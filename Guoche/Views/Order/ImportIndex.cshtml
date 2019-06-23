@@ -1,0 +1,86 @@
+﻿@using Common
+@using Entity.ViewModel;
+@{
+    ViewBag.Title = "订单导入";    
+}
+@section Header{
+<link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<script src="/source/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<style>
+    .btnAutoDiv {
+        width: 440px;
+        height: 85px;
+        display: flex;
+        justify-content: space-between;
+        position: absolute;
+        top: 110px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+    }
+
+    .btnAutoDiv div {
+        width: 200px;
+        height: 85px;
+        text-align: center;
+        line-height: 50px;
+        font-size: 26px;
+        color: #fff;
+        background: #00a7d0;
+        border-radius: 8px;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .btnAutoDiv div h5 {
+        width: 150px;
+        height: 40px;
+        margin: 0;
+        position: absolute;
+        top: 40px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        line-height: 20px;
+        font-size: 12px;
+        color: #fff;
+        font-weight: normal;
+    }
+
+    .btnAutoDiv div:hover {
+        transform: scale(1.1);
+    }
+</style>
+}
+<div class="row-fluid">
+    <form class="form-horizontal" id="priceSetForm" action="/Order/Modify" method="post">
+        <div class="widget widget-padding span12">
+            <div class="widget-header" style="margin-top:30px">
+                <i class="icon-list-alt"></i><h5>订单录入</h5>
+            </div>
+            <div class="btnAutoDiv">
+                <div class="addShop" onclick="openUrl('RtMart')">大润发订单<h5></h5></div>
+                <div class="addStorage" onclick="openUrl('Carrefour')">家乐福订单<h5></h5></div>
+            </div>
+            <div class="btnAutoDiv" style="top: 220px;">
+                <div class="addStorage1" onclick="openUrl('Lotus')">卜蜂莲花订单<h5></h5></div>
+                <div class="addShop1" onclick="openUrl('YongHui')">上蔬永辉订单<h5></h5></div>
+            </div>
+            <div class="btnAutoDiv" style="top: 330px;">
+                <div class="addStorage1" onclick="openUrl('Costa')">Costa订单<h5></h5></div>
+                <div class="addShop1" onclick="openUrl('Regular')">常规订单<h5></h5></div>
+            </div>
+        </div>
+    </form>
+
+</div>
+@section Footer{
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script type="text/javascript">
+    function openUrl(type) {
+        window.location.href = "OrderImport?type=" + type;
+    }
+</script>
+
+}

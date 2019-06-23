@@ -1,0 +1,146 @@
+﻿@using Entity.ViewModel;
+@using Common;
+@model GuoChe.Models.OrderInfo
+@{    
+    List<OrderEntity> orderList =Model.OrderList ;
+}
+<style type="text/css">
+    .tdcss {
+        border-left: 1px solid #121215;
+        border-top: 1px solid #121215;
+    }
+
+    .tdcss2 {
+        border-left: 1px solid #121215;
+        border-bottom: 1px solid #121215;
+        border-top: 1px solid #121215;
+    }
+    .tdcss3 {
+        border-bottom: 1px solid #121215;
+    }
+    .pdfpage {
+        page-break-inside: avoid;
+    }
+</style>
+@if(orderList!=null&&orderList.Count>0)
+{
+    foreach (OrderEntity entity in orderList)
+    { 
+        <div class="pdfpage">
+        <table style="width: 100%; border-collapse: separate; border-spacing: 0px 10px;" cellpadding="0" cellspacing="0">
+            <tr>
+                <td colspan="6">
+                    @*<img src="http://www.arapnet.com//bizcc/statics/images/lc/lc_logo_2.png"/>*@
+                    <img src="~/source/assets/img/logo.png" style="width:230px;height:40px" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" style="font-size: xx-large; font-weight: 100;text-align: center; ">送货单</td>
+            </tr>
+            <tr>
+                <td>客户名称:</td>
+                <td>@(entity.customer != null ? entity.customer.CustomerName : "")</td>
+                <td></td>
+                <td></td>
+                <td>温区:</td>
+                <td>@entity.TempType</td>
+            </tr>
+            <tr>
+                <td>门店名称:</td>
+                <td>@entity.contact.name</td>
+                <td></td>
+                <td></td>
+                <td>送货单号:</td>
+                <td>@entity.OrderNo</td>
+            </tr>
+            <tr>
+                <td>配送地址:</td>
+                <td>@entity.contact.address</td>
+                <td></td>
+                <td></td>
+                <td>生成日期:</td>
+                <td>@DateTime.Now.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <td class="tdcss3">联系电话:</td>
+                <td class="tdcss3">@entity.contact.telephone</td>
+                <td class="tdcss3">联系人:</td>
+                <td class="tdcss3">@entity.contact.contact</td>
+                <td class="tdcss3">到货日期:</td>
+                <td class="tdcss3">@DateTime.Now.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <td>提货地址:</td>
+                <td></td>
+                <td>送货车牌:</td>
+                <td></td>
+                <td>提货时间:</td>
+                <td></td>
+            </tr>
+        </table>
+        <table style="width: 100%;" cellspacing="0" cellpadding="2">
+            <tr style="height: 35px">
+                <td class="tdcss">项次</td>
+                <td class="tdcss">货品名称</td>
+                <td class="tdcss">规格型号</td>
+                <td class="tdcss">单位</td>
+                <td class="tdcss">数量</td>
+                <td class="tdcss">重量</td>
+                <td class="tdcss">批号</td>
+                <td class="tdcss">生产日期</td>
+                <td class="tdcss">到期日期</td>
+                <td class="tdcss" style="border-right: 1px solid #121215;">备注</td>
+            </tr>
+            @if(entity.orderDetailList!=null&&entity.orderDetailList.Count>0)
+            { 
+                int i=0;
+                int allCount=0;
+                decimal totalWeight=0;
+                foreach(OrderDetailEntity detail in entity.orderDetailList)
+                { 
+                    allCount+=detail.Quantity;
+                    i += 1;
+                    totalWeight += detail.Weight.ToDecimal(0);                                
+                    <tr style="height: auto">
+                        <td class="tdcss" style="width:5%;">@i</td>
+                        <td class="tdcss" style="width:15%;">@detail.GoodsName</td>
+                        <td class="tdcss" style="width:10%;">@detail.GoodsModel</td>
+                        <td class="tdcss" style="width:10%;">@detail.Units</td>
+                        <td class="tdcss" style="width:10%;">@detail.Quantity</td>
+                        <td class="tdcss" style="width:10%;">@detail.Weight</td>
+                        <td class="tdcss" style="width:10%;">@detail.BatchNumber</td>
+                        <td class="tdcss" style="width:10%;">@detail.ProductDate.ToShortDateString()</td>
+                        <td class="tdcss" style="width:10%;">@detail.ExceedDate.ToShortDateString()</td>
+                        <td class="tdcss" style="border-right: 1px solid #121215;width:10%;"></td>
+                    </tr>
+                }
+                <tr style="height: 50px">
+                    <td class="tdcss2">合计</td>
+                    <td class="tdcss2"></td>
+                    <td class="tdcss2"></td>
+                    <td class="tdcss2"></td>
+                    <td class="tdcss2">@allCount</td>
+                    <td class="tdcss2">@totalWeight</td>
+                    <td class="tdcss2"></td>
+                    <td class="tdcss2"></td>
+                    <td class="tdcss2"></td>
+                    <td class="tdcss2" style="border-right: 1px solid #121215;"></td>
+                </tr>
+            }            
+        </table>
+        <br />
+        <br />
+        <br />
+        <br />
+        <table style="width: 100%; border-collapse: separate; border-spacing: 0px 10px;" cellpadding="0" cellspacing="0">
+            <tr>
+                <td colspan="2">备注:@entity.Remark</td>
+            </tr>
+            <tr>
+                <td>收货单位及经手人: </td>
+                <td>送货单位及经手人:</td>
+            </tr>
+        </table>
+        </div>
+    }
+}

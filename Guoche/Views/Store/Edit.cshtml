@@ -1,0 +1,255 @@
+﻿@using Common
+@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑经销商";
+    List<Province> plist = (List<Province>)ViewBag.Province;
+    StoreEntity storeEntity = (StoreEntity)ViewBag.Store;
+}
+@section Header{
+    <link href="~/source/assets/css/timepicker.css" rel="stylesheet" />
+    @*<link href="~/source/assets/css/local.css" rel="stylesheet" />*@
+    <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style>
+        .picRemove {
+            height: 15px;
+            width: 15px;
+            background-color: #e4e5e6;
+            position: absolute;
+            margin-top: 15px;
+            /*filter: alpha(opacity:70);
+            opacity: 0.7;
+            -moz-opacity: 0.7;
+            -khtml-opacity: 0.7;*/
+        }
+    </style>
+
+}
+    <div class="row-fluid">
+        <form class="form-horizontal" id="storeForm" action="/Store/Modify" method="post">
+            <div class="widget widget-padding span12">
+                <div class="widget-header" style="margin-top:30px">
+                    <i class="icon-list-alt"></i><h5>租赁销售网点</h5>
+                </div>
+                <div class="widget-body" style="overflow: hidden; display: block;">
+                    <div class="widget-forms clearfix">
+                        <input type="hidden" id="SupplierID" name="SupplierID" value="@storeEntity.SupplierID">
+                        <div class="control-group">
+                            <label class="control-label">经销商名称</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="经销商名称" id="SupplierName" name="SupplierName" value="@storeEntity.SupplierName">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">经销商编码</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="经销商编码" id="SupplierCode" name="SupplierCode" value="@storeEntity.SupplierCode">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">网点类型</label>
+                            <div class="controls">
+                                <select tabindex="1" class="span5" id="SupplierType" name="SupplierType">
+                                    <option value="">--请选择--</option>
+                                    <option value="1" @(storeEntity.SupplierType == 1 ? "selected" : "")>租赁店</option>
+                                    <option value="2" @(storeEntity.SupplierType == 2 ? "selected" : "")>经销店</option>
+                                    <option value="3" @(storeEntity.SupplierType == 3 ? "selected" : "")>租售一体</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">所在城市</label>
+                            <div class="controls">
+                                <input type="hidden" id="cityid" value="@((storeEntity.CityID == 0) ? "" : storeEntity.CityID.ToString())">
+                                <input type="hidden" id="provinceid" value="@((storeEntity.CityInfo == null) ? "": storeEntity.CityInfo.ProvinceID.ToString())">
+                                <select tabindex="1" class="span2" id="sltProvince">
+                                    <option value="">--省份--</option>
+                                    @foreach (var item in plist)
+                                    {
+                                        <option value="@item.ProvinceID">@item.ProvinceName</option>
+                                    }
+                                </select>
+                                <select tabindex="1" class="span2" id="sltCity" name="CityID">
+                                    <option value="">--城市--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">经销商地址</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="经销商地址" id="Address" name="Address" value="@storeEntity.Address">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">联系电话</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="联系电话" id="Telephone" name="Telephone" value="@storeEntity.Telephone">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">联系手机</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="联系手机" id="Mobile" name="Mobile" value="@storeEntity.Mobile">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">经纬度</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="经纬度" id="Coordinate" name="Coordinate" value="@storeEntity.Coordinate">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">是否可用</label>
+                            <div class="controls">
+                                <input type="checkbox" value="1" id="Status" name="Status" @(storeEntity.Status == 1 ? "checked" : "")>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">营业开始时间</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="营业开始时间(XX:XX)" id="StartTime" name="StartTime" value="@storeEntity.StartTime">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">营业结束时间</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="营业结束时间(XX:XX)" id="EndTime" name="EndTime" value="@storeEntity.EndTime">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">图片预览</label>
+                            <div class="controls" id="picContainer">
+                                
+                                @if (storeEntity.Attachments != null && storeEntity.Attachments.Count > 0)
+                                {
+                                    foreach (var item in storeEntity.Attachments)
+                                    {
+                                         <span class="picRemove"  val="@item.AttachmentID" style="height:0px"></span>
+                                         <img src="@item.FilePath.Replace("~","")" alt="@(item.FileName+item.FileExtendName)" style="width: 150px; height: 150px; margin-top: 15px">
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <input type="hidden" id="AttachmentIDs" name="AttachmentIDs" value="@storeEntity.AttachmentIDs">
+                        @if (storeEntity.Attachments == null || storeEntity.Attachments.Count<5)
+                        {
+                            <div class="control-group" id="uploadC">                      
+                                <label class="control-label">上传图片</label>
+                                <div class="controls">
+                                    <input type="file" name="file" id="file" multiple />
+                                </div>
+                            </div>                         
+                        }
+                        <div class="control-group">
+                            <label class="control-label"></label>
+                            <div class="controls">
+                                <span style="color:red" id="spDesc"></span>
+                            </div>
+                        </div>  
+                        <div class="control-group">
+                            <label class="control-label">生成二维码</label>
+                            <div class="controls">
+                                <div id="qrcode"></div>
+                                <a id="downloadLink"></a>
+                                @*<input type="button" id="execute_qrcode" value="生成二维码" />*@
+                                <input type="text" id="txt_W" value="200" style="width:75px"  maxlength="5" />px <input type="text" id="txt_H" style="width:75px" value="200" maxlength="5" />px
+                                <input type="button" value="下载二维码" onclick="downloadClick()" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget-footer">
+                    <button class="btn btn-primary" type="button" id="save">保存</button>
+                </div>
+            
+            </div>
+        </form>
+        
+</div>
+<div class="window-mask" style="display:none"></div>
+<div id="imgContainer" style="z-index:999;display:none">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <div class="widget-buttons">
+                    <a href="javascript:void(0)" id="closeDeal"><i class="icon-remove"></i>关闭</a>
+                </div>
+            </div>
+            <div class="widget-body" id="imgshow" style="text-align: center;"></div>
+        </div>
+    </div>
+
+</div> 
+@section Footer{
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="~/Scripts/qrcode.js"></script> 
+<script type="text/javascript" src="~/source/Store.js"></script>
+<script type="text/javascript">
+    var maxPicCount = @ViewBag.MaxPicCount;
+    $(document).ready(function () {
+        var oFileInput = new FileInput();
+        oFileInput.Init("file", "/Upload/UploadFile");
+
+        $("#spDesc").text("最多只会保留" + maxPicCount + "张图片;图片大小：150KB以内 尺寸：1024*768");
+
+        storeInfo.init();
+
+    });
+
+    //$("#execute_qrcode").bind("click",function(){
+
+    //    var url="http://www.gcev.net/OutWeb/Register?Scode="+$("#SCode").val()+"&SalerSource=Store";
+
+    //    var qrcode = new QRCode(document.getElementById("qrcode"), {
+    //        text: url,
+    //        width: $("#txt_W").val(), //生成的二维码的宽度
+    //        height: $("#txt_H").val(), //生成的二维码的高度
+    //        //scr:'logo.png',
+    //        colorDark : "#000000", // 生成的二维码的深色部分
+    //        colorLight : "#ffffff", //生成二维码的浅色部分
+    //        correctLevel : QRCode.CorrectLevel.H
+    //    });
+    //});
+
+    function downloadClick () {  
+        
+        var url="http://www.gcev.net/OutWeb/Register?Scode="+$("#SupplierCode").val()+"&SalerSource=Store";
+
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: url,
+            width: $("#txt_W").val(), //生成的二维码的宽度
+            height: $("#txt_H").val(), //生成的二维码的高度
+            //scr:'logo.png',
+            colorDark : "#000000", // 生成的二维码的深色部分
+            colorLight : "#ffffff", //生成二维码的浅色部分
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        setTimeout(function(){
+            // 获取base64的图片节点
+            var img = document.getElementById('qrcode').getElementsByTagName('img')[0];
+            img.style="display:none";
+            // 构建画布
+            var canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            canvas.getContext('2d').drawImage(img, 0, 0);
+            // 构造url
+            url = canvas.toDataURL('image/png');
+            // 构造a标签并模拟点击
+            var downloadLink = document.getElementById('downloadLink');
+            downloadLink.setAttribute('href', url);
+            downloadLink.setAttribute('download', $("#SupplierName").val()+'.png');
+            downloadLink.click();
+            img.style="display:none";
+        },2000);
+
+        
+    }
+
+</script>
+    
+}
+

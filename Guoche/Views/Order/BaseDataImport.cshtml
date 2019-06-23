@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "BaseDataImport";
+}
+
+<h2>BaseDataImport</h2>
+<span class="lcQueryItem">
+    <input class="upfile" type="file" />批量导入
+</span>
+
+<script type="text/javascript" src="/source/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/raphael-min.js"></script>
+<script type="text/javascript" src="/source/assets/js/bootstrap.js"></script>
+
+<script type="text/javascript" src='/source/assets/js/morris.min.js'></script>
+<script type="text/javascript" src="/source/assets/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.masonry.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.imagesloaded.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.facybox.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.alertify.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.knob.js"></script>
+<script type='text/javascript' src='/source/assets/js/fullcalendar.min.js'></script>
+<script type='text/javascript' src='/source/assets/js/jquery.gritter.min.js'></script>
+
+<script type="text/javascript" src="/source/assets/js/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/source/Common.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script>
+    //Excel导入
+    $(".lcQueryItem").on("change", ".upfile", function () {
+        var formData = new FormData();
+        formData.append('file', $(this)[0].files[0]);
+        formData.append('token', $("#hid_Token").val());
+        var fileType = $(this)[0].files[0].name.split(".");
+        fileType = fileType[fileType.length - 1];
+
+        if (fileType == "xls" || fileType == "xlsx") {
+            $.ajax({
+                url: "OrderBaseDataImport",
+                type: 'post',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (data) {
+                if ("" != data) {
+                    console.log(data);
+
+                    //for (var i = 0; i < data.length; i++) {
+                    //    var html = "";
+                    //    if (type == "Costa") {
+                    //        html += "<tr>"
+                    //        html += "<td>" + data[i].GoodsNo + "</td><td>" + data[i].GoodsName + "</td><td>" + data[i].GoodsModel + "</td><td>" + data[i].Units + "</td><td>" + data[i].Quantity + "</td><td>" + data[i].ShopNo + "</td><td>" + data[i].ShopName + "</td>";
+                    //        html += "<td>" + data[i].OrderNo + "</td><td>" + data[i].OrderDate + "</td><td>" + data[i].YyDate + "</td><td>" + data[i].Remark + "</td>";
+                    //        html += "</tr>"
+                    //    }
+                    //    else {
+                    //        html += "<tr>"
+                    //        html += "<td>" + data[i].ImportType + "</td><td>" + data[i].OrderDate + "</td><td>" + data[i].CustomerName + "</td><td>" + data[i].ShopName + "</td><td>" + data[i].OrderNo + "</td><td>" + data[i].GoodsName + "</td><td>" + data[i].Units + "</td>";
+                    //        html += "<td>" + data[i].Quantity + "</td><td>" + data[i].Address + "</td><td>" + data[i].BarCode + "</td><td>" + data[i].SalesMan + "</td><td>" + data[i].PromotionMan + "</td><td>" + data[i].Remark + "</td>";
+                    //        html += "</tr>"
+                    //    }
+                    //    $("#orderImportList").append(html);
+                    //}
+                }
+            }).fail(function (res) {
+                alert("fail");
+                console.log(res);
+            });
+        } else {
+            alert("请上传png,jpg格式的图片")
+        }
+    })
+</script>
+

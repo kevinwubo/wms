@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D1AFE51-E7C8-4888-B18C-26B92A38A6AB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Service</RootNamespace>
+    <AssemblyName>Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdviseService.cs" />
+    <Compile Include="ApiBiz\SendSMSService.cs" />
+    <Compile Include="BaseBiz\BaseDataService.cs" />
+    <Compile Include="BaseBiz\LineService.cs" />
+    <Compile Include="BaseBiz\PriceSetService.cs" />
+    <Compile Include="BaseBiz\ReceiverService.cs" />
+    <Compile Include="BaseBiz\CustomerService.cs" />
+    <Compile Include="BaseBiz\CarrierService.cs" />
+    <Compile Include="BaseBiz\ContactService.cs" />
+    <Compile Include="BaseBiz\GoodsService.cs" />
+    <Compile Include="BaseBiz\StorageLocationService.cs" />
+    <Compile Include="BaseBiz\StorageService.cs" />
+    <Compile Include="BaseService.cs" />
+    <Compile Include="BaseBiz\GroupService.cs" />
+    <Compile Include="BaseBiz\MenuService.cs" />
+    <Compile Include="BaseBiz\RoleService.cs" />
+    <Compile Include="BrandService.cs" />
+    <Compile Include="CarService.cs" />
+    <Compile Include="ChargeService.cs" />
+    <Compile Include="Inventory\AutoAllocationService.cs" />
+    <Compile Include="Inventory\InventoryDetailService.cs" />
+    <Compile Include="Inventory\InventoryService.cs" />
+    <Compile Include="NewsService.cs" />
+    <Compile Include="OrderDetailService.cs" />
+    <Compile Include="OrderService.cs" />
+    <Compile Include="ReservationsService.cs" />
+    <Compile Include="SalerService.cs" />
+    <Compile Include="StoreService.cs" />
+    <Compile Include="BaseBiz\UserService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{5ed0a578-fe0e-4e6e-a1cb-f69761278183}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataRepository\DataRepository.csproj">
+      <Project>{2c07ff57-595d-4717-8c90-3da248898d6d}</Project>
+      <Name>DataRepository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Entity\Entity.csproj">
+      <Project>{5c08f63a-7418-45de-bf1d-0c5337927b37}</Project>
+      <Name>Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+      <Project>{13365811-32ba-422c-91c3-ca359a76fd53}</Project>
+      <Name>Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

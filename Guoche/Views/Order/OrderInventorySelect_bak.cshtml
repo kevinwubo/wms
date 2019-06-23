@@ -1,0 +1,167 @@
+﻿@using Entity.ViewModel;
+@using Common;
+@{
+    Layout = null;
+    ViewBag.Title = "商品库存选择";
+    List<InventoryEntity> goods = (List<InventoryEntity>)ViewBag.Goods;
+    List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
+    List<BaseDataEntity> goodsModel = ((List<BaseDataEntity>)ViewBag.GoodsModel) ?? new List<BaseDataEntity>();
+    PagerInfo p = (PagerInfo)ViewBag.Pager;
+}
+@*基础CSS加载*@
+<link href="~/source/assets/css/bootstrap.css" rel="stylesheet">
+<link href="~/source/assets/css/theme.css" rel="stylesheet">
+<link href="~/source/assets/css/font-awesome.min.css" rel="stylesheet">
+<link href="~/source/assets/css/alertify.css" rel="stylesheet">
+<link href="~/source/assets/css/OpenSans.css" rel="stylesheet" />
+<div class="row-fluid">
+    <div class="widget widget-padding span12">
+        @*<div class="widget-header">
+                <i class="icon-laptop"></i>
+                <h5>商品管理</h5>
+            </div>*@
+        <div class="widget-body" style="margin-bottom:50px">
+            <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                <div class="row-fluid">
+                    <div class="">
+                        <form action="/Order/OrderInventorySelect" method="get">
+                            <div class="dataTables_length" id="menus_filter">
+                                <input type="hidden" id="storageID" name="storageID" value="@ViewBag.StorageID" />
+                                <label>商品名称: <input type="text" aria-controls="menus" id="name" name="name" value="@ViewBag.Name"></label>
+                                &nbsp;&nbsp;
+                                <label>
+                                    <select tabindex="1" class="span5" style="width:100px" id="mcode" name="mcode">
+                                        <option value="">--商品类型--</option>
+                                        @foreach (var item in goodsModel)
+                                        {
+                                            <option value="@item.Description" @(ViewBag.Description == item.Description ? "selected" : "")>@item.Description</option>
+                                        }
+                                    </select>
+                                </label>
+                                &nbsp;&nbsp;
+                                <label>
+                                    <select tabindex="1" class="span5" style="width:100px" id="CustomerID" name="CustomerID">
+                                        <option value="">--所属客户--</option>
+                                        @foreach (var item in customers)
+                                        {
+                                            <option value="@item.CustomerID" @(ViewBag.CustomerID == item.CustomerID ? "selected" : "")>@item.CustomerName</option>
+                                        }
+                                    </select>
+                                </label>
+                                &nbsp;&nbsp;
+                                <button class="btn btn-info" type="submit">搜索</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                @if (goods != null && goods.Count > 0)
+                {
+                    <table id="users" class="table table-striped table-bordered dataTable" aria-describedby="users_info">
+                        <thead>
+                            <tr role="row">
+                                <th><input type="checkbox" name="checkall" /></th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">商品编号</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">商品名称</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">库存数量</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">运输成本</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">运输售价</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">规格型号</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">单位</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">批次号</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">生产日期</th>                                
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">保质期</th>                                
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">重量</th>
+                            </tr>
+                        </thead>
+                        @*	商品编号	商品名称	库存数量	运输成本	运输售价	规格型号	单位	 批次号	生产日期	到期日期	重量*@
+                        <tbody role="alert" id="tbody" aria-live="polite" aria-relevant="all">
+                            @for (int i = 0; i < goods.Count; i++)
+                            {
+                                <tr class=@(i%2==0?"odd":"even")>
+                                    <td class=" "><input type="checkbox" name="checkbox" id="@goods[i].GoodsID" value="@goods[i].GoodsID" /></td>                                    
+                                    <td class=" "><input type="hidden" value='@(goods[i].goods != null ? goods[i].goods.GoodsNo : "")' />@(goods[i].goods != null ? goods[i].goods.GoodsNo : "")</td>
+                                    <td class=" "><input type="hidden" value='@(goods[i].goods!=null?goods[i].goods.GoodsName:"")' />@(goods[i].goods != null ? goods[i].goods.GoodsName : "")</td>                                   
+                                    <td class=" "><input type="hidden" value="@goods[i].Quantity" />@goods[i].Quantity</td>
+                                    <td class=" "><input type="hidden" value="0" />0</td>
+                                    <td class=" "><input type="hidden" value="0" />0</td>
+                                    <td class=" "><input type="hidden" value='@(goods[i].goods != null ? goods[i].goods.GoodsModel : "")' />@(goods[i].goods != null ? goods[i].goods.GoodsModel : "") </td>  
+                                    <td class=" "><input type="hidden" value='@(goods[i].goods != null ? goods[i].goods.Units : "")' />@(goods[i].goods != null ? goods[i].goods.Units : "") </td>                                    
+                                    <td class=" "><input type="hidden" value='@(goods[i].goods != null ? goods[i].goods.Weight : "")' />@(goods[i].goods != null ? goods[i].goods.Weight : "") </td>                                    
+                                    <td class=" "><input type="hidden" value='@(goods[i].goods != null ? goods[i].goods.exDate + goods[i].goods.exUnits : "")' />@(goods[i].goods != null ? goods[i].goods.exDate + goods[i].goods.exUnits : "") </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                }
+                @{ Html.RenderPartial("../Pager", p); }
+                <div class="row-fluid">
+                    <div>
+                        <div class="dataTables_length" id="menus_filter">
+                            <button class="btn btn-info" type="button" id="add">确定</button>
+                            <button class="btn btn-info" type="button">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- /widget-body -->
+    </div> <!-- /widget -->
+</div>
+<script type="text/javascript" src="~/source/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="~/source/assets/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="~/source/assets/js/raphael-min.js"></script>
+<script type="text/javascript" src="~/source/assets/js/bootstrap.js"></script>
+<script>
+    $('input[name="checkall"]').on("click", function () {
+        if ($(this).is(':checked')) {
+            $('input[name="checkbox"]').each(function () {
+                $(this).prop("checked", true);
+            });
+        } else {
+            $('input[name="checkbox"]').each(function () {
+                $(this).prop("checked", false);
+            });
+        }
+    });
+
+    $("#add").click(function () {
+        var formParams = {};
+        var params = {
+            listContact: []
+        };
+        var html = "";
+        $("#tbody").find("tr").each(function () {
+            var tdArr = $(this).children();
+            if (tdArr.eq(0).find('[name="checkbox"]').prop("checked")) {
+                var goodsid = tdArr.eq(0).find('input').val();//商品ID
+                var goodsname = tdArr.eq(1).find('input').val();//商品名称
+                var goodsno = tdArr.eq(2).find('input').val();//商品编号
+                var customername = tdArr.eq(3).find('input').val();//所属客户
+                var typecode = tdArr.eq(4).find('input').val();//商品类别
+                var goodsmodel = tdArr.eq(5).find('input').val();//规格型号
+                var units = tdArr.eq(6).find('input').val();//单位
+                var exunits = tdArr.eq(7).find('input').val();//保质期
+                var weight = tdArr.eq(8).find('input').val();//重量
+
+                html += '<tr>\n' +
+                        '    <td><input type="hidden" value="' + goodsname + '" class="form-control">' + goodsname + '</td>\n' +
+                        '    <td><input type="hidden" value="' + goodsno + '" class="form-control ">' + goodsno + '</td>\n' +
+                        '    <td><input type="hidden" value="' + customername + '" class="form-control ">' + customername + '</td>\n' +
+                        '    <td><input type="hidden" value="' + typecode + '" class="form-control ">' + typecode + '</td>\n' +
+                        '    <td><input type="hidden" value="' + goodsmodel + '" class="form-control ">' + goodsmodel + '</td>\n' +
+                        '    <td><input type="hidden" value="' + units + '" class="form-control ">' + units + '</td>\n' +
+                        '    <td><input type="hidden" value="' + exunits + '" class="form-control ">' + exunits + '</td>\n' +
+                        '    <td><input type="hidden" value="' + weight + '" class="form-control ">' + weight + '</td>\n' +
+                        '    <td><input type="hidden" value="' + weight + '" class="form-control ">' + weight + '</td>\n' +
+                        '    <td><span style="cursor:pointer" onclick="delTr(this)">移除</span></td>\n' +
+                        '</tr>';
+            }
+        });
+        //原有记录累加
+        $("#parentTbody", window.opener.document).find("tr").each(function () {
+            html += $(this).context.outerHTML;
+        });
+        window.opener.document.getElementById("parentTbody").innerHTML = html;
+        window.close();//关闭当前窗口
+    });
+</script>

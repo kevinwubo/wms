@@ -1,0 +1,230 @@
+﻿@using Common
+@using Entity.ViewModel;
+@{
+    ViewBag.Title = "收货人信息管理";
+    List<Province> plist = (List<Province>)ViewBag.Province;
+    List<CarrierEntity> carrierlist = (List<CarrierEntity>)ViewBag.Carrier;
+    List<StorageEntity> storagelist = (List<StorageEntity>)ViewBag.Storage;
+    List<CustomerEntity> customerlist = (List<CustomerEntity>)ViewBag.Customer;
+    List<BaseDataEntity> receiverList = (List<BaseDataEntity>)ViewBag.ReceiverList;
+    ReceiverEntity ReceiverEntity = (ReceiverEntity)ViewBag.Receiver;
+}
+@section Header{
+    <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style>
+        .picRemove {
+            height: 15px;
+            width: 15px;
+            background-color: #e4e5e6;
+            position: absolute;
+            margin-top: 15px;
+            /*filter: alpha(opacity:70);
+            opacity: 0.7;
+            -moz-opacity: 0.7;
+            -khtml-opacity: 0.7;*/
+        }
+    </style>
+}
+<div class="row-fluid">
+    <form class="form-horizontal" id="ReceiverForm" action="/Receiver/Modify" method="post">
+        <div class="widget widget-padding span12">
+            <div class="widget-header" style="margin-top:30px">
+                <i class="icon-list-alt"></i><h5>收货人信息管理</h5>
+            </div>
+            <div class="widget-body" style="overflow: hidden; display: block;">
+                <div class="widget-forms clearfix">
+                    <input type="hidden" id="ReceiverID" name="ReceiverID" value="@ReceiverEntity.ReceiverID">
+                    <input type="hidden" id="ContactJson" name="ContactJson" value="@ReceiverEntity.ContactJson">
+                    <div class="control-group">
+                        <label class="control-label">客户信息及名称</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span2" id="CustomerID" name="CustomerID">
+                                @foreach (var item in customerlist)
+                                {
+                                    <option value="@item.CustomerID">@item.CustomerName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">收货人类型</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span2" id="ReceiverType" name="ReceiverType">
+                                @foreach (var item in receiverList)
+                                {
+                                    <option value="@item.ValueInfo" @(item.ValueInfo == ReceiverEntity.ReceiverType ? "selected" : "")>@item.ValueInfo</option>
+                                }
+                                @*<option value="大仓">大仓</option>
+                                <option value="门店">门店</option>
+                                <option value="经销商">经销商</option>
+                                <option value="其他">其他</option>*@
+                            </select>
+                        </div>
+                    </div>
+  
+                    <div class="control-group">
+                        <label class="control-label">收货人编号</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="收货人编号" id="ReceiverNo" name="ReceiverNo" value="@ReceiverEntity.ReceiverNo" maxlength="200">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">收货人名称</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="收货人名称" id="ReceiverName" name="ReceiverName" value="@ReceiverEntity.ReceiverName" maxlength="200">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">省份</label>
+                        <div class="controls">
+                            <input type="hidden" id="hid_cityid" value="@ReceiverEntity.CityID" />
+                            <input type="hidden" id="hid_provinceid" value="@ReceiverEntity.ProvinceID" />
+                            <select tabindex="1" class="span2" id="ProvinceID" name="ProvinceID">              
+                                @foreach (var item in plist)
+                                {
+                                    <option value="@item.ProvinceID" @(item.ProvinceID == ReceiverEntity.ProvinceID ? "selected" : "")>@item.ProvinceName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">城市</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span2" id="CityID" name="CityID">
+                                <option value=" ">--城市--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">地址</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="地址" id="Address" name="Address" value="@ReceiverEntity.Address" maxlength="200">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">备注</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="备注" id="Remark" name="Remark" value="@ReceiverEntity.Remark" maxlength="200">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">默认仓库编号</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span2" id="DefaultStorageID" name="DefaultStorageID">             
+                                @foreach (var item in storagelist)
+                                {
+                                    <option value="@item.StorageID" @(item.StorageID == ReceiverEntity.DefaultStorageID ? "selected" : "")>@(item.StorageNo+@item.StorageName)</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">默认承运商</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span2" id="DefaultCarrierID" name="DefaultCarrierID">
+                                @foreach (var item in carrierlist)
+                                {
+                                    <option value="@item.CarrierID" @(item.CarrierID == ReceiverEntity.DefaultCarrierID ? "selected" : "")>@(item.CarrierNo+item.CarrierName)</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            @if (ReceiverEntity.ReceiverID > 0)
+                            {
+                                <input type="checkbox" value="1" id="Status" name="Status" @(ReceiverEntity.Status == 1 ? "checked" : "")>
+                            }
+                            else
+                            {
+                                <input type="checkbox" value="1" id="Status" name="Status" checked>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-header" style="margin-top:30px">
+                <i class="icon-list-alt"></i><h5>新增加联系人</h5>
+                <div class="widget-buttons">
+                    <a  href="javascript:addTr(oneTr())"><i class="icon-user"></i> 新增</a>
+                </div>
+            </div>
+            <div class="widget-body" style="overflow: hidden; display: block;">
+                <div class="widget-forms clearfix">
+                    <table class="table table-bordered" id="fineTable">
+                        <thead>
+                            <tr>
+                                <th>联系人姓名<input type="hidden" value="Head"></th>
+                                <th>手机号</th>
+                                <th>座机</th>
+                                <th>邮箱</th>
+                                <th>备注</th>
+                                <th>操作</th>                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ReceiverEntity.listContact!=null&&ReceiverEntity.listContact.Count>0)
+                            {                                   
+                                foreach(ContactEntity cc in ReceiverEntity.listContact)
+                                { 
+                                     <tr>
+                                        <td><input type="text" id="contractName" value="@cc.ContactName" class="form-control"></td>
+                                        <td><input type="text" id="contractPhone" value="@cc.Mobile" class="form-control "></td>
+                                        <td><input type="text" id="contractTelephone" value="@cc.Telephone" class="form-control "></td>
+                                        <td><input type="text" id="contractEmail" value="@cc.Email" class="form-control "></td>
+                                        <td><input type="text" id="remark" value="@cc.Remark" class="form-control "></td>
+                                        <td><input type="hidden" id="contactID" value="@cc.ContactID" /><span style="cursor:pointer" onclick="delTr(this,@cc.ContactID)">移除</span></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            { 
+                                <tr>
+                                    <td><input type="text" id="contractName" class="form-control"></td>
+                                    <td><input type="text" id="contractPhone" class="form-control "></td>
+                                    <td><input type="text" id="contractTelephone" class="form-control "></td>
+                                    <td><input type="text" id="contractEmail" class="form-control "></td>
+                                    <td><input type="text" id="remark" class="form-control "></td>
+                                    <td><input type="hidden" id="contactID" value="0" /><span style="cursor:pointer" onclick="delTr(this,0)">移除</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="button" id="save">保存</button>
+                <button class="btn btn-primary" type="button" id="goback">返回</button>
+            </div>
+        </div>
+</form>
+
+</div>
+<div class="window-mask" style="display:none"></div>
+<div id="imgContainer" style="z-index:999;display:none">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <div class="widget-buttons">
+                    <a href="javascript:void(0)" id="closeDeal"><i class="icon-remove"></i>关闭</a>
+                </div>
+            </div>
+            <div class="widget-body" id="imgshow" style="text-align: center;"></div>
+        </div>
+    </div>
+</div>
+@section Footer{
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script type="text/javascript" src="~/source/BaseData/Receiver.js"></script>
+<script type="text/javascript" src="~/source/BaseData/Table.js"></script>
+<script>
+    $(document).ready(function () {
+        receiverInfo.init();
+    });
+
+</script>
+}

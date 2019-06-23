@@ -1,0 +1,1124 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta content="小匠专场拍卖" http-equiv="keywords">
+    <meta name="description" content="小匠专场拍卖">
+    <meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1">
+    <title>首页</title>
+    <!--<link rel="stylesheet" href="~/source//css/register/base.css" type="text/css">-->
+    <link rel="stylesheet" href="~/source//static/css/jquery-weui.css" type="text/css">
+    <link rel="stylesheet" href="~/source//static/css/base_1_30.css" type="text/css">
+    <!--<link rel="stylesheet" href="~/source//static/css/pagination.css" type="text/css">-->
+
+    <style>
+        body {
+            background: #fff;
+            max-width: 750px;
+            margin: auto;
+            /*-webkit-overflow-scrolling: touch;*/
+        }
+
+        .color_red_c9 {
+            color: #c90319;
+        }
+
+        .ssbtn {
+            width: 1rem;
+            background: #c90319;
+            color: white;
+            height: .56rem;
+            line-height: .56rem;
+            text-align: center;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .search {
+            background: #f7f7f7;
+            height: 0.56rem;
+            border-radius: 3px;
+        }
+
+        .ssbtnzx {
+            width: 2rem;
+            background: #c90319;
+            color: white;
+            height: .7rem;
+            line-height: .7rem;
+            text-align: center;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .searchzx {
+            background: #f7f7f7;
+            height: 0.7rem;
+            border-radius: 3px;
+        }
+
+        .banner {
+            overflow: hidden;
+            border-radius: 5px;
+            margin: .256rem;
+        }
+
+            .banner img {
+                width: 100%;
+            }
+
+        .part1 {
+            background: white;
+            padding: 0.256rem;
+            border-top: .1rem solid #f7f7f7;
+        }
+
+        .list {
+            overflow: hidden;
+            height: 7rem;
+            position: relative;
+        }
+
+            .list .item {
+                text-align: center;
+                width: 33.3%;
+                float: left;
+                height: 3.3rem;
+                margin-top: .2rem;
+            }
+
+                .list .item .t1 {
+                    margin-top: .2rem;
+                    font-size: .18rem;
+                }
+
+                .list .item .pimg {
+                    height: 1.4rem;
+                    margin-top: .1rem;
+                    width: 100%;
+                    background-size: 128% !important;
+                    background-position: center !important;
+                }
+
+        .bt-zx {
+            margin-top: .2rem;
+            width: 1.34rem;
+            height: .5rem;
+        }
+        /* 大师推荐 */
+        .list1 {
+            overflow: hidden;
+            height: 14.1rem;
+            position: relative;
+        }
+
+            .list1 .item1 {
+                text-align: center;
+                width: 50%;
+                float: left;
+                height: 4.5rem;
+                margin-top: .2rem;
+            }
+
+                .list1 .item1 .t1 {
+                    margin-top: .2rem;
+                    font-size: .18rem;
+                }
+
+                .list1 .item1 .pimg {
+                    height: 2.5rem;
+                    /* margin-top: .1rem; */
+                    width: 100%;
+                    background-size: 128% !important;
+                    background-position: center !important;
+                }
+
+        .swiper_container_suz2 {
+            width: 100%;
+            /* padding-left:3%; */
+            height: 4.2rem;
+            overflow: hidden;
+            position: relative;
+            background: white;
+        }
+
+            .swiper_container_suz2 .swiper-slide {
+                text-align: center;
+                font-size: 18px;
+                background: #fff;
+                line-height: 1.3rem;
+                height: 4.2rem;
+                margin-top: 0rem;
+                position: relative;
+                /*-webkit-transform:scale(0.8);*/
+            }
+
+                .swiper_container_suz2 .swiper-slide img {
+                    width: 100%;
+                    height: auto;
+                    display: block;
+                }
+        /* 名家 */
+
+        #swiper-container-star {
+            width: 100%;
+            height: 3.6rem;
+        }
+
+            #swiper-container-star a {
+                display: inline-block;
+                width: 100%;
+                height: 100%;
+            }
+
+                #swiper-container-star a img {
+                    width: 100%;
+                    height: 2.6rem;
+                }
+
+                #swiper-container-star a #headimg {
+                    width: 100%;
+                    height: 2.6rem;
+                }
+
+        .star-describe {
+            width: 100%;
+            height: 1rem;
+            background-color: white;
+            text-align: center;
+            overflow: hidden;
+        }
+
+            .star-describe p:nth-child(1) {
+                font-size: 0.37rem;
+                line-height: 0.37rem;
+                color: #cc3333;
+                padding-top: 0.106rem;
+                padding-bottom: 0.106rem;
+            }
+
+            .star-describe p:nth-child(2) {
+                font-size: 0.26rem;
+                line-height: 0.26rem;
+                color: #333333;
+            }
+
+        .store {
+            margin-top: .35rem;
+            height: auto;
+            border: 1px solid #ccc;
+            background: #f7f7f7;
+            border-radius: 15px;
+        }
+
+        #menupart {
+            height: 100%;
+            width: 80%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99;
+        }
+
+        #menumark {
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(99, 99, 99, 0.5);
+            z-index: 98;
+        }
+
+        #menupart .menu-body {
+            position: absolute;
+            right: 0;
+            top: 0;
+            background: #fff;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            padding-top: 1.2rem;
+            padding-bottom: 1.06rem;
+            box-sizing: border-box;
+            padding-left: .2rem;
+            padding-right: .2rem;
+        }
+
+        .menu-cate-part {
+            width: 100%;
+            position: relative;
+            text-align: center;
+        }
+
+        .menu-cate-title {
+            height: .7rem;
+            position: relative;
+            line-height: .7rem;
+            font-size: 0.24rem;
+            background: white;
+            margin: auto;
+            width: 1.5rem;
+            z-index: 1;
+        }
+
+        .cate-list {
+            background: #fff;
+            overflow: hidden;
+        }
+
+            .cate-list .item {
+                float: left;
+                width: 33.3%;
+            }
+
+                .cate-list .item div {
+                    height: 0.6rem;
+                    line-height: 0.6rem;
+                    text-align: center;
+                    font-size: 0.22rem;
+                    color: #666;
+                    margin: .15rem;
+                    background: #f6f6f6;
+                    border: 1px solid #e6e6e6;
+                }
+
+        .back-tag {
+            border-top: 1px solid #c90319;
+            border-left: 1px solid #c90319;
+            height: 0.15rem;
+            width: 0.15rem;
+            float: right;
+            margin: .15rem .15rem;
+            transform: rotate(315deg);
+            -o-transform: rotate(315deg);
+            -webkit-transform: rotate(315deg);
+            -moz-transform: rotate(315deg);
+        }
+
+        .line {
+            width: 100%;
+            height: 1px;
+            background: #f0f0f0;
+            position: absolute;
+            top: 16px;
+        }
+
+        .w_50 {
+            width: 50% !important;
+        }
+
+        .tk-mark {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            top: 0;
+            left: 0;
+            z-index: 9999;
+        }
+
+            /*说明*/
+            .tk-mark .kuang {
+                position: absolute;
+                height: 5.6rem;
+                background: white;
+                bottom: 0;
+                width: 100%;
+            }
+
+            /*购买弹款*/
+            .tk-mark .gmkuang {
+                padding: 0.34rem 0 0;
+                position: absolute;
+                /*height: 6rem;*/
+                background: white;
+                bottom: 0;
+                width: 100%;
+            }
+
+        .px22 {
+            font-size: .22rem;
+        }
+
+        .totop {
+            position: fixed;
+            height: auto;
+            z-index: 99999;
+            top: 8.5rem;
+            right: 0.4rem;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 8.5rem;
+        }
+        /*包裹自定义分页器的div的位置等CSS样式*/
+        .swiper-pagination-custom {
+            bottom: .3rem;
+        }
+        /*自定义分页器的样式，这个你自己想要什么样子自己写*/
+        .swiper-custom {
+            width: .1rem;
+            height: .1rem;
+            display: inline-block;
+            background: #666;
+            opacity: .3;
+            margin: 0 5px;
+            border-radius: 50%;
+            margin: 0 .3rem;
+        }
+        /*自定义分页器激活时的样式表现*/
+        .swiper-custom-active {
+            opacity: 1;
+            width: 1.2rem;
+            background-color: #F78E00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="flex-row bg_color_f navheight" style="align-items: center;max-width: 750px;">
+        <div class="flex-row pad-l-30" style="align-items: center">
+            <img class="mar-r-16" style="width: .5rem" src="~/source//static/images/jianzhan/logo.png" />
+        </div>
+        <div class="flex-col search">
+
+            <div class="flex-row" style="align-items: center;height: .56rem">
+
+                <img class="mar-l-30 mar-r-16" style="height: .3rem;width: .25rem" src="~/source//static/images/jianzhan/ic_search.png"
+                     alt="">
+                <input style="background: #f7f7f7" class="px24" type="text" placeholder="大师或者编号" />
+            </div>
+        </div>
+        <div class="ssbtn px24 mar-r-30">搜索</div>
+    </div>
+    <!-- <div style="height:1rem"></div> -->
+    <div class="banner">
+        <img src="~/source//static/images/jianzhan/banner.png" alt="" />
+    </div>
+
+    <div class="flex-row pad-l-30 pad-r-30 pad-t-20 pad-b-40" style="text-align: center;align-items: center;">
+        <a href="~/source//jianzhan/storePage.html" class="flex-col">
+            <img style="height: .8rem;width:.5rem" src="~/source//static/images/jianzhan/sc.png" alt="">
+        </a>
+        <a href="~/source//jianzhan/famousPage.html" class="flex-col">
+            <img style="height: .8rem;width:.5rem" src="~/source//static/images/jianzhan/ic_xt.png" alt="">
+        </a>
+        <a href="~/source//jianzhan/collegeList.html" class="flex-col">
+            <img style="height: .8rem;width:.5rem" src="~/source//static/images/jianzhan/iic_xy.png" alt="" />
+        </a>
+        <a href="~/source//jianzhan/collegeList.html" class="flex-col">
+            <img style="height: .8rem;width:.5rem" src="~/source//static/images/jianzhan/ic_zt.png" alt="" />
+        </a>
+        <a href="~/source//jianzhan/shouchangPage.html" class="flex-col">
+            <img style="height: .8rem;width:.5rem" src="~/source//static/images/jianzhan/ic_sc.png" alt="" />
+        </a>
+    </div>
+
+    <div class="flex-row mar-l-30 mar-r-30 pad-t-16 pad-b-16" style="border-top: 1px solid #f7f7f7">
+        <img style="height: .18rem;width: .18rem" class="mar-r-16" src="~/source//static/images/jianzhan/ic_lb.png" alt="" />
+        <div class="px20 color_57 mar-r-16">公告</div>
+        <div class="flex-col clamp1 px20 color_9" style="line-height: .32rem;
+        height: .28rem;">很多人都不知道建盏的束口线有什么用，你知道吗？</div>
+        <div class="px16 color_9 mar-l-30">更多></div>
+    </div>
+
+    <div class="part1">
+        <div class="flex-row" style="align-items: center;padding:.25rem 0">
+            <div class="flex-col"></div>
+            <div class="px32 color_57 mar-r-16">每日严选</div>
+            <img style="height: 0.17rem;width: .17rem" src="~/source//static/images/jianzhan/ic_next.png" alt="" />
+            <div class="flex-col"></div>
+        </div>
+        <div class="list">
+            <div class="item">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                </div>
+                <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx.png" />
+            </div>
+
+            <div class="item">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                </div>
+                <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx.png" />
+            </div>
+
+            <div class="item">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                </div>
+                <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx.png" />
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center; padding: .4rem" class="showmore">
+        <div class="color_red_c9 px28">展示更多</div>
+        <img style="width: 0.21rem;margin-top: 0.1rem" src="~/source//static/images/jianzhan/more.png" alt="">
+    </div>
+    </div>
+    <div class="part1">
+        <div class="flex-row" style="align-items: center;padding:.25rem 0">
+            <div class="flex-col"></div>
+            <div class="px32 color_57 mar-r-16">新品首发</div>
+            <img style="height: 0.17rem;width: .17rem" src="~/source//static/images/jianzhan/ic_next.png" alt="" />
+            <div class="flex-col"></div>
+        </div>
+        <div class="list">
+            <div class="item">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                    <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                    <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx_y.png" />
+                </div>
+            </div>
+            <div class="item">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+
+                    <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                    <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx_y.png" />
+                </div>
+            </div>
+            <div class="item">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                    <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                    <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx_y.png" />
+                </div>
+            </div>
+            <div class="item">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                    <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                    <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx_y.png" />
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; padding: .4rem" class="showmore">
+            <div class="color_red_c9 px28">展示更多</div>
+            <img style="width: 0.21rem;margin-top: 0.1rem" src="~/source//static/images/jianzhan/more.png" alt="">
+        </div>
+    </div>
+
+
+    <div class="part1">
+        <div class="flex-row" style="align-items: center;padding:.25rem 0">
+            <div class="flex-col"></div>
+            <div class="px32 color_57 mar-r-16">专题精选</div>
+            <img style="height: 0.17rem;width: .17rem" src="~/source//static/images/jianzhan/ic_next.png" alt="" />
+            <div class="flex-col"></div>
+        </div>
+        <div style="height: .3rem"></div>
+        <div class="swiper_container_suz2" id="pb2">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="~/source//static/images/jianzhan/banner1.png">
+                    <div>
+                        <div style="height: 0.25rem"></div>
+                        <div class="px30 clamp1" style="color: #373737;text-align: left;"> 【诚信315】捡漏微拍 独家巨献</div>
+                        <div style="height: 0.2rem"></div>
+                        <div class="px16 clamp1" style="text-align: left;color: #373737;">世界首位宋代曜变建盏复原者</div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="~/source//static/images/jianzhan/banner2.png">
+                    <div>
+                        <div style="height: 0.25rem"></div>
+                        <div class="px30 clamp1" style="color: #373737;text-align: left;"> 【诚信315】捡漏微拍 独家巨献</div>
+                        <div style="height: 0.2rem"></div>
+                        <div class="px16 clamp1" style="text-align: left;color: #373737;">世界首位宋代曜变建盏复原者</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="part1">
+        <div class="flex-row" style="align-items: center;padding:.25rem 0">
+            <div class="flex-col"></div>
+            <div class="px32 color_57 mar-r-16">大师推荐</div>
+            <img style="height: 0.17rem;width: .17rem" src="~/source//static/images/jianzhan/ic_next.png" alt="" />
+            <div class="flex-col"></div>
+        </div>
+        <div class="list1">
+            <div class="item1">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                    <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                    <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx.png" />
+                </div>
+            </div>
+            <div class="item1">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                    <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                    <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx.png" />
+                </div>
+            </div>
+            <div class="item1">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                    <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                    <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx.png" />
+                </div>
+            </div>
+            <div class="item1">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                    <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                    <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx.png" />
+                </div>
+            </div>
+            <div class="item1">
+                <div style="margin: 0 .1rem">
+                    <div class="t1 color_red_c9">ID:10161</div>
+                    <div class="pimg" style="background:url(~/source//static/images/jianzhan/img3.png)"></div>
+                    <div class="t1 clamp1">【吴继旺】柴烧鹧鸪</div>
+                    <img class="bt-zx" src="~/source//static/images/jianzhan/btn_ljzx.png" />
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; padding: .4rem" class="showmore">
+            <div class="color_red_c9 px28">展示更多</div>
+            <img style="width: 0.21rem;margin-top: 0.1rem" src="~/source//static/images/jianzhan/more.png" alt="">
+        </div>
+    </div>
+    <div class="part1" style="padding:.256rem 0;background: #f7f7f7">
+        <div class="flex-row" style="align-items: center;padding:.25rem 0;">
+            <div class="flex-col"></div>
+            <div class="px32 color_57 mar-r-16">名家推荐</div>
+            <img style="height: 0.17rem;width: .17rem" src="~/source//static/images/jianzhan/ic_next.png" alt="" />
+            <div class="flex-col"></div>
+        </div>
+        <div style="height: .3rem"></div>
+        <div id="swiper-container-star" class="swiper-container">
+            <div id="swiper-wrapper-star" class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <a href="./detail.html">
+                        <div id="headimg" style="background: url(~/source//static/images/jianzhan/img2.png) no-repeat center;background-size: auto 100%;"></div>
+                        <div class="star-describe">
+                            <p class="px32">大棚张</p>
+                            <p class="px20">鹧鸪斑护第一人</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="./detail.html">
+                        <div id="headimg" style="background: url(~/source//static/images/jianzhan/img2.png) no-repeat center;background-size: auto 100%;"></div>
+                        <!-- <img src="http://116.62.124.214:8080/upload/201803/08/201803082248234646.jpg"> -->
+                        <div class="star-describe">
+                            <p class="px32">大棚张</p>
+                            <p class="px20">鹧鸪斑护第一人</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="./detail.html">
+                        <div id="headimg" style="background: url(~/source//static/images/jianzhan/img2.png) no-repeat center;background-size: auto 100%;"></div>
+                        <!-- <img src="http://116.62.124.214:8080/upload/201803/08/201803082248234646.jpg"> -->
+                        <div class="star-describe">
+                            <p class="px32">大棚张</p>
+                            <p class="px20">鹧鸪斑护第一人</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; padding: .4rem" class="showmore">
+            <div class="color_red_c9 px28">查看更多大师</div>
+            <img style="width: 0.21rem;margin-top: 0.1rem" src="~/source//static/images/jianzhan/more.png" alt="">
+        </div>
+    </div>
+    <div class="part1" style="padding:.3rem .65rem .5rem ">
+        <div class="flex-row" style="align-items: center;padding:.25rem 0">
+            <div class="flex-col"></div>
+            <div class="px32 color_57 mar-r-16">八大保值</div>
+            <img style="height: 0.17rem;width: .17rem" src="~/source//static/images/jianzhan/ic_next.png" alt="" />
+            <div class="flex-col"></div>
+        </div>
+        <div class="flex-row" style="text-align: center; padding-top: .4rem">
+            <div class="flex-col">
+                <div style="margin: 0 .1rem">
+                    <img class="ic_60" src="~/source//static/images/jianzhan/ic_15.png" />
+                    <div class="px24 clamp1 pad-t-20">厂家直销</div>
+                </div>
+            </div>
+            <div class="flex-col">
+                <div style="margin: 0 .1rem">
+                    <img class="ic_60" src="~/source//static/images/jianzhan/ic_15.png" />
+                    <div class="px24 clamp1 pad-t-20">厂家直销</div>
+                </div>
+            </div>
+            <div class="flex-col">
+                <div style="margin: 0 .1rem">
+                    <img class="ic_60" src="~/source//static/images/jianzhan/ic_15.png" />
+                    <div class="px24 clamp1 pad-t-20">厂家直销</div>
+                </div>
+            </div>
+            <div class="flex-col">
+                <div style="margin: 0 .1rem">
+                    <img class="ic_60" src="~/source//static/images/jianzhan/ic_15.png" />
+                    <div class="px24 clamp1 pad-t-20">厂家直销</div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-row pad-b-40 " style="text-align: center;padding-top: .4rem">
+            <div class="flex-col">
+                <div style="margin: 0 .1rem">
+                    <img class="ic_60" src="~/source//static/images/jianzhan/ic_15.png" />
+                    <div class="px24 clamp1 pad-t-20">厂家直销</div>
+                </div>
+            </div>
+            <div class="flex-col">
+                <div style="margin: 0 .1rem">
+                    <img class="ic_60" src="~/source//static/images/jianzhan/ic_15.png" />
+                    <div class="px24 clamp1 pad-t-20">厂家直销</div>
+                </div>
+            </div>
+            <div class="flex-col">
+                <div style="margin: 0 .1rem">
+                    <img class="ic_60" src="~/source//static/images/jianzhan/ic_15.png" />
+                    <div class="px24 clamp1 pad-t-20">厂家直销</div>
+                </div>
+            </div>
+            <div class="flex-col">
+                <div style="margin: 0 .1rem">
+                    <img class="ic_60" src="~/source//static/images/jianzhan/ic_15.png" />
+                    <div class="px24 clamp1 pad-t-20">厂家直销</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="part1">
+        <div class="flex-row" style="align-items: center;padding:.25rem 0">
+            <div class="flex-col"></div>
+            <div class="px32 color_57 mar-r-16">连锁门店</div>
+            <img style="height: 0.17rem;width: .17rem" src="~/source//static/images/jianzhan/ic_next.png" alt="" />
+            <div class="flex-col"></div>
+        </div>
+        <div id="storeswiper" class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="store">
+                        <div style="height:auto;padding: .4rem .3rem 0">
+                            <div class="px24 color_57">客服：13888888888（xx</div>
+                            <div class="px24 color_57 mar-t-20" style="line-height:.4rem">
+                                地址：厦门市思明区台东路66号宝业营运中心705室
+                            </div>
+                            <div class="px24 color_57 mar-t-20">时间：周一至周日（9.30-18.3 </div>
+                            <div class="px24 color_57 mar-t-20">（其他时间请提前联系我们）</div>
+                        </div>
+                        <img style="padding: 4%;width: 92%;" class="" src="~/source//static//images/jianzhan/banner1.png" />
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="store">
+                        <div style="height:auto;padding: .4rem .3rem 0">
+                            <div class="px24 color_57">客服：13888888888（xx</div>
+                            <div class="px24 color_57 mar-t-20" style="line-height:.4rem">
+                                地址：厦门市思明区台东路66号宝业营运中心705室
+                            </div>
+                            <div class="px24 color_57 mar-t-20">时间：周一至周日（9.30-18.3 </div>
+                            <div class="px24 color_57 mar-t-20">（其他时间请提前联系我们）</div>
+                        </div>
+                        <img style="padding: 4%;width: 92%;" class="" src="~/source//static//images/jianzhan/banner1.png" />
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="store">
+                        <div style="height:auto;padding: .4rem .3rem 0">
+                            <div class="px24 color_57">客服：13888888888（xx</div>
+                            <div class="px24 color_57 mar-t-20" style="line-height:.4rem">
+                                地址：厦门市思明区台东路66号宝业营运中心705室
+                            </div>
+                            <div class="px24 color_57 mar-t-20">时间：周一至周日（9.30-18.3 </div>
+                            <div class="px24 color_57 mar-t-20">（其他时间请提前联系我们）</div>
+                        </div>
+                        <img style="padding: 4%;width: 92%;" class="" src="~/source//static//images/jianzhan/banner1.png" />
+                    </div>
+                </div>
+            </div>
+            <!-- 如果需要分页器 -->
+            <div class="swiper-pagination"></div>
+
+        </div>
+
+        <!-- <div class="flex-row mar-t-40">
+            <div class="flex-col"></div>
+            <div class="px32" style="border-radius: 5px;background: #c90319;color:white;padding:.16rem .33rem">厦门店</div>
+            <div class="flex-col"></div>
+        </div> -->
+    </div>
+    <!-- 添加 -->
+    <div style="background: #f7f7f7;padding: .5rem .6rem;margin-bottom: .2rem">
+        <div class="flex-row" style="text-align:center">
+            <img style="width:1.5rem;height:1.5rem;margin-left: .3rem" src="~/source//static//images/jianzhan/ic_code.png" />
+            <div class="flex-col">
+                <div class="flex-row" style="height:.35rem;align-items:center">
+                    <div class="mar-l-30 color_3 px20">关于我们</div>
+                    <div class="mar-l-30 color_3 px20">售后服务</div>
+                </div>
+                <div class="flex-row" style="height:.35rem;align-items:center">
+                    <div class="mar-l-30 color_3 px20">服务保障</div>
+                    <div class="mar-l-30 color_3 px20">在线支付</div>
+                </div>
+                <div class="flex-row" style="height:.43rem;align-items:center">
+                    <div class="color_red_c9 px30 mar-l-30">4008-2313-2321</div>
+                    <div class="color_red_c9 px16">(24小时在线)</div>
+                </div>
+                <div class="flex-row" style="height:.35rem;align-items:center">
+                    <div class="mar-l-30 color_3 px20" style="text-align:left">(识别二维码了解更多)</div>
+                </div>
+            </div>
+        </div>
+        <div class="color_3 px16 clamp1 mar-t-16" style="text-align:center">闽ICP备17006498号-1 Copyright 2015 建盏天下网 版权所有</div>
+        <div class="color_3 px16 clamp1 mar-t-16" style="text-align:center"> 福建省盏天下电子商务有限公司</div>
+    </div>
+    <!-- 底部导航栏 -->
+    <div id="header1" class="flex-row pad-l-30 pad-r-30 pad-t-30 pad-b-40" style="text-align: center;align-items: center;">
+        <div class="flex-col">
+            <img style="height: .5rem;width:.5rem" src="~/source//static/images/jianzhan/ic_home.png" alt="">
+            <div style="margin-top: .1rem;height: .3rem">首页</div>
+        </div>
+        <div style="width:1px;height: .6rem;background: #f7f7f7"></div>
+        <div class="flex-col" onclick="moveLeft()">
+            <img style="height: .5rem;width:.5rem" src="~/source//static/images/jianzhan/ic_fl.png" alt="" />
+            <div style="margin-top: .1rem;height: .3rem">分类</div>
+        </div>
+        <div style="width:1px;height: .6rem;background: #f7f7f7"></div>
+        <div class="flex-col">
+            <img style="height: .5rem;width:.5rem" src="~/source//static/images/jianzhan/ic-zx.png" alt="" />
+            <div style="margin-top: .1rem;height: .3rem">咨询</div>
+        </div>
+        <div style="width:1px;height: .6rem;background: #f7f7f7"></div>
+        <div style="width:2rem" class="mar-l-20">
+            <div class="flex-row" style="align-items: center;justify-content: center;">
+                <img style="height: .5rem;" src="~/source//static/images/jianzhan/wxadd.jpg" alt="" />
+                <!--<div class="flex-col px16">(长按复制添加微信)</div> -->
+            </div>
+            <div style="margin-top: .1rem;height: .3rem">1231723876</div>
+        </div>
+    </div>
+    <!-- 立即质询 -->
+    <div id="guanzhuweixin-s" class="flex-row " style="position: fixed;
+    bottom: 0;
+    height: 1.62rem;
+    background: white;
+    text-align: center;
+    align-items: center;
+    border-top: 1px solid #f6f6f6;
+    width: 100%;z-index: 99;">
+        <div class="flex-col searchzx mar-l-30">
+
+            <div class="flex-row" style="align-items: center;height: .7rem">
+                <!--
+                <img class="mar-l-30 mar-r-16" style="height: .3rem;width: .25rem" src="~/source//static/images/jianzhan/ic_search.png"
+                    alt=""> -->
+                <input style="background: #f7f7f7" class="px24 pad-l-30" type="text" placeholder="大师或者编号" />
+            </div>
+        </div>
+        <div class="ssbtnzx px24 mar-r-30">立即咨询</div>
+    </div>
+
+    <!-- 分类 -->
+    <div id='menumark' style="display: none"></div>
+    <div id="menupart" style="display: none;left:200%;">
+        <div id='menuplane' class="menuplane">
+            <div id="guanzhuweixin-s-cate" class="flex-row pad-l-20 bg_color_f navheight" style="align-items: center;max-width: 750px">
+                <div class="back-tag" style="align-items: center" onclick="moveRight()">
+
+                </div>
+                <div class="flex-col search">
+
+                    <div class="flex-row" style="align-items: center;height: .56rem">
+
+                        <img class="mar-l-30 mar-r-16" style="height: .3rem;width: .25rem" src="~/source//static/images/jianzhan/ic_search.png"
+                             alt="">
+                        <input style="background: #f7f7f7" class="px24" type="text" placeholder="大师或者编号" />
+                    </div>
+                </div>
+                <div class="ssbtn px24 mar-r-30">搜索</div>
+            </div>
+            <div class="menu-body">
+                <div class="menu-cate-part">
+                    <div class="menu-cate-title">名家大师</div>
+                    <div class='line'></div>
+                    <div class="cate-list">
+                        <div class="item">
+                            <div>大师</div>
+                        </div>
+                        <div class="item">
+                            <div>传承人</div>
+                        </div>
+                        <div class="item">
+                            <div>工艺师</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-cate-part">
+                    <div class="menu-cate-title">工艺釉色</div>
+                    <div class='line'></div>
+                    <div class="cate-list">
+                        <div class="item">
+                            <div>油滴</div>
+                        </div>
+                        <div class="item">
+                            <div>兔毫</div>
+                        </div>
+                        <div class="item">
+                            <div>鹧鸪斑</div>
+                        </div>
+                        <div class="item">
+                            <div>耀变</div>
+                        </div>
+                        <div class="item">
+                            <div>金乌釉</div>
+                        </div>
+                        <div class="item">
+                            <div>柿红</div>
+                        </div>
+                        <div class="item">
+                            <div>茶叶抹</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-cate-part">
+                    <div class="menu-cate-title">经典器型</div>
+                    <div class='line'></div>
+                    <div class="cate-list">
+                        <div class="item">
+                            <div>大师</div>
+                        </div>
+                        <div class="item">
+                            <div>大师</div>
+                        </div>
+                        <div class="item">
+                            <div>大师</div>
+                        </div>
+                        <div class="item">
+                            <div>大师</div>
+                        </div>
+                        <div class="item">
+                            <div>大师</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-cate-part">
+                    <div class="menu-cate-title">建盏尺寸</div>
+                    <div class='line'></div>
+                    <div class="cate-list">
+                        <div class="item w_50">
+                            <div>大师</div>
+                        </div>
+                        <div class="item w_50">
+                            <div>大师</div>
+                        </div>
+                        <div class="item w_50">
+                            <div>大师</div>
+                        </div>
+                        <div class="item w_50">
+                            <div>大师</div>
+                        </div>
+                        <div class="item w_50">
+                            <div>大师</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tk-mark" id="tixing" style="display: none;">
+        <div class="gmkuang">
+            <div class="flex-row" style="justify-content: center">
+                <div class="flex-col"></div>
+                <img style="height:0.93rem" src="~/source//static/images/xiaojiang/logo.png">
+                <div class="flex-col">
+                    <div class="mar-r-40 px24" style="color:#999;display: initial;float: right;" onclick="hideTiXing()">
+                        关闭
+                    </div>
+                </div>
+            </div>
+            <div class="flex-row mar-t-40" style="margin-left: 1rem;align-items: baseline;justify-content: left;">
+                <div class="px24">咨询建盏:</div>
+                <div class="mar-l-16 px22 color_9">称心如意“看作品价格”</div>
+                <div class="color_9 mar-l-16 px22">（10分钟内回复）</div>
+            </div>
+
+            <div class="flex-row mar-t-40" style="margin-left: 1rem;align-items: center;justify-content: left;">
+                <div class="px24">手机号码:</div>
+                <input placeholder="请输入您的手机号码" class="mar-l-20" style="width: 3.8rem;;border: 1px solid #f6f6f6;padding-left: 0.2rem;text-align: left;height: 0.5rem" />
+
+            </div>
+            <div style="color:#fff;background:#c90319;height: .6rem;margin: 0.2rem .3rem;line-height: .6rem;text-align: center">立即咨询</div>
+            <div class="flex-row mar-t-30 mar-b-40" style="justify-content: center;align-items: baseline;text-align: center;">
+                <div class="flex-col">
+                    <div class="color_57" style="font-size:.26rem;">快速直线:<span style="font-size:.3rem;color:#c90319">4008-276-376</span></div>
+                    <div class="px24 color_9 mar-t-30">福建省盏天下电子商务有限公司</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="totop" style="display: block;">
+        <img style="height:.8rem;width:.8rem" src="~/source//static/images/jianzhan/to_top.png">
+    </div>
+    <script src="~/source//static/js/jquery-2.1.4.js"></script>
+    <script src="~/source//static/js/jquery-weui.js"></script>
+    <script src="~/source//static/js/jquery.pagination.js"></script>
+    <script src="~/source//static/js/utils.js"></script>
+    <script src="~/source//static/js/showdiv.js"></script>
+    <script src="~/source//static/js/swiper.js"></script>
+    <script>
+        $('.M-box').pagination({
+            mode: 'fixed'
+        });
+        function hideTiXing() {
+            $('#tixing').hide()
+            utils.toggleBody(0)
+        }
+
+        function showTiXing() {
+            utils.toggleBody(1)
+            $('#tixing').show()
+        }
+
+        // <!-- 名家 -->
+        // 名家名堂 滚动面板的配置
+        var mySwiper = new Swiper('#swiper-container-star', {
+            loop: true,
+            autoplay: 3000,
+            effect: 'coverflow',
+            speed: 500,
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: '3',
+            coverflowEffect: {
+                rotate: 50,
+                stretch: 0,
+                depth: 50,
+                modifier: 1,
+                slideShadows: true,
+            }
+        })
+        // 店铺
+        var storeswiper = new Swiper('#storeswiper', {
+            loop: true,
+            // 如果需要分页器
+            autoplay: 5000,
+            initialSlide: 1,
+            pagination: '.swiper-pagination',//分页容器的css选择器
+            paginationType: 'custom',
+            paginationCustomRender: function (swiper, current, total) {
+                var _html = '';
+                for (var i = 1; i <= total; i++) {
+                    if (current == i) {
+                        _html += '<li class="px32 swiper-custom-active" style=" display: inline-block;border-radius: 5px;background: #c90319;color:white;padding:.16rem .33rem;width:1rem">厦门店</li>';
+                    } else {
+                        _html += '<li class="swiper-custom"></li>';
+                    }
+                }
+                return _html;//返回所有的页码html
+            }
+        })
+        // 精选
+        var swiper = new Swiper('.swiper_container_suz2', {
+            slidesPerView: 1.5,
+            spaceBetween: 10,
+            // centeredSlides: true,
+            paginationType: 'fraction',
+            // autoplay: 5000,
+        });
+        // $("#content").css("height", window.innerHeight - 0.83 * 58);
+        $('#showMark1').on('click', function () {
+            if ($('#mark1').css('display') == 'none') {
+                utils.toggleBody(1)  //在跳出弹窗的时候
+                $('#mark1').show()
+            }
+        })
+        $('#close').on('click', function () {
+            $('#mark1').hide()
+            utils.toggleBody(0)
+        })
+
+        $('.bt-zx').on('click', function () {
+            utils.toggleBody(1)
+            $('#tixing').show()
+        })
+
+        $('.showmore').on('click', function () {
+            $(this).parent().find('.list').css('height', 'unset')
+            $(this).hide()
+        })
+
+
+        //点击隐藏在线咨询面板或拨号面板
+        $('#menumark').click(function () {
+            moveRight();
+        })
+        // 隐藏分类面板
+        function moveRight() {
+            ismenu = false;
+            // console.log("dhgsfhjsgdghj");
+            $("#menupart").animate({ left: '100%' }, "slow", function () {
+                $(this).css("display", "none");
+                $("#menumark").css("display", "none");
+                utils.toggleBody(false)
+            });
+        }
+        //弹出分类面板
+        function moveLeft() {
+            ismenu = true;
+            // console.log("dhgsfhjsgdghj");
+            $('#menupart').css("display", "block");
+            $("#menumark").css("display", "block");
+            $("#menupart").animate({ left: '20%' }, "slow");//8.4
+            utils.toggleBody(true)
+        }
+        // 返回顶部
+        var backButton = $('.totop');
+        function backToTop() {
+            // $(window).animate({
+            // 	pageYOffset: 0
+            // }, 800);
+            window.scrollTo(0, 0)
+        }
+        backButton.on('click', backToTop);
+
+        $(window).on('scroll', function () {/*当滚动条的垂直位置大于浏览器所能看到的页面的那部分的高度时，回到顶部按钮就显示 */
+            if ($(window).scrollTop() > $(window).height())
+                backButton.fadeIn();
+            else
+                backButton.fadeOut();
+        });
+        $(window).trigger('scroll');
+        isTouchDevice();
+    </script>
+</body>
+
+</html>

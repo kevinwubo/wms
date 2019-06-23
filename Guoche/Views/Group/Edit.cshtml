@@ -1,0 +1,61 @@
+﻿@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑组别";
+    GroupEntity group = ((GroupEntity)ViewBag.Groups) ?? new GroupEntity();
+    group.Menus = group.Menus ?? new List<MenuEntity>();
+}
+<form class="form-horizontal" action="/Group/Modify" method="post" id="groupForm">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i><h5>编辑角色</h5>
+                <div class="widget-buttons">
+                    <a href="/Group/"><i class="icon-reply"></i> 返回列表</a>
+                </div>
+            </div>
+            <div class="widget-body" style="height:auto;">
+                <div class="widget-forms clearfix">
+                    <input class="span7" type="hidden" id="GroupID" name="GroupID" value="@group.GroupID">
+                    <div class="control-group">
+                        <label class="control-label">组别名</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="组别名" id="GroupName" name="GroupName" maxlength="50" value="@group.GroupName">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            <input type="checkbox" value="1" id="Status" name="Status" @(group.Status == 1 ? "checked" : "")>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="widget widget-padding span6" style="margin-left:180px;">
+                            <div class="widget-header"><i class="icon-list-alt"></i><h5>菜单信息</h5></div>
+                            <div class="widget-body">
+                                @Html.Raw(ViewBag.MenuHtml)
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="submit">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
+@section Footer {
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#groupForm").validate({
+            rules: {
+                GroupName: "required"
+            },
+            messages: {
+                GroupName: "请输入组别名"
+            }
+        });
+    })
+    </script>
+}

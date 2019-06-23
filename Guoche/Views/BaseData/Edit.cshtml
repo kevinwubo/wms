@@ -1,0 +1,68 @@
+﻿@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑数据";
+    BaseDataEntity baseData = ((BaseDataEntity)ViewBag.BaseData) ?? new BaseDataEntity();
+    List<BaseDataEntity> allData = ((List<BaseDataEntity>)ViewBag.BaseDataAll) ?? new List<BaseDataEntity>();
+}
+<form class="form-horizontal" action="/BaseData/Modify" method="post">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i><h5>编辑数据</h5>
+                <div class="widget-buttons">
+                    <a href="/BaseData/"><i class="icon-reply"></i> 返回列表</a>
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="widget-forms clearfix">
+                    <input class="span7" type="hidden" id="ID" name="ID" value="@baseData.ID">
+                    <div class="control-group">
+                        <label class="control-label">使用值</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="使用值" id="ValueInfo" name="ValueInfo" maxlength="50" value="@baseData.ValueInfo">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">描述信息</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="描述信息" id="Description" name="Description" maxlength="500" value="@baseData.Description">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">编码</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="编码" id="TypeCode" name="TypeCode" maxlength="200" value="@baseData.TypeCode">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">上级节点</label>
+                        <div class="controls">
+                            <select class="span3" id="PCode" name="PCode">
+                                <option value="">无</option>
+                                @if (allData != null && allData.Count > 0)
+                                {
+                                    List<BaseDataEntity> blist=allData.Where(t=>string.IsNullOrEmpty(t.PCode)).ToList();
+                                    foreach (BaseDataEntity b in blist)
+                                    {
+                                         <option value="@b.TypeCode" @((b.TypeCode==baseData.PCode)?"selected":"")>@b.Description</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            <input type="checkbox" value="1" id="Status" name="Status" @(baseData.Status == 1 ? "checked" : "")>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="submit">保存</button>
+            </div>
+        </div>
+    </div>
+</form>

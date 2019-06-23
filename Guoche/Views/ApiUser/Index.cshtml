@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>API验证功能</h2>
+<table cellpadding="0">
+    <tr>
+        <td>API接口链接</td>
+        <td><textarea id="txt_link" rows="2" style="height:100px;width:500px" cols="5"></textarea></td>
+    </tr>
+    <tr>
+        <td>获取结果</td>
+        <td><textarea id="txt_result" rows="5" style="height:300px;width:500px" cols="50"></textarea></td>
+    </tr>
+
+    <tr>
+        <td colspan="2"><input id="btn_link" type="button" value="验证" /></td>
+    </tr>
+</table>
+
+<script type="text/javascript" src="~/source/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="~/source/assets/js/jquery-ui.min.js"></script>
+<script>
+    $(function () {
+        $("#btn_link").click(function () {
+            var link = $("#txt_link").val();
+            $.ajax({
+                type: 'POST',//提交方式 post 或者get
+                url: link,//提交到那里 后他的服务                
+                success: function (msg) {
+                    $("#txt_result").val(msg);                    
+                },
+                error: function () {
+                    alert("提交失败的处理函数！");
+                }
+            });
+
+        });
+    });
+</script>

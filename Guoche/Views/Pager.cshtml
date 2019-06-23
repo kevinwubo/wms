@@ -1,0 +1,63 @@
+﻿@using Common;
+@{
+    Layout = null;
+    PagerInfo p = Model as PagerInfo;
+}
+@if (p.PageCount > 1)
+{
+<div class="row-fluid">
+    <div class="span6">
+        <div class="dataTables_paginate paging_bootstrap pagination">
+            <ul>
+                @if (p.PageIndex > 1)
+                {
+                    <li class="prev"><a href="javacsript:void(0)" onclick="return getUrl('@p.URL','@(p.PageIndex - 1)');">← 上一页</a></li>
+                }
+
+                @*@for (int i = 1; i <= p.PageCount; i++)
+                {
+                    <li @(i == p.PageIndex ? "class=active" : "")><a href="javacsript:void(0)" onclick="return getUrl('@p.URL','@i');">@i</a></li>
+                }*@
+
+                @foreach (int i in p.Pages)
+                {
+                    if (i < 0)
+                    {
+                       <li><a href="javacsript:void(0)" >...</a></li>  
+                    }
+                    else
+                    { 
+                        <li @(i == p.PageIndex ? "class=active" : "")><a href="javacsript:void(0)" onclick="return getUrl('@p.URL','@i');">@i</a></li>
+                    }
+                }
+
+                @if (p.PageIndex < p.PageCount)
+                {
+                    <li class="next"><a href="javacsript:void(0)" onclick="return getUrl('@p.URL','@(p.PageIndex + 1)');">下一页 → </a></li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+}
+<script type="text/javascript">
+    function getUrl(url, index)
+    {
+        var result = url;
+        var thisUrl = window.location.href.split("?"), queryString = "";
+        if (thisUrl.length > 1) {
+            queryString = thisUrl[1];
+            var cq = queryString.replace(/p=\d{0,9}&?/g, "");
+            var newq = cq.length > 0 ? "p=" + index+"&" : "p=" + index;
+            queryString = newq + cq;
+            result = thisUrl[0] + "?" + queryString;
+        }
+        else {
+            result = url + "?p=" + index;
+        }
+        window.location.href = result;
+
+        return false;
+
+    }
+</script>

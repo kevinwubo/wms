@@ -1,0 +1,117 @@
+﻿@using Common
+@using Entity.ViewModel;
+@{
+    ViewBag.Title = "仓库库位信息管理";        
+    StorageLocationEntity storageLocationEntity = (StorageLocationEntity)ViewBag.StorageLocation;
+    List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
+    List<BaseDataEntity> areas = (List<BaseDataEntity>)ViewBag.StorageAreas;//库位区域
+}
+@section Header{
+    <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style>
+        .picRemove {
+            height: 15px;
+            width: 15px;
+            background-color: #e4e5e6;
+            position: absolute;
+            margin-top: 15px;
+            /*filter: alpha(opacity:70);
+            opacity: 0.7;
+            -moz-opacity: 0.7;
+            -khtml-opacity: 0.7;*/
+        }
+    </style>
+}
+<div class="row-fluid">
+    <form class="form-horizontal" id="StorageLocationForm" action="/StorageLocation/Modify" method="post">
+        <div class="widget widget-padding span12">
+            <div class="widget-header" style="margin-top:30px">
+                <i class="icon-list-alt"></i><h5>仓库库位信息管理</h5>
+            </div>
+            <div class="widget-body" style="overflow: hidden; display: block;">
+                <div class="widget-forms clearfix">
+                    <input type="hidden" id="StorageLocationID" name="StorageLocationID" value="@storageLocationEntity.StorageLocationID">
+                    <div class="control-group">
+                        <label class="control-label">仓库</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span5" id="StorageID" name="StorageID">
+                                <option value="">--请选择出库仓--</option>
+                                @foreach (var item in storages)
+                                {
+                                    <option value="@item.StorageID" @(item.StorageID == storageLocationEntity.StorageID ? "selected" : "")>@item.StorageName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">库位区域</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span5" id="StorageAreaNo" name="StorageAreaNo">
+                                <option value="">--请选择库位区域--</option>
+                                @foreach (var item in areas)
+                                {
+                                    <option value="@item.ValueInfo" @(item.ValueInfo == storageLocationEntity.StorageAreaNo ? "selected" : "")>@item.ValueInfo</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">库位编号</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="库位编号" id="StorageLocationNo" name="StorageLocationNo" value="@storageLocationEntity.StorageLocationNo" maxlength="100">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">备注</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="备注" id="Remark" name="Remark" value="@storageLocationEntity.Remark" maxlength="200">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            @if (storageLocationEntity.StorageLocationID > 0)
+                            {
+                                <input type="checkbox" value="1" id="Status" name="Status" @(storageLocationEntity.Status == 1 ? "checked" : "")>
+                            }
+                            else
+                            {
+                                <input type="checkbox" value="1" id="Status" name="Status" checked>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="button" id="save">保存</button>
+                <button class="btn btn-primary" type="button" id="goback">返回</button>
+            </div>
+        </div>
+</form>
+
+</div>
+<div class="window-mask" style="display:none"></div>
+<div id="imgContainer" style="z-index:999;display:none">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <div class="widget-buttons">
+                    <a href="javascript:void(0)" id="closeDeal"><i class="icon-remove"></i>关闭</a>
+                </div>
+            </div>
+            <div class="widget-body" id="imgshow" style="text-align: center;"></div>
+        </div>
+    </div>
+</div>
+@section Footer{
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script type="text/javascript" src="~/source/BaseData/StorageLocation.js"></script>
+<script>
+    $(document).ready(function () {
+        storageLocationInfo.init();
+    });
+</script>
+}

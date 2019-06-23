@@ -1,0 +1,294 @@
+﻿@using Common
+@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑车辆信息";
+    List<StoreEntity> plist = (List<StoreEntity>)ViewBag.Store;
+    List<BaseDataEntity> carType = (List<BaseDataEntity>)ViewBag.CarModel;
+    List<BrandEntity> brands = (List<BrandEntity>)ViewBag.Brands;
+    CarEntity carEntity = (CarEntity)ViewBag.Car;
+}
+@section Header{
+    <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style>
+        .picRemove {
+            height: 15px;
+            width: 15px;
+            background-color: #e4e5e6;
+            position: absolute;
+            margin-top: 15px;
+            /*filter: alpha(opacity:70);   
+            opacity: 0.7;
+            -moz-opacity: 0.7;
+            -khtml-opacity: 0.7;*/
+        }
+    </style>
+}
+    <div class="row-fluid">
+        <form class="form-horizontal" id="carForm" action="/Car/Modify" method="post">
+            <div class="widget widget-padding span12">
+                <div class="widget-header" style="margin-top:30px">
+                    <i class="icon-list-alt"></i><h5>车辆信息</h5>
+                </div>
+                <div class="widget-body" style="overflow: hidden; display: block;">
+                    <div class="widget-forms clearfix">
+                        <input type="hidden" id="CarID" name="CarID" value="@carEntity.CarID">
+                        <div class="control-group">
+                            <label class="control-label">车辆名称</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="车辆名称" id="CarName" name="CarName" value="@carEntity.CarName" maxlength="100">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">车辆品牌</label>
+                            <div class="controls" id="brandContainer">
+                                <select tabindex="1" class="span5" id="BrandID" name="BrandID">
+                                    <option value="">--请选择车辆品牌--</option>
+                                    @foreach (var item in brands)
+                                    {
+                                        <option value="@item.BrandID" @(item.BrandID == carEntity.BrandID ? "selected" : "")>@item.BrandName</option>
+                                    }
+                                </select><br/>
+                                @if (carEntity.CarBrand != null && carEntity.CarBrand.BrandID > 0 && !string.IsNullOrEmpty(carEntity.CarBrand.Attachment.FilePath))
+                                {
+                                    <img src="@carEntity.CarBrand.Attachment.FilePath.Replace("~", "")" alt="@(carEntity.CarBrand.Attachment.FileName + carEntity.CarBrand.Attachment.FileExtendName)" style="width: 150px; height: 150px; margin-top: 15px;margin-left:20px">
+                                }
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">车型代码</label>
+                            <div class="controls">
+                                <select tabindex="1" class="span5" id="ModelCode" name="ModelCode">
+                                    <option value="">--请选择车型--</option>
+                                    @foreach (var item in carType)
+                                    {
+                                        <option value="@item.TypeCode" @(item.TypeCode == carEntity.ModelCode ? "selected" : "")>@item.Description</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">车型描述</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="车型描述" id="CarModel" name="CarModel" value="@carEntity.CarModel" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">合同编号</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="合同编号" id="ContractCode" name="ContractCode" value="@carEntity.ContractCode" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">外观尺寸</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="车型代码" id="AppearanceSize" name="AppearanceSize" value="@carEntity.AppearanceSize" maxlength="200">
+                            </div>
+                        </div>
+                        <div id="trackContainer" style="display:none">
+                            <div class="control-group">
+                                <label class="control-label">货箱栏板内尺寸</label>
+                                <div class="controls">
+                                    <input class="span5" type="text" placeholder="货箱栏板内尺寸" id="PlateSize" name="PlateSize" value="@carEntity.PlateSize" maxlength="200">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">载货容量</label>
+                                <div class="controls">
+                                    <input class="span5" type="text" placeholder="载货容量" id="Capacity" name="Capacity" value="@carEntity.Capacity" maxlength="200">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">最大爬坡度</label>
+                                <div class="controls">
+                                    <input class="span5" type="text" placeholder="最大爬坡度" id="Slope" name="Slope" value="@carEntity.Slope" maxlength="200">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">最大总质量</label>
+                                <div class="controls">
+                                    <input class="span5" type="text" placeholder="最大总质量" id="MaxWeight" name="MaxWeight" value="@carEntity.MaxWeight" maxlength="200">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">轴距</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="轴距" id="Wheelbase" name="Wheelbase" value="@carEntity.Wheelbase" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">电池组容量</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="电池组容量" id="BatteryCapacity" name="BatteryCapacity" value="@carEntity.BatteryCapacity" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">整备质量</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="整备质量" id="Quality" name="Quality" value="@carEntity.Quality" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">驻车制动</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="驻车制动" id="Braking" name="Braking" value="@carEntity.Braking" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">最高车速</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="最高车速" id="MaxSpeed" name="MaxSpeed" value="@carEntity.MaxSpeed" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">座位数</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="座位数" id="SiteNum" name="SiteNum" value="@carEntity.SiteNum" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">电池类型</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="电池类型" id="BatteryType" name="BatteryType" value="@carEntity.BatteryType" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">安全配置</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="安全配置" id="SafeConfigure" name="SafeConfigure" value="@carEntity.SafeConfigure" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">外部配置</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="外部配置" id="OuterConfigure" name="OuterConfigure" value="@carEntity.OuterConfigure" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">续航里程</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="续航里程" id="Renewal" name="Renewal" value="@carEntity.Renewal" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">车牌号</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="车牌号" id="CarLicNumber" name="CarLicNumber" value="@carEntity.CarLicNumber" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">出售价</label>
+                            <div class="controls">
+                                <span style="margin-left:-12px;margin-right:5px">&yen;</span><input class="span5" type="text" placeholder="出售价" id="SalePrice" name="SalePrice" value="@(carEntity.SalePrice == 0 ? "" : carEntity.SalePrice.ToString("f2"))" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">租赁价</label>
+                            <div class="controls">
+                                <span style="margin-left:-12px;margin-right:5px">&yen;</span><input class="span5" type="text" placeholder="租赁价" id="LeasePrice" name="LeasePrice" value="@(carEntity.LeasePrice == 0 ? "" : carEntity.LeasePrice.ToString("f2"))" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">经销商</label>
+                            <div class="controls">
+                                <select tabindex="1" class="span5" id="SupplierID" name="SupplierID">
+                                    <option value="">--请选择--</option>
+                                    @foreach (var item in plist)
+                                    {
+                                         <option value="@item.SupplierID" @(item.SupplierID == carEntity.SupplierID ? "selected" : "")>@item.SupplierName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">是否可用</label>
+                            <div class="controls">
+                                @if (carEntity.CarID > 0)
+                                {
+                                     <input type="checkbox" value="1" id="Status" name="Status" @(carEntity.Status == 1 ? "checked" : "")>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" value="1" id="Status" name="Status" checked> 
+                                }
+                                
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">车辆图片</label>
+                            <div class="controls" id="picContainer">
+                                
+                                @if (carEntity.AttachmentsInfo != null && carEntity.AttachmentsInfo.Count > 0)
+                                {
+                                    foreach (var item in carEntity.AttachmentsInfo)
+                                    {
+                                        <span class="picRemove"  val="@item.AttachmentID" style="height:0px"></span>
+                                        <img src="@item.FilePath.Replace("~","")" alt="@(item.FileName+item.FileExtendName)" style="width: 150px; height: 150px; margin-top: 15px">
+                                    }
+                                }
+                            </div>
+                        </div>
+                        @if (carEntity.AttachmentsInfo == null || carEntity.AttachmentsInfo.Count < 5)
+                        {
+                            <div class="control-group" id="uploadC">
+                                <input type="hidden" id="AttachmentIDs" name="AttachmentIDs" value="@carEntity.AttachmentIDs">
+                                <label class="control-label">上传图片</label>
+                                <div class="controls">
+                                    <input type="file" name="file" id="file" multiple />
+                                </div>
+                            </div>                         
+                        }
+                        <div class="control-group">
+                            <label class="control-label"></label>
+                            <div class="controls">
+                                <span style="color:red" id="spDesc"></span>
+                            </div>
+                        </div> 
+
+                    </div>
+                </div>
+
+                <div class="widget-footer">
+                    <button class="btn btn-primary" type="button" id="save">保存</button>
+                </div>
+            
+            </div>
+        </form>
+        
+</div>
+<div class="window-mask" style="display:none"></div>
+<div id="imgContainer" style="z-index:999;display:none">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <div class="widget-buttons">
+                    <a href="javascript:void(0)" id="closeDeal"><i class="icon-remove"></i>关闭</a>
+                </div>
+            </div>
+            <div class="widget-body" id="imgshow" style="text-align: center;"></div>
+        </div>
+    </div>
+
+</div> 
+@section Footer{
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script type="text/javascript" src="~/source/Car.js"></script>
+<script type="text/javascript">
+    var maxPicCount = @ViewBag.MaxPicCount;
+    $(document).ready(function () {
+        var oFileInput = new FileInput();
+        oFileInput.Init("file", "/Upload/UploadFile");
+
+        $("#spDesc").text("最多只会保留" + maxPicCount + "张图片;图片大小：150KB以内 尺寸：1024*768");
+
+        carInfo.init();
+
+    });
+
+
+
+</script>
+    
+}
+

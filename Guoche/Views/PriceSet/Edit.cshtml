@@ -1,0 +1,216 @@
+﻿@using Common
+@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑价格配置信息";
+    List<GoodsEntity> goods = (List<GoodsEntity>)ViewBag.Goods;
+    List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
+    List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
+    List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
+    PriceSetEntity priceSetEntity = (PriceSetEntity)ViewBag.PriceSet;
+    List<BaseDataEntity> tems = (List<BaseDataEntity>)ViewBag.TemList;//温度
+    List<BaseDataEntity> receiverList = (List<BaseDataEntity>)ViewBag.ReceiverList;//收货方
+    List<BaseDataEntity> deliverList = (List<BaseDataEntity>)ViewBag.DeliverList;//配送方式
+}
+@section Header{
+    <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style>
+        .picRemove {
+            height: 15px;
+            width: 15px;
+            background-color: #e4e5e6;
+            position: absolute;
+            margin-top: 15px;
+            /*filter: alpha(opacity:70);
+            opacity: 0.7;
+            -moz-opacity: 0.7;
+            -khtml-opacity: 0.7;*/
+        }
+    </style>
+}
+    <div class="row-fluid">
+        <form class="form-horizontal" id="priceSetForm" action="/PriceSet/Modify" method="post">
+            <div class="widget widget-padding span12">
+                <div class="widget-header" style="margin-top:30px">
+                    <i class="icon-list-alt"></i><h5>产品信息</h5>
+                </div>
+                <div class="widget-body" style="overflow: hidden; display: block;">
+                    <div class="widget-forms clearfix">
+                        <input type="hidden" id="PriceSetID" name="PriceSetID" value="@priceSetEntity.PriceSetID">
+                        <div class="control-group">
+                            <label class="control-label">客户</label>
+                            <div class="controls" id="brandContainer">
+                                <select tabindex="1" class="span5" id="CustomerID" name="CustomerID">
+                                    <option value="">--请选择客户--</option>
+                                    @foreach (var item in customers)
+                                    {
+                                        <option value="@item.CustomerID" @(item.CustomerID == priceSetEntity.CustomerID ? "selected" : "")>@item.CustomerName</option>
+                                    }
+                                </select>
+                                
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">出库仓</label>
+                            <div class="controls">
+                                <select tabindex="1" class="span5" id="StorageID" name="StorageID">
+                                    <option value="">--请选择出库仓--</option>
+                                    @foreach (var item in storages)
+                                    {
+                                        <option value="@item.StorageID" @(item.StorageID == priceSetEntity.StorageID ? "selected" : "")>@item.StorageName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">承运商</label>
+                            <div class="controls">
+                                <select tabindex="1" class="span5" id="CarrierID" name="CarrierID">
+                                    <option value="">--请选择承运商--</option>
+                                    @foreach (var item in carriers)
+                                    {
+                                        <option value="@item.CarrierID" @(item.CarrierID == priceSetEntity.CarrierID ? "selected" : "")>@item.CarrierName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">收货方类型</label>
+                            <div class="controls">
+                                <input type="hidden" id="hid_ReceivingType" value="@priceSetEntity.ReceivingType" />
+                                <input type="hidden" id="hid_ReceivingID" value="@priceSetEntity.ReceivingID" />
+                                <select tabindex="1" class="span5" id="ReceivingType" name="ReceivingType"> 
+                                    <option value="">--请选择收货方类型--</option>                                   
+                                    @foreach (var item in receiverList)
+                                    {
+                                        <option value="@item.ValueInfo" @(item.ValueInfo == priceSetEntity.ReceivingType ? "selected" : "")>@item.ValueInfo</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">收货方</label>
+                            <div class="controls">
+                                <select tabindex="1" class="span5" id="ReceivingID" name="ReceivingID">
+                                    <option value="">--请选择收货方--</option>     
+                                    @*@foreach (var item in goods)
+                                    {
+                                        <option value="@item.GoodsNo" @(item.GoodsID == priceSetEntity.ReceivingID ? "selected" : "")>@item.GoodsName</option>
+                                    }*@
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">配送方式</label>
+                            <div class="controls">
+                                <select tabindex="1" class="span5" id="DeliveryModel" name="DeliveryModel">
+                                    @foreach (var item in deliverList)
+                                    {
+                                        <option value="@item.ValueInfo" @(item.ValueInfo == priceSetEntity.DeliveryModel ? "selected" : "")>@item.ValueInfo</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">温度</label>
+                            <div class="controls">
+                                <select tabindex="1" class="span5" id="TemType" name="TemType">
+                                    @foreach (var item in tems)
+                                    {
+                                        <option value="@item.ValueInfo" @(item.ValueInfo == priceSetEntity.TemType ? "selected" : "")>@item.ValueInfo</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">运输应收</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="运输应收" id="configPrice" name="configPrice" value="@priceSetEntity.configPrice" maxlength="100">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">运输应付</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="运输应付" id="configCosting" name="configCosting" value="@priceSetEntity.configCosting" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">装卸应收</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="装卸应收" id="configHandInAmt" name="configHandInAmt" value="@priceSetEntity.configHandInAmt" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">装卸应付</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="装卸应付" id="configHandOutAmt" name="configHandOutAmt" value="@priceSetEntity.configHandOutAmt" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">分拣应收</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="分拣应收" id="configSortPrice" name="configSortPrice" value="@priceSetEntity.configSortPrice" maxlength="200">
+                            </div>
+                        </div>                       
+                        <div class="control-group">
+                            <label class="control-label">分拣应付</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="分拣应付" id="configSortCosting" name="configSortCosting" value="@priceSetEntity.configSortCosting" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">备注</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="备注" id="Remark" name="Remark" value="@priceSetEntity.Remark" maxlength="200">
+                            </div>
+                        </div>                        
+                        <div class="control-group">
+                            <label class="control-label">是否可用</label>
+                            <div class="controls">
+                                @if (priceSetEntity.PriceSetID > 0)
+                                {
+                                    <input type="checkbox" value="1" id="Status" name="Status" @(priceSetEntity.Status==1 ? "checked" : "")>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" value="1" id="Status" name="Status" checked>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget-footer">
+                    <button class="btn btn-primary" type="button" id="save">保存</button>
+                    <button class="btn btn-primary" type="button" id="goback">返回</button>
+                </div>
+            
+            </div>
+        </form>
+        
+</div>
+<div class="window-mask" style="display:none"></div>
+<div id="imgContainer" style="z-index:999;display:none">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <div class="widget-buttons">
+                    <a href="javascript:void(0)" id="closeDeal"><i class="icon-remove"></i>关闭</a>
+                </div>
+            </div>
+            <div class="widget-body" id="imgshow" style="text-align: center;"></div>
+        </div>
+    </div>
+
+</div> 
+@section Footer{
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script type="text/javascript" src="~/source/BaseData/PriceSet.js"></script>
+<script>
+    $(document).ready(function () {
+        priceSetInfo.init();
+    });
+</script>
+}
+

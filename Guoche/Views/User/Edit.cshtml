@@ -1,0 +1,77 @@
+﻿@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑用户";
+    UserEntity user = ((UserEntity)ViewBag.User) ?? new UserEntity();
+
+}
+<form class="form-horizontal" action="/User/Modify" method="post" id="userForm">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i><h5>用户信息</h5>
+            </div>
+            <div class="widget-body">
+                <div class="widget-forms clearfix">
+
+                    <input class="span7" type="hidden" id="UserID" name="UserID" value="@user.UserID">
+                    <div class="control-group">
+                        <label class="control-label">用户名</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="用户名" id="UserName" name="UserName" value="@user.UserName" maxlength="20">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">昵称</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="昵称" id="NickName" name="NickName" value="@user.NickName" maxlength="20">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            <input type="checkbox" value="1" id="Status" name="Status" @(user.Status == 1 ? "checked" : "")>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="widget widget-padding span6" style="margin-left:180px">
+                            <div class="widget-header"><i class="icon-list-alt"></i><h5>角色信息</h5></div>
+                            <div class="widget-body">
+                                @Html.Raw(ViewBag.RoleHtml)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="widget widget-padding span6" style="margin-left:180px">
+                            <div class="widget-header"><i class="icon-list-alt"></i><h5>组别信息</h5></div>
+                            <div class="widget-body">
+                                @Html.Raw(ViewBag.GroupHtml)
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="submit">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
+@section Footer {
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#userForm").validate({
+            rules: {
+                UserName: "required",
+                RoleIDs: "required",
+                GroupIDs: "required"
+            },
+            messages: {
+                UserName: "请输入用户名",
+                RoleIDs: "请选择角色",
+                GroupIDs:"请选择组别"
+            }
+        });
+    })
+</script>
+}

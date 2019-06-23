@@ -1,0 +1,154 @@
+﻿@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑充电桩";
+    List<ChargingBaseEntity> allBase = ((List<ChargingBaseEntity>)ViewBag.AllBase) ?? new List<ChargingBaseEntity>();
+    ChargingPileEntity chargePile = ((ChargingPileEntity)ViewBag.ChargePile) ?? new ChargingPileEntity();
+
+}
+<form class="form-horizontal" action="/Charge/ModifyChargePile" method="post" id="pileForm">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i><h5>编辑充电桩</h5>
+                <div class="widget-buttons">
+                    <a href="/Charge/ChargePile"><i class="icon-reply"></i> 返回列表</a>
+                </div>
+            </div>
+            <div class="widget-body" style="height:auto;">
+                <div class="widget-forms clearfix">
+                    <input class="span7" type="hidden" id="ID" name="ID" value="@chargePile.ID">
+                    <div class="control-group">
+                        <label class="control-label">充电桩编码</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="充电桩编码" id="Code" name="Code" maxlength="50" value="@chargePile.Code">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">接口标准</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="接口标准" id="Standard" name="Standard" maxlength="50" value="@chargePile.Standard">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">车辆SOC</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="车辆SOC" id="SOC" name="SOC" maxlength="50" value="@chargePile.SOC">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">功率</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="功率" id="Power" name="Power" maxlength="50" value="@chargePile.Power">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">实时电流</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="实时电流" id="Electric" name="Electric" maxlength="50" value="@chargePile.Electric">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">额定电流</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="额定电流" id="CElectric" name="CElectric" maxlength="50" value="@chargePile.CElectric">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">实时电压</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="实时电压" id="Voltage" name="Voltage" maxlength="50" value="@chargePile.Voltage">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">额定电压</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="额定电压" id="CVoltage" name="CVoltage" maxlength="50" value="@chargePile.CVoltage">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">从属充电站</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span7" id="sltBase" name="ChargingBaseID">
+                                <option value="">--充电站--</option>
+                                @foreach (var item in allBase)
+                                {
+                                    <option value="@item.ChargeBaseID" @(item.ChargeBaseID == chargePile.ChargingBaseID ? "selected" : "")>@item.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            @if (chargePile.ID > 0)
+                            {
+                                <input type="checkbox" value="1" id="IsUse" name="IsUse" @(chargePile.IsUse == 1 ? "checked" : "")>
+                            }
+                            else
+                            {
+                                <input type="checkbox" value="1" id="IsUse" name="IsUse" checked>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="button" id="save">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
+@section Footer {
+    <script type="text/javascript">
+        var elemnets = {
+            ids: ["Code", "Standard", "SOC", "Power", "Electric", "CElectric", "Voltage", "CVoltage","sltBase"],
+            methods: [
+                {
+                    required: true,
+                    messages: ["请输入充电桩编码", "", "", ""]
+                },
+                {
+                    required: true,
+                    messages: ["请输入接口标准", "", "", ""]
+                },
+                {
+                    required: true,
+                    messages: ["请输入SOC", "", "", ""]
+                },
+                {
+                    required: true,
+                    messages: ["请输入功率", "", "", ""]
+                },
+                {
+                    required: true,
+                    messages: ["请输入实时电流", "", "", ""]
+                },
+                {
+                    required: true,
+                    messages: ["请输入额定电流", "", "", ""]
+                },
+                {
+                    required: true,
+                    messages: ["请输入实时电压", "", "", ""]
+                },
+                {
+                    required: true,
+                    messages: ["请输入额定电压", "", "", ""]
+                },
+                {
+                    required: true,
+                    messages: ["请选择从属充电站", "", "", ""]
+                }
+            ]
+        };
+    $(document).ready(function () {
+        valid.init(elemnets);
+        $("#save").click(function () {
+            if (valid.validate()) {
+                $("#pileForm").submit();
+            }
+        });
+    })
+    </script>
+}

@@ -1,0 +1,95 @@
+﻿@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑菜单";
+    MenuEntity menu = ((MenuEntity)ViewBag.Menu) ?? new MenuEntity();
+    List<BaseDataEntity> groupCodes = ((List<BaseDataEntity>)ViewBag.GroupCodes) ?? new List<BaseDataEntity>();
+}
+<form class="form-horizontal" action="/Menu/Modify" method="post" id="menuForm">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i><h5>编辑菜单</h5>
+                <div class="widget-buttons">
+                    <a href="/Menu/"><i class="icon-reply"></i> 返回列表</a>
+                </div>
+            </div>
+            <div class="widget-body">
+                <div class="widget-forms clearfix">
+                    <input class="span7" type="hidden" id="MenuID" name="MenuID" value="@menu.MenuID">
+                    <div class="control-group">
+                        <label class="control-label">菜单名</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="菜单名称" id="MenuName" name="MenuName" maxlength="50" value="@menu.MenuName">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">菜单地址</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="菜单地址" id="URL" name="URL" maxlength="500" value="@menu.URL">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">前缀</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="前缀" id="PreFlag" name="PreFlag" maxlength="200" value="@menu.PreFlag">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">后缀</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="后缀" id="SufFlag" name="SufFlag" maxlength="200" value="@menu.SufFlag">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">菜单描述</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="描述" id="Remark" name="Remark" maxlength="200" value="@menu.Remark">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">菜单组别</label>
+                        <div class="controls">
+                            <select class="span3" id="GroupCode" name="GroupCode">
+                                <option value="">无</option>
+                                @if (groupCodes != null && groupCodes.Count > 0)
+                                {
+                                    foreach (BaseDataEntity b in groupCodes)
+                                    {
+                                        <option value="@b.TypeCode" @((b.TypeCode == menu.GroupCode) ? "selected" : "")>@b.Description</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            <input type="checkbox" value="1" id="Status" name="Status" @(menu.Status == 1 ? "checked" : "")>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="submit">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
+@section Footer {
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#menuForm").validate({
+            rules: {
+                MenuName: "required",
+                URL:"required"
+            },
+            messages: {
+                MenuName: "请输入菜单名",
+                URL: "请输入菜单地址"
+            }
+        });
+    })
+    </script>
+}

@@ -1,0 +1,263 @@
+﻿@using Common
+@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑新闻资讯";
+    NewsEntity newsEntity = (NewsEntity)ViewBag.News;
+}
+@section Header{
+}<link href="~/source/assets/css/timepicker.css" rel="stylesheet" />
+@*<link href="~/source/assets/css/local.css" rel="stylesheet" />*@
+<link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<style>
+    .picRemove {
+        height: 15px;
+        width: 15px;
+        background-color: #e4e5e6;
+        position: absolute;
+        margin-top: 15px;
+        /*filter: alpha(opacity:70);
+            opacity: 0.7;
+            -moz-opacity: 0.7;
+            -khtml-opacity: 0.7;*/
+    }
+</style>
+
+<div class="row-fluid">
+    <form class="form-horizontal" id="newsForm" action="/News/Modify" method="post">
+        <div class="widget widget-padding span12">
+            <div class="widget-header" style="margin-top:30px">
+                <i class="icon-list-alt"></i><h5>新闻资讯信息</h5>
+            </div>
+            <div class="widget-body" style="overflow: hidden; display: block;">
+                <div class="widget-forms clearfix">
+                    <input type="hidden" id="ID" name="ID" value="@newsEntity.ID">
+                    <div class="control-group">
+                        <label class="control-label">新闻标题</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="新闻标题" id="Title" name="Title" value="@newsEntity.Title">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">新闻分类</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span5" id="ChannelID" name="ChannelID">
+                                <option value="">--请选择--</option>
+                                <option value="1" @(newsEntity.ChannelID == 1 ? "selected" : "")>新闻资讯</option>
+                                <option value="2" @(newsEntity.ChannelID == 2 ? "selected" : "")>最新资讯</option>
+                            </select>
+                        </div>
+                    </div>
+                    @*<div class="control-group">
+                            <label class="control-label">新闻图片</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="新闻图片" id="AttachmentIDs" name="AttachmentIDs" value="@newsEntity.AttachmentIDs">
+                            </div>
+                        </div>*@
+                    <div class="control-group">
+                        <label class="control-label">图片预览</label>
+                        <div class="controls" id="picContainer">
+
+                            @if (newsEntity.Attachments != null && newsEntity.Attachments.Count > 0)
+                            {
+                                foreach (var item in newsEntity.Attachments)
+                                {
+                                    <span class="picRemove" val="@item.AttachmentID" style="height:0px"></span>
+                                    <img src="@item.FilePath.Replace("~","")" alt="@(item.FileName+item.FileExtendName)" style="width: 150px; height: 150px; margin-top: 15px">
+                                }
+                            }
+                        </div>
+                    </div>
+                    <input type="hidden" id="AttachmentIDs" name="AttachmentIDs" value="@newsEntity.AttachmentIDs">
+                    @if (newsEntity.Attachments == null || newsEntity.Attachments.Count < 1)
+                    {
+                        <div class="control-group" id="uploadC">
+                            <label class="control-label">上传图片</label>
+                            <div class="controls">
+                                <input type="file" name="file" id="file" multiple />
+                            </div>
+                        </div>
+                    }
+                    <div class="control-group">
+                        <label class="control-label">新闻摘要</label>
+                        <div class="controls">
+                            <textarea id="zhaiyao" class="span5" name="zhaiyao" style="width:450px;height:80px;">@newsEntity.zhaiyao</textarea>                            
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">新闻内容</label>
+                        <div class="controls">
+                            <span id="showcode" style="display:none;">@newsEntity.Content</span>
+                            <input class="span5" type="hidden" id="Content" name="Content">
+                            <asp:TextBox ID="txtEditorContents" name="txtEditorContents" runat="server" TextMode="MultiLine" Height="400px" Width="1000px" ClientIDMode="Static"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            <input type="checkbox" value="1" id="Status" name="Status" @(newsEntity.Status == 1 ? "checked" : "")>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="button" id="save">保存</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+@section Footer{
+    <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+    <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+    <script type="text/javascript" src="~/source/News.js"></script>
+    <script type="text/javascript" charset="utf-8" src="~/Scripts/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="~/Scripts/ueditor/ueditor.all.min.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="~/Scripts/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var len = 5;
+            var ids = $("#AttachmentIDs").val().split(",");
+            if (ids.length < 5) {
+                len = 5 - ids.length;
+            }
+
+
+            var oFileInput = new FileInput();
+            oFileInput.Init("file", "/Upload/UploadFile", len);
+
+            newsInfo.init();
+
+        });
+
+        var ues = UE.getEditor('txtEditorContents');//初始化对象
+        $(document).ready(function () {
+            var ues = UE.getEditor('txtEditorContents');
+            var proinfo = $("#showcode").text();
+
+            ues.ready(function () {//编辑器初始化完成再赋值
+                ues.setContent(proinfo);  //赋值给UEditor
+            });
+
+        });
+
+        jQuery("#save").click(function () {
+            var arr = [];
+            arr.push(UE.getEditor('txtEditorContents').getContent());
+            jQuery("#Content").val(arr.join("\n"));
+            jQuery("#newsForm").submit();
+        });
+
+        //实例化编辑器
+        //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+        var ue = UE.getEditor('txtEditorContents');
+
+
+        function isFocus(e) {
+            alert(UE.getEditor('editor').isFocus());
+            UE.dom.domUtils.preventDefault(e)
+        }
+        function setblur(e) {
+            UE.getEditor('editor').blur();
+            UE.dom.domUtils.preventDefault(e)
+        }
+        function insertHtml() {
+            var value = prompt('插入html代码', '');
+            UE.getEditor('editor').execCommand('insertHtml', value)
+        }
+        function createEditor() {
+            enableBtn();
+            UE.getEditor('editor');
+        }
+        function getAllHtml() {
+            alert(UE.getEditor('editor').getAllHtml())
+        }
+        function getContent() {
+            var arr = [];
+            arr.push("使用editor.getContent()方法可以获得编辑器的内容");
+            arr.push("内容为：");
+            arr.push(UE.getEditor('editor').getContent());
+            alert(arr.join("\n"));
+        }
+        function getPlainTxt() {
+            var arr = [];
+            arr.push("使用editor.getPlainTxt()方法可以获得编辑器的带格式的纯文本内容");
+            arr.push("内容为：");
+            arr.push(UE.getEditor('editor').getPlainTxt());
+            alert(arr.join('\n'))
+        }
+        function setContent(isAppendTo) {
+            var arr = [];
+            arr.push("使用editor.setContent('欢迎使用ueditor')方法可以设置编辑器的内容");
+            UE.getEditor('editor').setContent('欢迎使用ueditor', isAppendTo);
+            alert(arr.join("\n"));
+        }
+        function setDisabled() {
+            UE.getEditor('editor').setDisabled('fullscreen');
+            disableBtn("enable");
+        }
+
+        function setEnabled() {
+            UE.getEditor('editor').setEnabled();
+            enableBtn();
+        }
+
+        function getText() {
+            //当你点击按钮时编辑区域已经失去了焦点，如果直接用getText将不会得到内容，所以要在选回来，然后取得内容
+            var range = UE.getEditor('editor').selection.getRange();
+            range.select();
+            var txt = UE.getEditor('editor').selection.getText();
+            alert(txt)
+        }
+
+        function getContentTxt() {
+            var arr = [];
+            arr.push("使用editor.getContentTxt()方法可以获得编辑器的纯文本内容");
+            arr.push("编辑器的纯文本内容为：");
+            arr.push(UE.getEditor('editor').getContentTxt());
+            alert(arr.join("\n"));
+        }
+        function hasContent() {
+            var arr = [];
+            arr.push("使用editor.hasContents()方法判断编辑器里是否有内容");
+            arr.push("判断结果为：");
+            arr.push(UE.getEditor('editor').hasContents());
+            alert(arr.join("\n"));
+        }
+        function setFocus() {
+            UE.getEditor('editor').focus();
+        }
+        function deleteEditor() {
+            disableBtn();
+            UE.getEditor('editor').destroy();
+        }
+        function disableBtn(str) {
+            var div = document.getElementById('btns');
+            var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+            for (var i = 0, btn; btn = btns[i++];) {
+                if (btn.id == str) {
+                    UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+                } else {
+                    btn.setAttribute("disabled", "true");
+                }
+            }
+        }
+        function enableBtn() {
+            var div = document.getElementById('btns');
+            var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+            for (var i = 0, btn; btn = btns[i++];) {
+                UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+            }
+        }
+
+        function getLocalData() {
+            alert(UE.getEditor('editor').execCommand("getlocaldata"));
+        }
+
+        function clearLocalData() {
+            UE.getEditor('editor').execCommand("clearlocaldata");
+            alert("已清空草稿箱")
+        }
+
+    </script>
+}
+

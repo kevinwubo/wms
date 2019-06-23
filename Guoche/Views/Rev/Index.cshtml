@@ -1,0 +1,143 @@
+﻿@using Entity.ViewModel;
+@using DataRepository.DataAccess.Reservations;
+@using Common;
+@{
+    ViewBag.Title = "预约单信息";
+    ReservationsSearchEntity search = (ReservationsSearchEntity)ViewBag.Search;
+    List<ReservationsEntity> reservations = (List<ReservationsEntity>)ViewBag.Reservations;
+    List<BaseDataEntity> paytypes = (List<BaseDataEntity>)ViewBag.PayTypes;
+    List<CustomerEntity> allCustomers = (List<CustomerEntity>)ViewBag.Customers;
+    PagerInfo p = (PagerInfo)ViewBag.Pager;
+}
+<div class="row-fluid">
+    <h2 class="heading" style="margin-top:20px">预约单信息</h2>
+</div>
+<div class="row-fluid">
+    <div class="widget widget-padding span12">
+        <div class="widget-header">
+            <i class="icon-laptop"></i>
+            <h5>预约单信息</h5>
+        </div>
+        <div class="widget-body" style="margin-bottom:50px">
+            <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <form action="/Rev/Index" method="get">
+                            <div class="dataTables_length" id="menus_filter">
+                                <label>
+                                    支付方式: <select class="span3" style="width:150px" id="paytype" name="paytype">
+                                                    <option value="">全部</option>
+                                                    @if (paytypes != null && paytypes.Count > 0)
+                                                    {
+                                                        foreach (var pt in paytypes)
+                                                        {
+                                                            <option value="@pt.TypeCode" @(search.PayType == pt.TypeCode ? "selected" : "")>@pt.Description</option>
+                                                        }
+                                                    }
+                                                </select>
+
+                                </label>
+                                <label>
+                                    用户: <select class="span3" style="width:270px" id="customerid" name="customerid">
+                                            <option value="0">全部</option>
+                                            @if (allCustomers != null && allCustomers.Count > 0)
+                                            {
+                                                foreach (var customer in allCustomers)
+                                                {
+                                                    <option value="@customer.CustomerID" @(customer.CustomerID == search.CustomerID ? "selected" : "")>@customer.CustomerName</option>
+                                                }
+                                            }
+                                          </select>
+                                </label>
+                                <label>
+                                    订单状态: <select class="span3" style="width:80px" id="status" name="status">
+                                        <option value="-2" @(search.Status == -2 ? "selected" : "")>全部</option>
+                                        <option value="-1" @(search.Status == -1 ? "selected" : "")>已取消</option>
+                                        <option value="0" @(search.Status == 0 ? "selected" : "")>待处理</option>
+                                        <option value="1" @(search.Status == 1 ? "selected" : "")>已处理</option>
+                                    </select>
+                                </label>
+                                <button class="btn btn-info" type="submit">搜索</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                @if (reservations != null && reservations.Count > 0)
+                {
+                    <table id="users" class="table table-striped table-bordered dataTable" aria-describedby="users_info">
+                        <thead>
+                            <tr role="row">
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:200px">供应商</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">预定方式</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">支付方式</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">租期</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">租金</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">预约时间</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">备注信息</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width: 40px;">状态</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width: 40px;">操作</th>
+                            </tr>
+                        </thead>
+
+                        <tbody role="alert" aria-live="polite" aria-relevant="all">
+                            @for (int i = 0; i < reservations.Count; i++)
+                            {
+
+                                <tr class=@(i%2==0?"odd":"even")>
+                                    <td class=" sorting_1"><a target="_blank" href="/Customer/Edit?cid=@reservations[i].CustomerID">@reservations[i].CustomerName</a></td>
+                                    <td class=" ">@reservations[i].RTypeDesc</td>
+                                    <td class=" ">@reservations[i].PayTypeInfo.Description</td>
+                                    <td class=" ">@reservations[i].LeaseTime (小时)</td>
+                                    <td class=" ">@reservations[i].Price.ToString("f2") (小时)</td>
+                                    <td class=" ">@reservations[i].RDate.ToString("yyyy-MM-dd hh:mm:ss")</td>
+                                    <td class=" ">@reservations[i].Remark</td>
+                                    <td class=" "><span class="label @(reservations[i].Status == -1 ? "label-warning" : "label-success")">@reservations[i].StatusDesc</span></td>
+                                    <td class=" ">
+                                        <div class="btn-group">
+                                            <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
+                                                操作
+                                                <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a href="javascript:void(0)" onclick="editRev('@reservations[i].ID','1')"><i class="icon-edit"></i> 成交</a></li>
+                                                <li><a href="javascript:void(0)" onclick="editRev('@reservations[i].ID','-1')"><i class="icon-trash"></i> 取消</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                }
+
+                @{ Html.RenderPartial("../Pager", p); }
+            </div> <!-- /widget-body -->
+        </div> <!-- /widget -->
+    </div>
+</div>
+@section Footer{
+
+<script type="text/javascript">
+        function editRev(id,status)
+        {
+            $.ajax({
+                url: "/Rev/Edit",
+                type: 'POST',
+                data: { rid: id, status: status },
+                success: function (data) {
+                    if (data.result)
+                    {
+                        alert("操作成功");
+                        window.location.reload();
+                    }
+                }
+            });
+
+
+            return false;
+        }
+</script>
+
+}
+

@@ -1,0 +1,222 @@
+﻿@using Common
+@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑业务员信息";
+    List<BaseDataEntity> cardTypes = (List<BaseDataEntity>)ViewBag.CardTypes;
+    SalerEntity saler = (SalerEntity)ViewBag.Saler;
+}
+@section Header{
+    <link href="~/source/assets/css/datepicker.css" rel="stylesheet">
+    <link href="~/source/assets/css/timepicker.css" rel="stylesheet" />
+    <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style>
+        .picRemove {
+            height: 15px;
+            width: 15px;
+            background-color: #e4e5e6;
+            position: absolute;
+            margin-top: 15px;
+            /*filter: alpha(opacity:70);
+            opacity: 0.7;
+            -moz-opacity: 0.7;
+            -khtml-opacity: 0.7;*/
+        }
+    </style>
+
+}
+<div class="row-fluid">
+    <form class="form-horizontal" id="salerForm" action="/Saler/Modify" method="post">
+        <div class="widget widget-padding span12">
+            <div class="widget-header" style="margin-top:30px">
+                <i class="icon-list-alt"></i><h5>销售员信息</h5>
+            </div>
+            <div class="widget-body" style="overflow: hidden; display: block;">
+                <div class="widget-forms clearfix">
+                    <input type="hidden" id="SID" name="SID" value="@saler.SID">
+                    <div class="control-group">
+                        <label class="control-label">销售员编码</label>
+                        <div class="controls">
+                            <input class="span5" type="text" readonly="readonly" placeholder="销售员编码" id="SCode" name="SCode" value="@saler.SCode">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">销售员名称</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="销售员名称" id="Name" name="Name" value="@saler.Name">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">性别</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span5" id="Sex" name="Sex">
+                                <option value="-1">--请选择--</option>
+                                <option value="0" @(saler.Sex == 0 ? "selected" : "")>女</option>
+                                <option value="1" @(saler.Sex == 1 ? "selected" : "")>男</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">出生日期</label>
+                        <div class="controls">
+                            <div class="input-append date datepicker datepicker-basic" data-date="" data-date-format="yyyy-mm-dd">
+                                <input readonly="" id="Birthday" name="Birthday" size="16" type="text" value="@(saler.Birthday>DateTime.Parse("1753-01-01")?saler.Birthday.ToString("yyyy-MM-dd"):"")">
+                                <span class="add-on"><i class="icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">证件类型</label>
+                        <div class="controls">
+                            <select tabindex="1" class="span5" id="CertificateType" name="CertificateType">
+                                <option value="">--请选择证件类型--</option>
+                                @foreach (var item in cardTypes)
+                                        {
+                                        <option value="@item.TypeCode" @(item.TypeCode == saler.CertificateType ? "selected" : "")>@item.Description</option>
+                                        }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">证件码</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="证件码" id="CertificateNo" name="CertificateNo" value="@saler.CertificateNo">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">微信号</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="微信号" id="WXCode" name="WXCode" value="@saler.WXCode">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">手机号</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="手机号" id="Mobile" name="Mobile" value="@saler.Mobile">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            <input type="checkbox" value="1" id="Status" name="Status" @(saler.Status == 1 ? "checked" : "")>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">图片预览</label>
+                        <div class="controls" id="picContainer">
+
+                            @if (saler.Attachment != null && saler.Attachment.AttachmentID > 0)
+                                    {
+                                    <span class="picRemove" val="@saler.Attachment.AttachmentID" style="height:0px"></span>
+                                    <img src="@saler.Attachment.FilePath.Replace("~", "")" alt="@(saler.Attachment.FileName + saler.Attachment.FileExtendName)" style="width: 150px; height: 150px; margin-top: 15px">
+                                    }
+                        </div>
+                    </div>
+                    <input type="hidden" id="ImageURL" name="ImageURL" value="@saler.ImageURL">
+                    @if (saler.Attachment == null || saler.Attachment.AttachmentID == 0)
+                    {
+                        <div class="control-group" id="uploadC">
+                            <label class="control-label">上传图片</label>
+                            <div class="controls">
+                                <input type="file" name="file" id="file" multiple />
+                            </div>
+                        </div>
+                    }
+                    <div class="control-group">
+                        <label class="control-label"></label>
+                        <div class="controls">
+                            <span style="color:red" id="spDesc"></span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">生成二维码</label>
+                        <div class="controls">
+                            <div id="qrcode"></div>
+                            <a id="downloadLink"></a>
+                            @*<input type="button" id="execute_qrcode" value="生成二维码" />*@
+                            <input type="text" id="txt_W" value="200" style="width:75px" maxlength="5" />px <input type="text" id="txt_H" style="width:75px" value="200" maxlength="5" />px
+                            <input type="button" value="下载二维码" onclick="downloadClick()" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="button" id="save">保存</button>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+<div class="window-mask" style="display:none"></div>
+<div id="imgContainer" style="z-index:999;display:none">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <div class="widget-buttons">
+                    <a href="javascript:void(0)" id="closeDeal"><i class="icon-remove"></i>关闭</a>
+                </div>
+            </div>
+            <div class="widget-body" id="imgshow" style="text-align: center;"></div>
+        </div>
+    </div>
+
+</div>
+@section Footer{
+    <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+    <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+    <script type="text/javascript" src="~/source/assets/js/bootstrap-datepicker.js"></script>    
+    <script type="text/javascript" src="~/Scripts/jquery.qrcode.min.js"></script>       
+    <script type="text/javascript" src="~/Scripts/qrcode.js"></script> 
+    <script type="text/javascript" src="~/source/Saler.js"></script>
+    <script type="text/javascript">
+        var maxPicCount = @ViewBag.MaxPicCount;
+        $(document).ready(function () {
+            var oFileInput = new FileInput();
+            oFileInput.Init("file", "/Upload/UploadFile");
+
+            $("#spDesc").text("最多只会保留" + maxPicCount + "张图片;图片大小：150KB以内 尺寸：1024*768");
+
+            salerInfo.init();
+
+        });
+
+        function downloadClick () {  
+        
+            var url="http://www.gcev.net/OutWeb/Register?Scode="+$("#SCode").val()+"&SalerSource=Saler";
+
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: url,
+                width: $("#txt_W").val(), //生成的二维码的宽度
+                height: $("#txt_H").val(), //生成的二维码的高度
+                //scr:'logo.png',
+                colorDark : "#000000", // 生成的二维码的深色部分
+                colorLight : "#ffffff", //生成二维码的浅色部分
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            setTimeout(function(){
+                // 获取base64的图片节点
+                var img = document.getElementById('qrcode').getElementsByTagName('img')[0];
+                img.style="display:none";
+                // 构建画布
+                var canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                canvas.getContext('2d').drawImage(img, 0, 0);
+                // 构造url
+                url = canvas.toDataURL('image/png');
+                // 构造a标签并模拟点击
+                var downloadLink = document.getElementById('downloadLink');
+                downloadLink.setAttribute('href', url);
+                downloadLink.setAttribute('download', $("#Name").val()+'.png');
+                downloadLink.click();
+                img.style="display:none";
+            },2000);
+
+        
+        }
+    </script>
+}
+

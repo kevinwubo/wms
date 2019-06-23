@@ -1,0 +1,213 @@
+﻿@using Common
+@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑产品信息";
+    List<StoreEntity> plist = (List<StoreEntity>)ViewBag.Store;
+    List<BaseDataEntity> goodsType = (List<BaseDataEntity>)ViewBag.GoodsModel;
+    List<BrandEntity> brands = (List<BrandEntity>)ViewBag.Brands;
+    GoodsEntity goodsEntity = (GoodsEntity)ViewBag.Goods;
+    List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
+}
+@section Header{
+    <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style>
+        .picRemove {
+            height: 15px;
+            width: 15px;
+            background-color: #e4e5e6;
+            position: absolute;
+            margin-top: 15px;
+            /*filter: alpha(opacity:70);
+            opacity: 0.7;
+            -moz-opacity: 0.7;
+            -khtml-opacity: 0.7;*/
+        }
+    </style>
+}
+    <div class="row-fluid">
+        <form class="form-horizontal" id="goodsForm" action="/Goods/Modify" method="post">
+            <div class="widget widget-padding span12">
+                <div class="widget-header" style="margin-top:30px">
+                    <i class="icon-list-alt"></i><h5>产品信息</h5>
+                </div>
+                <div class="widget-body" style="overflow: hidden; display: block;">
+                    <div class="widget-forms clearfix">
+                        <input type="hidden" id="GoodsID" name="GoodsID" value="@goodsEntity.GoodsID">
+                        <div class="control-group">
+                            <label class="control-label">商品类型</label>
+                            <div class="controls" id="brandContainer">
+                                <select tabindex="1" class="span5" id="TypeCode" name="TypeCode">
+                                    <option value="">--请选择商品类型--</option>
+                                    @foreach (var item in goodsType)
+                                    {
+                                        <option value="@item.Description" @(item.Description == goodsEntity.TypeCode ? "selected" : "")>@item.Description</option>
+                                    }
+                                </select>
+                                
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">所属客户</label>
+                            <div class="controls">
+                                <select tabindex="1" class="span5" id="CustomerID" name="CustomerID">
+                                    <option value="">--请选择客户--</option>
+                                    @foreach (var item in customers)
+                                    {
+                                        <option value="@item.CustomerID" @(goodsEntity.CustomerID == item.CustomerID ? "selected" : "")>@item.CustomerName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">商品编号</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="商品编号" id="GoodsNo" name="GoodsNo" value="@goodsEntity.GoodsNo" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">商品名称</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="商品名称" id="GoodsName" name="GoodsName" value="@goodsEntity.GoodsName" maxlength="100">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">规格型号</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="规格型号" id="GoodsModel" name="GoodsModel" value="@goodsEntity.GoodsModel" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">重量</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="重量" id="Weight" name="Weight" value="@goodsEntity.Weight" maxlength="200">
+                            </div>
+                        </div>                        
+                        <div class="control-group">
+                            <label class="control-label">尺寸</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="尺寸" id="Size" name="Size" value="@goodsEntity.Size" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">单位</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="单位" id="Units" name="Units" value="@goodsEntity.Units" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">成本</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="成本" id="Costing" name="Costing" value="@goodsEntity.Costing" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">售价</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="售价" id="SalePrice" name="SalePrice" value="@goodsEntity.SalePrice" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">托</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="托" id="Torr" name="Torr" value="@goodsEntity.Torr" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">保质期</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="保质期" id="exDate" name="exDate" value="@goodsEntity.exDate" maxlength="50">                                
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">保质期单位</label>
+                            <div class="controls">
+                                @*<input class="span5" type="text" placeholder="保质期单位" id="exUnits" name="exUnits" value="@goodsEntity.exUnits" maxlength="200">*@
+                                <select tabindex="1" class="span5" id="exUnits" name="exUnits">
+                                    <option value="天" @(!string.IsNullOrEmpty(goodsEntity.exUnits)?(goodsEntity.exUnits.Equals("天") ?"selected":""):"")>天</option>
+                                    <option value="月" @(!string.IsNullOrEmpty(goodsEntity.exUnits) ? (goodsEntity.exUnits.Equals("月") ? "selected" : "") : "")>月</option>
+                                    <option value="年" @(!string.IsNullOrEmpty(goodsEntity.exUnits) ? (goodsEntity.exUnits.Equals("年") ? "selected" : "") : "")>年</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">商品别名编号</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="商品别名编号" id="AnotherNO" name="AnotherNO" value="@goodsEntity.AnotherNO" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">商品别名名称</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="商品别名名称" id="AnotherName" name="AnotherName" value="@goodsEntity.AnotherName" maxlength="200">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">商品条形码</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="商品条形码" id="BarCode" name="BarCode" value="@goodsEntity.BarCode" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">备注</label>
+                            <div class="controls">
+                                <input class="span5" type="text" placeholder="备注" id="Remark" name="Remark" value="@goodsEntity.Remark" maxlength="50">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">是否可用</label>
+                            <div class="controls">
+                                @if (goodsEntity.GoodsID > 0)
+                                {
+                                    <input type="checkbox" value="1" id="Status" name="Status" @(goodsEntity.Status==1 ? "checked" : "")>
+                                }
+                                else
+                                {
+                                    <input type="checkbox" value="1" id="Status" name="Status" checked>
+                                }
+
+                            </div>
+                        </div>
+                        @*<div class="control-group">
+                            <label class="control-label"></label>
+                            <div class="controls">
+                                <span style="color:red" id="spDesc"></span>
+                            </div>
+                        </div>*@ 
+
+                    </div>
+                </div>
+
+                <div class="widget-footer">
+                    <button class="btn btn-primary" type="button" id="save">保存</button>
+                    <button class="btn btn-primary" type="button" id="goback">返回</button>
+                </div>
+            
+            </div>
+        </form>
+        
+</div>
+<div class="window-mask" style="display:none"></div>
+<div id="imgContainer" style="z-index:999;display:none">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <div class="widget-buttons">
+                    <a href="javascript:void(0)" id="closeDeal"><i class="icon-remove"></i>关闭</a>
+                </div>
+            </div>
+            <div class="widget-body" id="imgshow" style="text-align: center;"></div>
+        </div>
+    </div>
+
+</div> 
+@section Footer{
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script type="text/javascript" src="~/source/BaseData/Goods.js"></script>
+    <script>
+        $(document).ready(function () {
+            goodInfo.init();
+        });
+    </script>
+}
+

@@ -1,0 +1,247 @@
+.page {
+    font-weight: 900;
+    height: 40px;
+    text-align: center;
+    color: #888;
+    margin: 20px auto 0;
+    background: #f2f2f2;
+}
+
+.pagelist {
+    font-size: 0;
+    background: #fff;
+    height: 50px;
+    line-height: 50px;
+}
+
+.pagelist span {
+    font-size: 14px;
+}
+
+.pagelist .jump {
+    border: 1px solid #ccc;
+    padding: 5px 8px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.pagelist .bgprimary {
+    cursor: default;
+    color: #fff;
+    background: #337ab7;
+    border-color: #337ab7;
+}
+
+.jumpinp input {
+    width: 55px;
+    height: 26px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.ellipsis {
+    padding: 0px 8px;
+}
+
+.jumppoint {
+    margin-left: 30px;
+}
+
+.pagelist .gobtn {}
+
+.bgprimary {
+    cursor: default;
+    color: #fff;
+    background: #337ab7;
+    border-color: #337ab7;
+}
+
+
+
+
+.lcItem{
+    padding: 5px 10px;
+    border:1px #3388ff solid;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.lcItem:hover{
+    transform：scale(1.1);
+}
+
+.lcItem p{
+    margin: 0;
+    width: 60px;
+    height: 20px;
+    margin-right: 5px;
+    font-size: 12px;
+    line-height: 20px;
+    text-align:justify;
+    text-justify:distribute-all-lines;/*ie6-8*/
+    text-align-last:justify;/* ie9*/
+    -moz-text-align-last:justify;/*ff*/
+    -webkit-text-align-last:justify;/*chrome 20+*/
+}
+.lcItem h5{
+    margin: 0;
+    flex: 1;
+    height: 20px;
+    line-height: 20px;
+    font-weight: normal;
+    color: #337ab7;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lcItem .lcItem_l{
+    flex: 1;
+    border-right: 1px #3388ff solid;
+}
+.lcItem .lcItem_l .lcDivList{
+    display: flex;
+    justify-content: space-between;
+}
+.lcItem .lcItem_l .lcDivList div:first-child{
+    flex: 1;
+}
+.lcItem .lcItem_l .lcDivList div{
+    width: 150px;
+    height: 20px;
+    display: flex;
+}
+
+
+.lcItem .lcItem_r{
+    width:530px;
+    display: flex;
+    justify-content: space-between;
+    padding-left:20px;
+}
+
+.lcItem .lcItem_r .lcItem_t_r_l{
+    width:300px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.lcItem .lcItem_r .lcItem_t_r_l div{
+    width:150px;
+    display: flex;
+}
+
+.lcItem .lcItem_r .lcItem_r_btnList{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.lcItem .lcItem_r .lcItem_r_btnList div{
+    width:80px;
+    height: 25px;
+    text-align: center;
+    line-height: 25px;
+    font-size: 12px;
+    color: #fff;
+    background: #232931;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.addZz{
+    width:100%;
+    height: 100%;
+    position: fixed;
+    top:0;
+    left:0;
+    background: rgba(0,0,0,0.7);
+}
+.modZz{
+    width:100%;
+    height: 100%;
+    position: fixed;
+    top:0;
+    left:0;
+    background: rgba(0,0,0,0.7);
+}
+.addLayer{
+    width:900px;
+    height: 390px;
+    background: #fff;
+    position: absolute;
+    top:40px;
+    left:0;
+    right:0;
+    margin: 0 auto;
+    border-radius: 8px;
+}
+
+.addLayer .addLayer_t{
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    background: #c4c4c4;
+    color: #333;
+    border-radius: 8px 8px 0 0;
+}
+.addLayer .addLayer_b{
+    height: 260px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 10px;
+}
+.addLayer .addLayer_b .layerItem{
+    width:300px;
+    height: 50px;
+    display: flex;
+    padding: 0 10px;
+    justify-content: space-between;
+}
+.addLayer .addLayer_b .layerItem p{
+    margin: 0;
+    width: 70px;
+    height: 34px;
+    margin-right: 10px;
+    font-size: 14px;
+    line-height: 34px;
+    text-align:justify;
+    text-justify:distribute-all-lines;/*ie6-8*/
+    text-align-last:justify;/* ie9*/
+    -moz-text-align-last:justify;/*ff*/
+    -webkit-text-align-last:justify;/*chrome 20+*/
+}
+
+.addLayer .addLayer_b .layerItem select,.addLayer .addLayer_b .layerItem input{
+    flex: 1;
+}
+
+.addLayer  .clickDiv{
+    width:180px;
+    height: 34px;
+    margin: 20px auto 0;
+    display: flex;
+    justify-content: space-between;
+}
+.addLayer  .clickDiv div{
+    width:80px;
+    height: 34px;
+    background: #3388ff;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    line-height: 34px;
+    border-radius: 5px;
+    cursor: pointer;
+}

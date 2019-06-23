@@ -1,0 +1,137 @@
+﻿@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑充电站";
+    List<Province> plist = (List<Province>)ViewBag.Province;
+    List<BaseDataEntity> payType = (List<BaseDataEntity>)ViewBag.PayType;
+    ChargingBaseEntity chargeBase = ((ChargingBaseEntity)ViewBag.ChargeBase) ?? new ChargingBaseEntity();
+
+}
+<form class="form-horizontal" action="/Charge/ModifyChargeBase" method="post" id="baseForm">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i><h5>编辑充电站</h5>
+                <div class="widget-buttons">
+                    <a href="/Charge/ChargeBase"><i class="icon-reply"></i> 返回列表</a>
+                </div>
+            </div>
+            <div class="widget-body" style="height:auto;">
+                <div class="widget-forms clearfix">
+                    <input class="span7" type="hidden" id="ChargeBaseID" name="ChargeBaseID" value="@chargeBase.ChargeBaseID">
+                    <div class="control-group">
+                        <label class="control-label">充电站名</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="充电站" id="Name" name="Name" maxlength="50" value="@chargeBase.Name">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">充电站编码</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="充电站编码" id="Code" name="Code" maxlength="50" value="@chargeBase.Code">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">所在城市</label>
+                        <div class="controls">
+                            <input type="hidden" id="cityid" value="@((chargeBase.CityID == 0) ? "" : chargeBase.CityID.ToString())">
+                            <input type="hidden" id="provinceid" value="@((chargeBase.CityInfo == null) ? "" : chargeBase.CityInfo.ProvinceID.ToString())">
+                            <select tabindex="1" class="span3" id="sltProvince">
+                                <option value="">--省份--</option>
+                                @foreach (var item in plist)
+                                {
+                                    <option value="@item.ProvinceID">@item.ProvinceName</option>
+                                }
+                            </select>
+                            <select tabindex="1" class="span3" id="sltCity" name="CityID">
+                                <option value="">--城市--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            @if (chargeBase.ChargeBaseID > 0)
+                            {
+                                <input type="checkbox" value="1" id="IsUse" name="IsUse" @(chargeBase.IsUse == 1 ? "checked" : "")>
+                            }
+                            else
+                            {
+                                <input type="checkbox" value="1" id="IsUse" name="IsUse" checked>
+                            }
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">充电费（/小时）</label>
+                        <div class="controls">
+                            <span style="margin-left:-12px;margin-right:5px">&yen;</span><input class="span7" type="text" placeholder="充电费（/小时）" id="ChargeFee" name="ChargeFee" value="@chargeBase.ChargeFee"> 
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">服务费（/次）</label>
+                        <div class="controls">
+                           <span style="margin-left:-12px;margin-right:5px">&yen;</span><input class="span7" type="text" placeholder="服务费（/次）" id="ServerFee" name="ServerFee" value="@chargeBase.ServerFee">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">停车费（/小时）</label>
+                        <div class="controls">
+                            <span style="margin-left:-12px;margin-right:5px">&yen;</span><input class="span7" type="text" placeholder="停车费（/小时）" id="ParkFee" name="ParkFee" value="@chargeBase.ParkFee">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">下辖充电桩个数</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="下辖充电桩个数" id="ChargeNum" name="ChargeNum" value="@(chargeBase.ChargeNum == 0 ? "" : chargeBase.ChargeNum.ToString())">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">地址</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="地址" id="Address" name="Address" value="@chargeBase.Address">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">经纬度坐标</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="经纬度坐标" id="Coordinate" name="Coordinate" value="@chargeBase.Coordinate">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">营业开始时间</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="营业开始时间(XX:XX)" id="StartTime" name="StartTime" value="@chargeBase.StartTime">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">营业结束时间</label>
+                        <div class="controls">
+                            <input class="span5" type="text" placeholder="营业结束时间(XX:XX)" id="EndTime" name="EndTime" value="@chargeBase.EndTime">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">支持支付方式</label>
+                        <div class="controls">
+                            @foreach (var item in payType)
+                            {
+                                 <label class="checkbox"><input type="checkbox" name="pType" value="@item.TypeCode" @((chargeBase.PayType??"").Contains(item.TypeCode)?"checked":"")>@item.Description</label>
+                            }
+                            <input class="span7" type="hidden" id="PayType" name="PayType" value="@chargeBase.PayType">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="button" id="save">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
+@section Footer {
+<script type="text/javascript" src="~/source/Chargebase.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        chargeBase.init();
+    })
+</script>
+}

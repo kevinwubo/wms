@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2C07FF57-595D-4717-8C90-3DA248898D6D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataRepository</RootNamespace>
+    <AssemblyName>DataRepository</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Common, Version=5.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Microsoft.Practices.EnterpriseLibrary.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Data, Version=5.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libs\Microsoft.Practices.EnterpriseLibrary.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataAccess\Advise\AdviseStatement.cs" />
+    <Compile Include="DataAccess\Advise\AdviseRepository.cs" />
+    <Compile Include="DataAccess\BaseData\BaseDataStatement.cs" />
+    <Compile Include="DataAccess\BaseData\BaseDataRepository.cs" />
+    <Compile Include="DataAccess\BaseData\LineRepository.cs" />
+    <Compile Include="DataAccess\BaseData\LineStatement.cs" />
+    <Compile Include="DataAccess\BaseData\StorageLocationRepository.cs" />
+    <Compile Include="DataAccess\BaseData\StorageLocationStatement.cs" />
+    <Compile Include="DataAccess\BaseData\PriceSetRepository.cs" />
+    <Compile Include="DataAccess\BaseData\PriceSetStatement.cs" />
+    <Compile Include="DataAccess\BaseData\ReceiverRepository.cs" />
+    <Compile Include="DataAccess\BaseData\CustomerRepository.cs" />
+    <Compile Include="DataAccess\BaseData\ReceiverStatement.cs" />
+    <Compile Include="DataAccess\BaseData\CustomerStatement.cs" />
+    <Compile Include="DataAccess\BaseData\ContactRepository.cs" />
+    <Compile Include="DataAccess\BaseData\ContactStatement.cs" />
+    <Compile Include="DataAccess\Brand\BrandRepository.cs" />
+    <Compile Include="DataAccess\Brand\BrandStatement.cs" />
+    <Compile Include="DataAccess\BaseData\CarrierRepository.cs" />
+    <Compile Include="DataAccess\BaseData\CarrierStatement.cs" />
+    <Compile Include="DataAccess\Car\CarRepository.cs" />
+    <Compile Include="DataAccess\Car\CarStatement.cs" />
+    <Compile Include="DataAccess\Charge\ChargeRepository.cs" />
+    <Compile Include="DataAccess\Charge\ChargeStatement.cs" />
+    <Compile Include="DataAccess\BaseData\GoodsRepository.cs" />
+    <Compile Include="DataAccess\BaseData\GoodsStatement.cs" />
+    <Compile Include="DataAccess\Inventory\InventoryDetailRepository.cs" />
+    <Compile Include="DataAccess\Inventory\InventoryDetailStatement.cs" />
+    <Compile Include="DataAccess\Inventory\InventoryRepository.cs" />
+    <Compile Include="DataAccess\Inventory\InventoryStatement.cs" />
+    <Compile Include="DataAccess\News\NewsRepository.cs" />
+    <Compile Include="DataAccess\News\NewsStatement.cs" />
+    <Compile Include="DataModel\OrderDetailInfo.cs" />
+    <Compile Include="DataAccess\Order\OrderDetailRepository.cs" />
+    <Compile Include="DataAccess\Order\OrderDetailStatement.cs" />
+    <Compile Include="DataAccess\Order\OrderRepository.cs" />
+    <Compile Include="DataAccess\Order\OrderSearchEntity.cs" />
+    <Compile Include="DataAccess\Order\OrderStatement.cs" />
+    <Compile Include="DataAccess\Reservations\ReservationsRepository.cs" />
+    <Compile Include="DataAccess\Reservations\ReservationsSearchEntity.cs" />
+    <Compile Include="DataAccess\Reservations\ReservationsStatement.cs" />
+    <Compile Include="DataAccess\Saler\SalerRepository.cs" />
+    <Compile Include="DataAccess\Saler\SalerStatement.cs" />
+    <Compile Include="DataAccess\BaseData\StorageRepository.cs" />
+    <Compile Include="DataAccess\BaseData\StorageStatement.cs" />
+    <Compile Include="DataModel\AdviseInfo.cs" />
+    <Compile Include="DataModel\BrandInfo.cs" />
+    <Compile Include="DataModel\CarInfo.cs" />
+    <Compile Include="DataModel\CarrierInfo.cs" />
+    <Compile Include="DataModel\ChargingBaseInfo.cs" />
+    <Compile Include="DataModel\ChargingPileInfo.cs" />
+    <Compile Include="DataAccess\CommonStatement.cs" />
+    <Compile Include="DataAccess\Group\GroupRepository.cs" />
+    <Compile Include="DataAccess\Group\GroupStatement.cs" />
+    <Compile Include="DataAccess\Menu\MenuRepository.cs" />
+    <Compile Include="DataAccess\Menu\MenuSatement.cs" />
+    <Compile Include="DataAccess\Role\RoleRepository.cs" />
+    <Compile Include="DataAccess\Role\RoleStatement.cs" />
+    <Compile Include="DataAccess\Store\StoreRepository.cs" />
+    <Compile Include="DataAccess\Store\StoreStatement.cs" />
+    <Compile Include="DataAccess\User\UserRepository.cs" />
+    <Compile Include="DataAccess\User\UserStatement.cs" />
+    <Compile Include="DataModel\AttachmentInfo.cs" />
+    <Compile Include="DataModel\BaseDataInfo.cs" />
+    <Compile Include="DataModel\CityInfo.cs" />
+    <Compile Include="DataModel\ContactInfo.cs" />
+    <Compile Include="DataModel\CustomerExtendInfo.cs" />
+    <Compile Include="DataModel\CustomerInfo.cs" />
+    <Compile Include="DataModel\GoodsInfo.cs" />
+    <Compile Include="DataModel\GroupInfo.cs" />
+    <Compile Include="DataModel\InventoryDetailInfo.cs" />
+    <Compile Include="DataModel\InventoryInfo.cs" />
+    <Compile Include="DataModel\LineInfo.cs" />
+    <Compile Include="DataModel\MenuInfo.cs" />
+    <Compile Include="DataModel\NewsInfo.cs" />
+    <Compile Include="DataModel\OrderInfo.cs" />
+    <Compile Include="DataModel\PriceSetInfo.cs" />
+    <Compile Include="DataModel\ProvinceInfo.cs" />
+    <Compile Include="DataModel\ReservationsInfo.cs" />
+    <Compile Include="DataModel\RoleInfo.cs" />
+    <Compile Include="DataModel\SalerInfo.cs" />
+    <Compile Include="DataModel\SalerRelation.cs" />
+    <Compile Include="DataModel\ReceiverInfo.cs" />
+    <Compile Include="DataModel\StorageInfo.cs" />
+    <Compile Include="DataModel\StorageLocationInfo.cs" />
+    <Compile Include="DataModel\StoreInfo.cs" />
+    <Compile Include="DataModel\UserInfo.cs" />
+    <Compile Include="DataModel\VerificationCodeInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{5ed0a578-fe0e-4e6e-a1cb-f69761278183}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+      <Project>{13365811-32ba-422c-91c3-ca359a76fd53}</Project>
+      <Name>Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

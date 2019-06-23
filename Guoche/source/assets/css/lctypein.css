@@ -1,0 +1,158 @@
+.autoDivQuery{
+    margin-top: 8px;
+    height: 35px;
+    position: relative;
+}
+.autoDivQuery p{
+    width:70px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    font-size: 14px;
+    color: #444;
+    display: block;
+    float: left;
+    margin: 0 10px 0 0;
+}
+.autoDivQuery .divInput,.autoDivQuery .divSel{
+    margin: 0 20px 0 0;
+    width: 170px;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+}
+.autoDivQuery .divInput,.autoDivQuery .btn{
+    height: 30px;
+    line-height: 30px;
+    padding: 0 12px;
+}
+.autoDivQuery .shopMsg{
+    width:650px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    color: #666;
+    position: absolute;
+    top:36px;
+    left:340px;
+}
+.autoDivQuery .shopMsg span{
+    color: #00a7d0;
+}
+.autoDivQuery .btnDiv{
+    width:100px;
+    height: 34px;
+    text-align: center;
+    line-height: 34px;
+    background: #337ab7;
+    color: #fff;
+    float: left;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.autoDivQuery .btnDiv:hover{
+    background: #2A6090;
+}
+.boxBtnDiv .btnDiv{
+    width:100px;
+    height: 34px;
+    text-align: center;
+    line-height: 34px;
+    background: #337ab7;
+    color: #fff;
+    float: left;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.boxBtnDiv .btnDiv:hover{
+    background: #2A6090;
+}
+
+.goodsLayer tbody tr td{
+    font-size: 14px;
+}
+.goodsLayer tbody tr{
+    cursor: pointer;
+}
+
+.goodsLayer tbody tr:hover td{
+    background: #e5e5e5;
+}
+.goodsLayer tbody tr.active td{
+    background: #999;
+}
+
+
+
+
+.layer .totalDiv{
+    height: 20px;
+    margin: 0 0 30px 0;
+}
+.layer .totalDiv p{
+    margin: 0 0 0 30px;
+    line-height: 20px;
+    font-size: 12px;
+    color: #333;
+    display: block;
+    float: right;
+}
+.layer .totalDiv p span{
+    color: #333;
+    font-size: 12px;
+}
+
+
+
+.coumpLayer{
+    width:800px;
+    height:200px;
+    background: #fff;
+    padding: 40px 10px;
+    position: absolute;
+    top:100px;
+    left:0;
+    right:0;
+    margin: 0 auto;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px #3388ff;
+}
+.coumpLayer .coumpLayer_t{
+    height: 40px;
+}
+.coumpLayer .coumpLayer_t .coumpLayerItem{
+    width:250px;
+    height: 40px;
+    display: flex;
+    float: left;
+}
+.coumpLayer .coumpLayer_t .coumpLayerItem p{
+    width:80px;
+    text-align: center;
+    line-height: 34px;
+    color: #333;
+    margin: 0;
+    font-size: 14px;
+}
+.coumpLayer .coumpLayer_t .coumpLayerItem .form-control{
+    flex: 1;
+}
+.coumpLayer .coumpClickDiv{
+    width:180px;
+    height: 34px;
+    margin: 40px auto 0;
+    display: flex;
+    justify-content: space-between;
+}
+.coumpLayer .coumpClickDiv div{
+    width:80px;
+    height: 34px;
+    background: #3388ff;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 34px;
+    font-size: 12px;
+    color: #fff;
+    cursor: pointer;
+}

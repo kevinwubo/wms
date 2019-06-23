@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "登录";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Bluth Company">
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="shortcut icon" href="~/source/assets/ico/favicon.html">
+    @*基础CSS加载*@
+    <link href="~/source/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="~/source/assets/css/theme.css" rel="stylesheet">
+    <link href="~/source/assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/source/assets/css/alertify.css" rel="stylesheet">
+    <link href="~/source/assets/css/OpenSans.css" rel="stylesheet" />
+    <style>
+    #loginForm span.error {
+		margin-left: 10px;
+		width: auto;
+		display: inline;
+        color:red;
+	}
+    body{
+      padding-top: 45px;
+      font-family: 'Open Sans', sans-serif;
+      background-image: url("../source/assets/img/index.jpg");
+      overflow-x: hidden;
+    }
+
+        .widget-header1 {
+            background-color: #807474;
+            -moz-border-radius: 3px 3px 0 0;
+            -webkit-border-radius: 3px 3px 0 0;
+            border-radius: 3px 3px 0 0;
+            min-height: 41px;
+            border: 1px solid #DDDDDD;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="widget container-narrow">                            
+                            <div class="widget-header1">
+                                <img src="~/source/assets/img/logo.png" style="width:230px;height:40px;" alt="Realm Admin Template">
+                            </div>
+                            <div class="widget-header">
+                                <i class="icon-user"></i>
+                                <h5>力橙供应链系统</h5>
+                            </div>
+                            <div class="widget-body clearfix" style="padding:25px;">
+                                <input type="hidden" name="ukey" id="ukey" value="@ViewBag.UKey" />
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <input class="btn-block" type="text" id="name" name="name" placeholder="用户名">
+                                        <span id="spnameerror" class="help-inline" style="color:red;display:none">请输入用户名</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <input class="btn-block" type="password" id="pwd" name="pwd" placeholder="密码">
+                                        <span id="sppwderror" class="help-inline" style="color:red;display:none">请输入密码</span>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn pull-right" onclick="login(); return false;">登录</button>
+                            </div>
+                        </div>
+                    </div><!--/row-fluid-->
+                </div><!--/span10-->
+            </div><!--/row-fluid-->
+        </div><!--/.fluid-container-->
+    </div><!-- wrap ends-->
+</body>
+</html>
+<script type="text/javascript" src="~/source/assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#name,#pwd").keyup(function () {
+            $(this).next("span").hide();
+        });
+        $(document).keyup(function (event) {
+            if (event.keyCode == 13) {
+                login();
+            }
+        });
+    });
+    function login()
+    {
+        var name=$("#name").val(),pwd=$("#pwd").val()
+        if ($.trim(name) == "") { $("#spnameerror").show(); return false; }
+        if ($.trim(pwd) == "") { $("#sppwderror").show(); return false; }
+        $.post("/Home/Login", {
+                name: name,
+                pwd: pwd,
+                ukey: $("#ukey").val()
+            }, function (data) {
+                if (data == "F") {
+                    alert("用户名或密码错误，请重新输入");
+                }
+                else {
+                    window.location.href = "/BaseData/Main";
+                }
+        });
+    }
+</script>

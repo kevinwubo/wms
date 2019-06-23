@@ -1,0 +1,293 @@
+﻿@using Entity.ViewModel;
+@using Common;
+@{
+    ViewBag.Title = "订单查询";
+    List<OrderEntity> orderList = (List<OrderEntity>)ViewBag.OrderList;
+    List<BaseDataEntity> PriceSetModel = ((List<BaseDataEntity>)ViewBag.PriceSetModel) ?? new List<BaseDataEntity>();
+
+    List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
+    List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
+    List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
+
+    PagerInfo p = (PagerInfo)ViewBag.Pager;
+}
+<link href="~/source/assets/css/queryItem.css" rel="stylesheet" />
+<link href="~/source/assets/css/comfirm.css" rel="stylesheet" />
+<link href="~/source/assets/css/viewer.min.css" rel="stylesheet" />
+<link href="~/source/assets/css/img.css" rel="stylesheet" />
+
+<div class="row-fluid">
+    <h2 class="heading" style="margin-top:20px">订单查询</h2>
+</div>
+<div class="row-fluid">
+    <div class="widget widget-padding span12">
+        <div class="widget-header">
+            <i class="icon-laptop"></i>
+            <h5>订单查询</h5>
+            <div class="widget-buttons">
+                <a href="/Order/Index"><i class="icon-laptop"></i> 新增</a>
+            </div>
+        </div>
+        <div class="widget-body" style="margin-bottom:50px">
+            <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                <div class="row-fluid">
+                    <div class="">
+                        <form action="/Order/OrderSearch" method="get">
+                            <div class="dataTables_length" id="menus_filter">
+                                <label>
+                                    <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
+                                        <option value="">--请选择出库仓--</option>
+                                        @foreach (var item in storages)
+                                        {
+                                            <option value="@item.StorageID" @(item.StorageID == ViewBag.storageid ? "selected" : "")>@item.StorageName</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    <select tabindex="1" class="" style="width: 200px" id="carrierid" name="carrierid">
+                                        <option value="">--请选择承运商--</option>
+                                        @foreach (var item in carriers)
+                                        {
+                                            <option value="@item.CarrierID" @(item.CarrierID == ViewBag.carrierid ? "selected" : "")>@item.CarrierName</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    <select tabindex="1" class="" style="width: 200px" id="customerid" name="customerid">
+                                        <option value="">--请选择客户--</option>
+                                        @foreach (var item in customers)
+                                        {
+                                            <option value="@item.CustomerID" @(item.CustomerID == ViewBag.customerid ? "selected" : "")>@item.CustomerName</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    订单状态: <select class="span3" style="width:150px" id="status" name="status">
+                                        <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
+                                        <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
+                                        <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
+                                    </select>
+                                </label>
+                                <button class="btn btn-info" type="submit">搜索</button>
+                                @*<button class="btn btn-info" type="button" id="download_SHD">下载送货单</button>*@
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                @if (orderList != null && orderList.Count > 0)
+{
+    <div class="lcQueryItem">
+        @foreach (OrderEntity entity in orderList)
+{
+
+    <div class="lcItem" dataid="@entity.OrderID" storageid="23">
+        <div class="lcItem_t">
+            <div class="lcCheckDiv">
+                <input type="checkbox" class="checkbox" value="@entity.OrderID" />
+            </div>
+            <div class="lcItem_t_l">
+                <div class="lcDivList">
+                    <div>
+                        <p>订单编号</p>
+                        <h5>@entity.OrderNo</h5>
+                    </div>
+                    <div>
+                        <p>下单时间</p>
+                        <h5>@entity.OrderDate</h5>
+                    </div>
+                    <div>
+                        <p>送货时间</p>
+                        <h5>@entity.SendDate</h5>
+                    </div>
+                </div>
+
+
+                <div class="lcDivList">
+                    <div title="@entity.contact.name">
+                        <p>收货方</p>
+                        <h5>@entity.contact.name</h5>
+                    </div>
+                    <div>
+                        <p>收货人</p>
+                        <h5>@entity.contact.contact</h5>
+                    </div>
+                    <div title="联系方式：@entity.contact.telephone">
+                        <p>联系方式</p>
+                        <h5>@entity.contact.telephone</h5>
+                    </div>
+                </div>
+                <div class="lcDivList">
+                    <div title="@entity.contact.address">
+                        <p>配送地址</p>
+                        <h5>@entity.contact.address</h5>
+                    </div>
+                    <div title="@entity.carrier.CarrierName">
+                        <p>承运商</p>
+                        <h5>@entity.carrier.CarrierName</h5>
+                    </div>
+                </div>
+
+
+                <div class="lcDivList">
+                    <div title="@entity.Remark">
+                        <p>备注</p>
+                        <h5>@entity.Remark</h5>
+                    </div>
+                    <div>
+                        <p>温区</p>
+                        <h5>@entity.TempType</h5>
+                    </div>
+                    <div>
+                        <p>订单属性</p>
+                        <h5>@entity.OrderType</h5>
+                    </div>
+                </div>
+                <div class="lcDivList">
+                    <div>
+                        <p>合并编号</p>
+                        <h5>@entity.MergeNo</h5>
+                    </div>
+                    <div>
+                        <p>制单人</p>
+                        <h5>@(entity.user != null ? entity.user.UserName : "")</h5>
+                    </div>
+                    <div title="2019-05-15 17:31:11">
+                        <p>制单时间</p>
+                        <h5>@entity.CreateDate.ToString()</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="lcItem_t_r">
+                <div class="lcItem_t_r_l">
+                    <div>
+                        <p>订单归属</p>
+                        <h5>@(entity.customer != null ? entity.customer.CustomerName : "")</h5>
+                    </div>
+                    <div>
+                        <p>发货仓库</p>
+                        <h5>@(entity.sendstorage != null ? entity.sendstorage.StorageName : "")</h5>
+                    </div>
+                    <div>
+                        <p>订单状态</p>
+                        <h5>@(entity.OrderStatus)</h5>
+                    </div>
+                </div>
+                <div class="lcItem_t_r_btnList" style="width: 130px;">
+                    <div class="showDiv" isok="true">
+                        订单详情
+                    </div>
+                    @*<div class="showDiv">
+                        <a href="/Order/OrderAdd?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">订单修改</a>
+                    </div>*@
+                    @*<input type="hidden" id="AttachmentIDs" name="AttachmentIDs" value="@entity.AttachmentIDs">
+                    <div class="upImg">上传图片<input type="file" class="upfile"></div>*@                                        
+                </div>
+            </div>
+        </div>
+
+
+        <div class="lcItem_b">
+            <table>
+                <thead>
+                    <tr>
+                        <th>项次</th>
+                        <th>商品编号</th>
+                        <th>名称</th>
+                        <th>规格</th>
+                        <th>数量</th>
+                        <th>单位</th>
+                        <th>重量</th>
+                        <th>批次号</th>
+                        <th>生产日期</th>
+                        <th>到期日期</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (entity.orderDetailList != null && entity.orderDetailList.Count > 0)
+                    {
+                        List<OrderDetailEntity> list = entity.orderDetailList;
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            <tr>
+                                <td>@i++</td>
+                                <td>@list[i].GoodsNo</td>
+                                <td>@list[i].GoodsName</td>
+                                <td>@list[i].GoodsModel</td>
+                                <td>@list[i].Quantity</td>
+                                <td>@list[i].Units</td>
+                                <td>@list[i].TotalWeight</td>
+                                <td>@list[i].BatchNumber</td>
+                                <td>@list[i].ProductDate.ToShortDateString()</td>
+                                <td>@list[i].ExceedDate.ToShortDateString()</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <div class="lcItem_b_b">
+                <div class="lcItem_b_bDivItem">
+                    <div>
+                        运费应收:
+                        <span>@entity.configPrice</span>
+                    </div>
+                    <div>
+                        装卸应收:
+                        <span>@entity.configHandInAmt</span>
+                    </div>
+                    <div>
+                        分拣应收:
+                        <span>@entity.configSortPrice</span>
+                    </div>
+                    <div>
+                        运费应付:
+                        <span>@entity.configCosting</span>
+                    </div>
+                    <div>
+                        装卸应付:
+                        <span>@entity.configHandOutAmt</span>
+                    </div>
+                    <div>
+                        分拣应付:
+                        <span>@entity.configSortCosting</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    </div>
+}
+
+                @{ Html.RenderPartial("../Pager", p); }
+            </div>
+        </div> <!-- /widget-body -->
+    </div> <!-- /widget -->
+</div>
+
+<!--图片的弹窗-->
+<div class="maskLayer">
+    <div class="mask-layer">
+        <div class="mask-layer-container">
+            <div class="mask-layer-container-operate">
+                <button class="mask-out btn-default-styles">放大</button>
+                <button class="mask-in btn-default-styles">缩小</button>
+                <button class="mask-close btn-default-styles">关闭</button>
+            </div>
+        </div>
+        <div class="mask-layer-imgbox auto-img-center">
+            <p><img src=""></p>
+        </div>
+    </div>
+</div>
+@section Footer{
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script type="text/javascript" src="~/source/Order/SearchOrder.js"></script>
+<script type="text/javascript" src="~/source/assets/js/viewer-jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        orderInfo.init();        
+    });
+</script>
+
+}

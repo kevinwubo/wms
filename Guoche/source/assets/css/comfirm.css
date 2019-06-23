@@ -1,0 +1,114 @@
+.item{
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+.item .itemHead{
+    background: #f5f5f5;
+    height: 80px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.item .itemHead .pListDiv{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /*flex-wrap: wrap;*/
+    height: 60px;
+}
+.item .itemHead .pList{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 20px;
+}
+.item .itemHead p{
+    line-height: 20px;
+    font-size: 12px;
+    display: block;
+    color: #333;
+    margin: 0 15px 0 0;
+}
+.item .itemHead p span{
+    color: #00a7d0;
+}
+.item .leftDiv{
+    width:260px;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+.item .sendTime,.item .xy{
+    width:80px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+    background: #00a7d0;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+    float: left;
+}
+.item .del,.item .mod,.item .sure,.item .back{
+    width:80px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+    background: #00a7d0;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.item .leftDiv div:hover{
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);
+}
+.item table{
+    margin: 0 auto;
+}
+
+
+
+/*图片上传*/
+.upImg{
+    width:80px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+    background: #00a7d0;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+    position: relative;
+}
+.upImg .upfile{
+    width: 80px;
+    height: 40px;
+    position: absolute;
+    overflow: hidden;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+
+
+#myModal img{
+    width:400px;
+}

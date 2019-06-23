@@ -1,0 +1,62 @@
+﻿@using Entity.ViewModel;
+@{
+    ViewBag.Title = "编辑组别";
+    RoleEntity role = ((RoleEntity)ViewBag.Role) ?? new RoleEntity();
+    role.Menus = role.Menus ?? new List<MenuEntity>();
+}
+<form class="form-horizontal" action="/Role/Modify" method="post" id="roleForm">
+    <div class="row-fluid" style="margin-top:30px">
+        <div class="widget widget-padding span12">
+            <div class="widget-header">
+                <i class="icon-list-alt"></i><h5>编辑角色</h5>
+                <div class="widget-buttons">
+                    <a href="/Role/"><i class="icon-reply"></i> 返回列表</a>
+                </div>
+            </div>
+            <div class="widget-body" style="height:auto;">
+                <div class="widget-forms clearfix">
+                    <input class="span7" type="hidden" id="RoleID" name="RoleID" value="@role.RoleID">
+                    <div class="control-group">
+                        <label class="control-label">角色名</label>
+                        <div class="controls">
+                            <input class="span7" type="text" placeholder="角色名" id="RoleName" name="RoleName" maxlength="50" value="@role.RoleName">
+                            
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否可用</label>
+                        <div class="controls">
+                            <input type="checkbox" value="1" id="Status" name="Status" @(role.Status == 1 ? "checked" : "")>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="widget widget-padding span6" style="margin-left:180px;">
+                            <div class="widget-header"><i class="icon-list-alt"></i><h5>菜单信息</h5></div>
+                            <div class="widget-body">
+                                @Html.Raw(ViewBag.MenuHtml)
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="widget-footer">
+                <button class="btn btn-primary" type="submit">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
+@section Footer {
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#roleForm").validate({
+            rules: {
+                RoleName: "required",
+            },
+            messages: {
+                RoleName: "请输入角色名"
+            }
+        });
+    })
+    </script>
+}
