@@ -91,6 +91,51 @@ namespace Common
             }
             return "";
         }
+        /// <summary>
+        /// 未配送 = 0,配送中 = 1, 已配送 = 2, 已回单 = 3, 订单完成 = 4, 已拒绝 = 5
+        /// </summary>
+        /// <param name="orderStatus"></param>
+        /// <param name="UploadStatus"></param>
+        /// <returns></returns>
+        public static string GetOrderStatusDesc(int orderStatus)
+        {
+            switch (orderStatus)
+            {
+                case 0:
+                    return OrderStatus.未配送.ToString();
+                case 1:
+                    return OrderStatus.配送中.ToString();
+                case 2:
+                    return OrderStatus.已配送.ToString();
+                case 3:
+                    return OrderStatus.已回单.ToString();
+                case 4:
+                    return OrderStatus.订单完成.ToString();
+                case 5:
+                    return OrderStatus.已拒绝.ToString();
+                default:
+                    return OrderStatus.未配送.ToString();
+            }
+        }
+
+
+        /// <summary>
+        /// 获取接单状态
+        /// </summary>
+        /// <param name="uploadStatus"></param>
+        /// <returns></returns>
+        public static string GetUploadStatusDesc(int uploadStatus)
+        {
+            switch (uploadStatus)
+            {
+                case 0:
+                    return UploadStatus.未接单.ToString();
+                case 1:
+                    return UploadStatus.已接单.ToString();
+                default:
+                    return UploadStatus.未接单.ToString();
+            }
+        }
 
         /// <summary>
         /// 获取订单来源

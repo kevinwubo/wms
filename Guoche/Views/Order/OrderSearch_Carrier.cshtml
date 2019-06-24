@@ -162,7 +162,7 @@
                     </div>
                     <div>
                         <p>订单状态</p>
-                        <h5>@(entity.OrderStatus)</h5>
+                        <h5>@(entity.OrderStatusDesc + entity.UploadStatusDesc)</h5>
                     </div>
                     <div>
                         <p>送达时间</p>
@@ -182,9 +182,12 @@
                         
                         <div class="sure">开始配送</div>
                     }      
-                    <div class="查看回单" onclick="javascript:showImg(@entity.AttachmentIDs)">
-                        查看回单
-                    </div>
+                    @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
+                    { 
+                        <div class="查看回单" onclick="javascript:showImg(@entity.AttachmentIDs)">
+                            查看回单
+                        </div>
+                    }
                 </div>
             </div>
         </div>

@@ -227,14 +227,15 @@ namespace GuoChe.Controllers
         /// <param name="carrierid"></param>
         /// <param name="storageid"></param>
         /// <param name="customerid"></param>
-        /// <param name="status"></param>
+        /// <param name="orderstatus"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public ActionResult OrderSearch(string type = "", int carrierid = 0, int storageid = 0, int customerid = 0, int status = -1, int p = 1)
+        public ActionResult OrderSearch(string type = "", int carrierid = 0, int storageid = 0, int customerid = 0, int orderstatus = -1, string orderno = ""
+            , string begindate = "", string enddate = "", int operatorid = -1, int p = 1)
         {
             List<OrderEntity> mList = null;
 
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status);
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, orderstatus, -1, -1, "", orderno, begindate, enddate, operatorid);
 
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
@@ -242,9 +243,9 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "OrderSearch";
 
-            if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0)
+            if (orderstatus > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || operatorid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
             {
-                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", "");
+                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, orderstatus, -1, -1, "", orderno, begindate, enddate, operatorid);
             }
             else
             {
@@ -258,10 +259,13 @@ namespace GuoChe.Controllers
             ViewBag.Goods = GoodsService.GetGoodsByRule("", 1);//只显示使用中的数据
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
-
-
+            //操作人
+            ViewBag.Users = UserService.GetUserAll();
+            ViewBag.BeginDate = begindate;
+            ViewBag.EndDate = enddate;
             ViewBag.PageType = type;
-            ViewBag.Status = status;
+            ViewBag.OperatorID = operatorid;
+            ViewBag.OrderStatus = orderstatus;
             ViewBag.carrierid = carrierid;
             ViewBag.customerid = customerid;
             ViewBag.storageid = storageid;
@@ -290,7 +294,8 @@ namespace GuoChe.Controllers
             {
                 OperatorID = CurrentUser.UserID;
             }
-            OrderService.OrderPass(orderid, type, OperatorID);
+            // 更新订单状态
+            OrderService.UpdateOrderStatus(orderid, 4);            
         }
         #endregion
 
@@ -650,12 +655,13 @@ namespace GuoChe.Controllers
 
                 ds = ExcelHelper.ImportBaseExceltoDt(path);
                 OrderService.GetBaseImportList(ds);
-                
+
                 //存入缓存
                 Cache.Add(token, list);
             }
             return Json(list);
         }
         #endregion
+
     }
 }

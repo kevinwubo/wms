@@ -55,6 +55,12 @@ namespace Common
         OUT
     }
 
+    public enum UploadStatus
+    {
+        未接单,
+        已接单
+    }
+
     /// <summary>
     /// 订单状态
     /// </summary>

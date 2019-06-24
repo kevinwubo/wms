@@ -114,7 +114,7 @@
                                                 <div class="accordion-inner">
                                                     @foreach (var inner in item)
                                                     {
-                                                        <a class="accordion-toggle" href="@inner.URL"><i class="@inner.PreFlag"></i>  @inner.MenuName</a>
+                                                        <a class="accordion-toggle" href="@inner.URL?Code=@inner.GroupCode"><i class="@inner.PreFlag"></i>  @inner.MenuName</a>
                                                     }
                                                 </div>
                                             </div>

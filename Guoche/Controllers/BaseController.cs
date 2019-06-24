@@ -188,6 +188,7 @@ namespace GuoChe.Controllers
         {
             ViewBag.UKey = UKey;
             string action = RouteData.Route.GetRouteData(this.HttpContext).Values["controller"].ToString();
+            string code = Request["Code"];
             Response.Cookies["userName"].Value = action;
             Response.Cookies["userName"].Expires = DateTime.Now.AddDays(1);
             if (CurrentUser != null)
@@ -198,13 +199,20 @@ namespace GuoChe.Controllers
                 {
                     foreach (MenuEntity entity in list)
                     {
-                        if (entity.URL.Contains(action))
+                        entity.IsShow = false;
+                        if (string.IsNullOrEmpty(code))
                         {                            
-                            entity.IsShow = true;
+                            if (entity.URL.Contains(action))
+                            {
+                                entity.IsShow = true;
+                            }
                         }
                         else
                         {                            
-                            entity.IsShow = false;
+                            if (entity.GroupCode.Equals(code))
+                            {
+                                entity.IsShow = true;
+                            }
                         }
                         listNew.Add(entity);
                     }

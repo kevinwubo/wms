@@ -94,15 +94,16 @@ namespace Entity.ViewModel
         /// 温度
         /// </summary>
         public string TempType { get; set; }
+
         /// <summary>
         /// 订单状态
-        /// 未配送 = 0,配送中 = 1, 已送达未回单 = 2, 已回单 = 3, 订单完成 = 4, 已拒绝 = 5
+        /// 未配送 = 0,配送中 = 1, 已配送 = 2, 已回单 = 3, 订单完成 = 4, 已拒绝 = 5
         /// /// </summary>
         public int OrderStatus { get; set; }
 
         /// <summary>
-        /// 订单状态
-        /// 未配送 = 0,配送中 = 1, 已送达未回单 = 2, 已回单 = 3, 订单完成 = 4, 已拒绝 = 5
+        /// 订单状态描述
+        /// 未配送 = 0,配送中 = 1, 已配送 = 2, 已回单 = 3, 订单完成 = 4, 已拒绝 = 5
         /// /// </summary>
         public string OrderStatusDesc { get; set; }
 
@@ -110,6 +111,11 @@ namespace Entity.ViewModel
         /// 接单状态 0：(未接单) 1：(已接单)
         /// </summary>
         public int UploadStatus { get; set; }
+
+        /// <summary>
+        /// 接单状态描述 0：(未接单) 1：(已接单)
+        /// </summary>
+        public string UploadStatusDesc { get; set; }
 
         /// <summary>
         /// 状态   (1:使用中 0：已删除)
@@ -160,6 +166,10 @@ namespace Entity.ViewModel
         /// 送货单 补损单
         /// </summary>
         public string TypeDesc { get; set; }
+        /// <summary>
+        /// 公司名称  
+        /// </summary>
+        public string CompanyName { get; set; }
 
         #region 其他属性
         /// <summary>

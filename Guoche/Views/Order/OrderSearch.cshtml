@@ -8,14 +8,14 @@
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
-
+    List<UserEntity> users = (List<UserEntity>)ViewBag.Users;
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
 <link href="~/source/assets/css/queryItem.css" rel="stylesheet" />
 <link href="~/source/assets/css/comfirm.css" rel="stylesheet" />
 <link href="~/source/assets/css/viewer.min.css" rel="stylesheet" />
 <link href="~/source/assets/css/img.css" rel="stylesheet" />
-
+<script src="/source/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
 <div class="row-fluid">
     <h2 class="heading" style="margin-top:20px">订单查询</h2>
 </div>
@@ -34,42 +34,69 @@
                     <div class="">
                         <form action="/Order/OrderSearch" method="get">
                             <div class="dataTables_length" id="menus_filter">
-                                <label>
-                                    <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
-                                        <option value="">--请选择出库仓--</option>
-                                        @foreach (var item in storages)
-                                        {
-                                            <option value="@item.StorageID" @(item.StorageID == ViewBag.storageid ? "selected" : "")>@item.StorageName</option>
-                                        }
-                                    </select>
-                                </label>
-                                <label>
-                                    <select tabindex="1" class="" style="width: 200px" id="carrierid" name="carrierid">
-                                        <option value="">--请选择承运商--</option>
-                                        @foreach (var item in carriers)
-                                        {
-                                            <option value="@item.CarrierID" @(item.CarrierID == ViewBag.carrierid ? "selected" : "")>@item.CarrierName</option>
-                                        }
-                                    </select>
-                                </label>
-                                <label>
-                                    <select tabindex="1" class="" style="width: 200px" id="customerid" name="customerid">
-                                        <option value="">--请选择客户--</option>
-                                        @foreach (var item in customers)
-                                        {
-                                            <option value="@item.CustomerID" @(item.CustomerID == ViewBag.customerid ? "selected" : "")>@item.CustomerName</option>
-                                        }
-                                    </select>
-                                </label>
-                                <label>
-                                    订单状态: <select class="span3" style="width:150px" id="status" name="status">
-                                        <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
-                                        <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
-                                        <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
-                                    </select>
-                                </label>
-                                <button class="btn btn-info" type="submit">搜索</button>
-                                @*<button class="btn btn-info" type="button" id="download_SHD">下载送货单</button>*@
+                                <table class="table table-bordered" style="width:70%;">
+                                    <tr>
+                                        <td>
+                                            <input type="text" id="orderno" name="orderno" style="width:200px" placeholder="订单号查询" />
+                                        </td>
+                                        <td>
+                                            <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
+                                                <option value="">--请选择出库仓--</option>
+                                                @foreach (var item in storages)
+                                                {
+                                                    <option value="@item.StorageID" @(item.StorageID == ViewBag.storageid ? "selected" : "")>@item.StorageName</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select tabindex="1" class="" style="width: 200px" id="carrierid" name="carrierid">
+                                                <option value="">--请选择承运商--</option>
+                                                @foreach (var item in carriers)
+                                                {
+                                                    <option value="@item.CarrierID" @(item.CarrierID == ViewBag.carrierid ? "selected" : "")>@item.CarrierName</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select tabindex="1" class="" style="width: 200px" id="customerid" name="customerid">
+                                                <option value="">--请选择客户--</option>
+                                                @foreach (var item in customers)
+                                                {
+                                                    <option value="@item.CustomerID" @(item.CustomerID == ViewBag.customerid ? "selected" : "")>@item.CustomerName</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            @*未配送 = 0,配送中 = 1, 已配送 = 2, 已回单 = 3, 订单完成 = 4, 已拒绝 = 5*@
+                                            <select class="span3" style="width: 200px" id="orderstatus" name="orderstatus">
+                                                <option value="-1" @(ViewBag.OrderStatus == -1 ? "selected" : "")>--订单状态--</option>
+                                                <option value="1" @(ViewBag.OrderStatus == 0 ? "selected" : "")>未配送</option>
+                                                <option value="0" @(ViewBag.OrderStatus == 1 ? "selected" : "")>配送中</option>
+                                                <option value="0" @(ViewBag.OrderStatus == 2 ? "selected" : "")>已配送</option>
+                                                <option value="0" @(ViewBag.OrderStatus == 3 ? "selected" : "")>已回单</option>
+                                                <option value="0" @(ViewBag.OrderStatus == 4 ? "selected" : "")>订单完成</option>
+                                                <option value="0" @(ViewBag.OrderStatus == 5 ? "selected" : "")>已拒绝</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <select tabindex="1" class="" style="width: 200px" id="operatorid" name="operatorid">
+                                                <option value="">--请选择操作人--</option>
+                                                @foreach (var item in users)
+                                                {
+                                                    <option value="@item.UserID" @(item.UserID == ViewBag.OperatorID ? "selected" : "")>@item.UserName</option>
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" aria-controls="menus" style="width:200px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" autocomplete="off" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="begindate">
+                                        </td>
+                                        <td><input type="text" aria-controls="menus" style="width:200px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" autocomplete="off" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="enddate"></td>
+                                        <td></td>
+                                        <td><button class="btn btn-info" type="submit">搜索</button></td>
+                                    </tr>
+                                </table>
                             </div>
                         </form>
                     </div>
@@ -153,7 +180,7 @@
                     </div>
                     <div title="2019-05-15 17:31:11">
                         <p>制单时间</p>
-                        <h5>@entity.CreateDate.ToString()</h5>
+                        <h5>@entity.OrderDate</h5>
                     </div>
                 </div>
             </div>
@@ -169,18 +196,19 @@
                     </div>
                     <div>
                         <p>订单状态</p>
-                        <h5>@(entity.OrderStatus)</h5>
+                        <h5>@(entity.OrderStatusDesc+entity.UploadStatusDesc)</h5>
                     </div>
                 </div>
                 <div class="lcItem_t_r_btnList" style="width: 130px;">
                     <div class="showDiv" isok="true">
                         订单详情
                     </div>
-                    @*<div class="showDiv">
-                        <a href="/Order/OrderAdd?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">订单修改</a>
-                    </div>*@
-                    @*<input type="hidden" id="AttachmentIDs" name="AttachmentIDs" value="@entity.AttachmentIDs">
-                    <div class="upImg">上传图片<input type="file" class="upfile"></div>*@                                        
+                    @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
+                    { 
+                        <div class="查看回单" onclick="javascript:showImg(@entity.AttachmentIDs)">
+                            查看回单
+                        </div>                                     
+                    }
                 </div>
             </div>
         </div>
@@ -264,20 +292,8 @@
     </div> <!-- /widget -->
 </div>
 
-<!--图片的弹窗-->
-<div class="maskLayer">
-    <div class="mask-layer">
-        <div class="mask-layer-container">
-            <div class="mask-layer-container-operate">
-                <button class="mask-out btn-default-styles">放大</button>
-                <button class="mask-in btn-default-styles">缩小</button>
-                <button class="mask-close btn-default-styles">关闭</button>
-            </div>
-        </div>
-        <div class="mask-layer-imgbox auto-img-center">
-            <p><img src=""></p>
-        </div>
-    </div>
+<!--图片显示模板-->
+<div class="docs-pictures clearfix" id="div_showImage">
 </div>
 @section Footer{
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>

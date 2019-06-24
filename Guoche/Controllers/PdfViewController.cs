@@ -12,6 +12,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Common;
+using Service.BaseBiz;
 
 namespace GuoChe.Controllers
 {
@@ -73,6 +74,8 @@ namespace GuoChe.Controllers
                     {
                         OrderEntity entity = OrderService.GetOrderEntityById(str.ToInt(0));
                         entity.TypeDesc = typedesc;
+                        List<BaseDataEntity> baseList= BaseDataService.GetBaseDataByType(entity.OrderSource);
+                        entity.CompanyName = baseList != null && baseList.Count > 0 ? baseList[0].ValueInfo : "";
                         if (entity != null)
                         {
                             list.Add(entity);

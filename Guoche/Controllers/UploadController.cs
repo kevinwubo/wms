@@ -82,7 +82,7 @@ namespace GuoChe.Controllers
                     OrderService.UpdateOrderAttachmentIDs(entity);
 
                     //更新订单状态 已回单
-                    OrderService.UpdateOrderStatus(orderid.ToInt(0), 1);
+                    OrderService.UpdateOrderStatus(orderid.ToInt(0), 3);
                 }
             }
 

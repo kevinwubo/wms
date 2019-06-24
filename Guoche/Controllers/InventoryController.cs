@@ -278,7 +278,7 @@ namespace GuoChe.Controllers
         {
             bool result = InventoryService.ModifyInventoryStatus(iid, "T", InventoryStatus.盘点中.ToString());
             //return Content(result ? "T" : "F");
-            Response.Redirect("InventoryCheck/");
+            Response.Redirect("Inventory/InventoryCheck/");
         }
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace GuoChe.Controllers
         public void InventoryCheckOver(int iid)
         {
             bool result = InventoryService.ModifyInventoryStatus(iid, "F", InventoryStatus.盘点完成.ToString());
-            Response.Redirect("InventoryCheck/");
+            Response.Redirect("Inventory/InventoryCheck/");
             //return Content(result ? "T" : "F");
         }
         #endregion
@@ -463,6 +463,5 @@ namespace GuoChe.Controllers
             return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMdd") + "库存信息.xls");
         }
         #endregion     
-
     }
 }

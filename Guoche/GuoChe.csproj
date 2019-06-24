@@ -621,9 +621,11 @@
     <Content Include="source\assets\css\fullcalendar.css" />
     <Content Include="source\assets\css\fullcalendar.print.css" />
     <Content Include="source\assets\css\img.css" />
+    <Content Include="source\assets\css\lctypein-alert.css" />
     <Content Include="source\assets\css\lctypein.css" />
     <Content Include="source\assets\css\local.css" />
     <Content Include="source\assets\css\OpenSans.css" />
+    <Content Include="source\assets\css\orderimport.css" />
     <Content Include="source\assets\css\queryItem.css" />
     <Content Include="source\assets\css\select2.css" />
     <Content Include="source\assets\css\setprice.css" />
@@ -703,6 +705,7 @@
     <Content Include="source\assets\js\SearchOrder.js" />
     <Content Include="source\assets\js\select2.min.js" />
     <Content Include="source\assets\js\sparkline.js" />
+    <Content Include="source\assets\js\viewer-jquery.min.js" />
     <Content Include="source\assets\js\viewer.min.js" />
     <Content Include="source\BaseData\Carrier.js" />
     <Content Include="source\BaseData\Customer.js" />

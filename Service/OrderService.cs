@@ -11,7 +11,6 @@ using Common;
 using DataRepository.DataAccess.Order;
 using Service.BaseBiz;
 using System.Data;
-using Service.Inventory;
 
 namespace Service
 {
@@ -97,7 +96,9 @@ namespace Service
 
                 entity.TempType = info.TempType;
                 entity.OrderStatus = info.OrderStatus;
+                entity.OrderStatusDesc = StringHelper.GetOrderStatusDesc(info.OrderStatus);
                 entity.UploadStatus = info.UploadStatus;
+                entity.UploadStatusDesc = StringHelper.GetUploadStatusDesc(info.UploadStatus);
                 entity.Status = info.Status;
                 entity.Remark = info.Remark;
                 entity.OrderSource = info.OrderSource;
@@ -175,7 +176,7 @@ namespace Service
         /// 更新订单状态
         /// </summary>
         /// <param name="orderid"></param>
-        /// <param name="orderstatus">未配送 = 0, 已配送 = 1, 订单完成 = 2, 已拒绝 = 3</param>
+        /// <param name="orderstatus">未配送 = 0,配送中 = 1, 已配送 = 2, 已回单 = 3, 订单完成 = 4, 已拒绝 = 5</param>
         /// <returns></returns>
         public static int UpdateOrderStatus(int orderid,int orderstatus)
         {
@@ -405,9 +406,10 @@ namespace Service
         }
 
         #region 分页相关
-        public static int GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "")
+        public static int GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1,
+            int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1)
         {
-            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno);
+            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid);
         }
 
         public static List<OrderEntity> GetOrderInfoPager(PagerInfo pager)
@@ -423,11 +425,12 @@ namespace Service
             return all;
         }
 
-        public static List<OrderEntity> GetOrderInfoByRule(PagerInfo pager, string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "")
+        public static List<OrderEntity> GetOrderInfoByRule(PagerInfo pager, string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1,
+            int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1)
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, pager);
+            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, pager);
 
             if (!miList.IsEmpty())
             {
@@ -443,7 +446,7 @@ namespace Service
         #endregion
 
 
-        #region 订单审核通过
+        #region 订单库存处理
         /// <summary>
         /// 仓配订单 仓到店，涉及仓的库存扣减，无视门店库存。
         /// 调拨订单 仓到仓，涉及仓仓之间的库存扣减增加。
@@ -453,7 +456,7 @@ namespace Service
         /// <param name="orderid"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static bool OrderPass(int orderid,string type,long operatorID)
+        public static bool OrderInventoryProcess(int orderid,string type,long operatorID)
         {
             InventoryRepository mr = new InventoryRepository();
             OrderEntity orderinfo = GetOrderByOrderID(orderid);
@@ -545,9 +548,6 @@ namespace Service
                 {
                     //运输订单B 厂到店，均无视库存。
                 }
-
-                // 更新订单状态
-                OrderService.UpdateOrderStatus(orderid, 2);
             }
             return true;
         }
@@ -630,7 +630,7 @@ namespace Service
         public static bool OrderBack(int orderid, string type, long operatorID)
         {
             // 更新订单状态
-            OrderService.UpdateOrderStatus(orderid, 1);
+            OrderService.UpdateOrderStatus(orderid,5);
             return true;
         }
         #endregion
@@ -779,7 +779,7 @@ namespace Service
                     }
                     info.OrderNo = entity.OrderNo;
                     info.MergeNo = "";
-                    info.OrderType = "订单导入";
+                    info.OrderType = OrderType.仓配订单.ToString();//商超订单、COSTA订单都为仓配订单
                     info.ReceiverStorageID = 0;
                     info.OrderDate = string.IsNullOrEmpty(entity.OrderDate) ? DefaultDateTime : DateTime.Parse(entity.OrderDate);
                     info.SendDate = string.IsNullOrEmpty(entity.YyDate) ? DefaultDateTime : DateTime.Parse(entity.YyDate);                    
@@ -844,6 +844,9 @@ namespace Service
                         long id = ordetail.CreateNew(infodetail);                        
                         #endregion
                     }
+
+                    //订单库存扣减处理
+                    OrderInventoryProcess(orderid.ToString().ToInt(0), "CPDD", OperatorID);
                 }
             }
 
@@ -851,7 +854,6 @@ namespace Service
         }
         
         #endregion
-
 
         #region 基础数据导入
         /// <summary>
@@ -865,15 +867,15 @@ namespace Service
 
             if (ds != null && ds.Tables.Count > 0)
             {
-                List<GoodsEntity> listG= GoodsService.GetAllGoods();
+                List<GoodsEntity> listG = GoodsService.GetAllGoods();
                 foreach (DataTable dt in ds.Tables)
                 {
                     if (dt != null && dt.Rows.Count > 0)
                     {
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
-                            //所属客户	仓库编号	仓库名称	商品编号	商品名称	规格型号	单位	批次号	生产日期	到期日期	
-                            //余量	破损	总库存	成本	售价	重量	总总量	最后更新时间
+                            //所属客户    仓库编号    仓库名称    商品编号    商品名称    规格型号    单位    批次号    生产日期    到期日期    
+                            //余量    破损    总库存    成本    售价    重量    总总量    最后更新时间
                             //GoodsEntity entity = new GoodsEntity();
                             //entity.TypeCode = "商品";
                             //entity.CustomerID = 14;
@@ -892,7 +894,7 @@ namespace Service
                             //entity.Status = 1;
                             //GoodsService.ModifyGoods(entity);
 
-                            GoodsEntity gEntity= listG.Find(p=>p.GoodsNo.Equals(dt.Rows[i]["商品编号"].ToString()));
+                            GoodsEntity gEntity = listG.Find(p => p.GoodsNo.Equals(dt.Rows[i]["商品编号"].ToString()));
 
                             InventoryInfo info = new InventoryInfo();
                             info.BatchNumber = dt.Rows[i]["批次号"].ToString();
@@ -909,7 +911,7 @@ namespace Service
                             info.StorageID = 13;
                             info.UnitPrice = 0;
                             InventoryRepository mr = new InventoryRepository();
-                            long inventID= mr.CreateNew(info);
+                            long inventID = mr.CreateNew(info);
 
                             InventoryDetailInfo dinfo = new InventoryDetailInfo();
                             dinfo.BatchNumber = dt.Rows[i]["批次号"].ToString();
@@ -933,5 +935,6 @@ namespace Service
             }
         }
         #endregion
+
     }
 }

@@ -234,7 +234,8 @@ namespace DataRepository.DataAccess.Order
         /// <param name="orderno">订单编号</param>
         /// <param name="pager"></param>
         /// <returns></returns>
-        public List<OrderInfo> GetOrderInfoByRule(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus, int orderstatus, string ordertype, string orderno, PagerInfo pager)
+        public List<OrderInfo> GetOrderInfoByRule(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
+            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, PagerInfo pager)
         {
             List<OrderInfo> result = new List<OrderInfo>();
 
@@ -269,8 +270,17 @@ namespace DataRepository.DataAccess.Order
             }
             if (!string.IsNullOrEmpty(orderno))
             {
-                builder.Append(" AND orderno=@orderno");
+                builder.Append(" AND orderno '%'+@orderno+'%' ");
             }
+            if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
+            {
+                builder.Append(" AND OrderDate BETWEEN @begindate AND @enddate ");
+            }
+            if (operatorid > -1)
+            {
+                builder.Append(" AND OperatorID=@OperatorID ");
+            }
+
             string sqlText = OrderStatement.GetAllOrderInfoByRulePagerHeader + builder.ToString() + OrderStatement.GetAllOrderInfoByRulePagerFooter;
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
@@ -306,6 +316,15 @@ namespace DataRepository.DataAccess.Order
             {
                 command.AddInputParameter("@orderno", DbType.String, orderno);
             }
+            if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
+            {
+                command.AddInputParameter("@begindate", DbType.String, begindate);
+                command.AddInputParameter("@enddate", DbType.String, enddate);
+            }
+            if (operatorid > -1)
+            {
+                command.AddInputParameter("@OperatorID", DbType.Int32, operatorid);
+            }
             command.AddInputParameter("@PageIndex", DbType.Int32, pager.PageIndex);
             command.AddInputParameter("@PageSize", DbType.Int32, pager.PageSize);
             command.AddInputParameter("@recordCount", DbType.Int32, pager.SumCount);
@@ -314,7 +333,8 @@ namespace DataRepository.DataAccess.Order
             return result;
         }
 
-        public int GetOrderCount(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus, int orderstatus, string ordertype, string orderno)
+        public int GetOrderCount(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
+            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid)
         {
             StringBuilder builder = new StringBuilder();
             builder.Append(OrderStatement.GetCount);
@@ -348,9 +368,16 @@ namespace DataRepository.DataAccess.Order
             }
             if (!string.IsNullOrEmpty(orderno))
             {
-                builder.Append(" AND orderno=@orderno");
+                builder.Append(" AND orderno LIKE '%'+@orderno+'%' ");
             }
-
+            if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
+            {
+                builder.Append(" AND OrderDate BETWEEN @begindate AND @enddate ");
+            }
+            if (operatorid > -1)
+            {
+                builder.Append(" AND OperatorID=@OperatorID ");
+            }
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(builder.ToString(), "Text"));
 
@@ -386,7 +413,15 @@ namespace DataRepository.DataAccess.Order
             {
                 command.AddInputParameter("@orderno", DbType.String, orderno);
             }
-
+            if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
+            {
+                command.AddInputParameter("@begindate", DbType.String, begindate);
+                command.AddInputParameter("@enddate", DbType.String, enddate);
+            }
+            if (operatorid > -1)
+            {
+                command.AddInputParameter("@OperatorID", DbType.Int32, operatorid);
+            }
             var o = command.ExecuteScalar<object>();
             return Convert.ToInt32(o);
         }
