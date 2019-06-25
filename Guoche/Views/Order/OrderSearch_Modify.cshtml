@@ -178,7 +178,7 @@
                     </div>
                     @if (ViewBag.PageType == "verify")
                     {
-                        @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
+                        if (!string.IsNullOrEmpty(entity.AttachmentIDs))
                         { 
                             <div class="查看回单" onclick="javascript:showImg(@entity.AttachmentIDs)">
                                 查看回单

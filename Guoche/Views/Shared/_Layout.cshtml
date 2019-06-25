@@ -114,7 +114,15 @@
                                                 <div class="accordion-inner">
                                                     @foreach (var inner in item)
                                                     {
-                                                        <a class="accordion-toggle" href="@inner.URL?Code=@inner.GroupCode"><i class="@inner.PreFlag"></i>  @inner.MenuName</a>
+                                                        if (inner.URL.Contains("?"))
+                                                        {
+                                                             <a class="accordion-toggle" href="@inner.URL&Code=@inner.GroupCode"><i class="@inner.PreFlag"></i>  @inner.MenuName</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="accordion-toggle" href="@inner.URL?Code=@inner.GroupCode"><i class="@inner.PreFlag"></i>  @inner.MenuName</a> 
+                                                        }
+                                                        
                                                     }
                                                 </div>
                                             </div>
