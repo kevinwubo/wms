@@ -1,5 +1,5 @@
 ﻿var elemnets = {
-    ids: ["StorageID", "ProductDate", "NeedStorageLocationCount", "SaveInventoryJson"],
+    ids: ["StorageID", "ProductDate", "SaveInventoryJson"],
     methods: [
         {
             required: true,
@@ -8,10 +8,6 @@
         {
             required: true,
             messages: ["请输入入库时间", "", "", ""]
-        },
-        {
-            required: true,
-            messages: ["请输入需要的仓库数量", "", "", ""]
         },
         {
             required: true,

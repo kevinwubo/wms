@@ -152,6 +152,7 @@ namespace Service
                         //entity.receiverstorage = 
                     }
                     entity.contact = item;
+                    entity.user = UserService.GetUserById(info.OperatorID);
                 }
 
             }

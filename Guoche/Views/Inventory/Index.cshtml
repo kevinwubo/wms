@@ -39,16 +39,15 @@
                                 <label>
                                     仓库名称:
                                     <select tabindex="1" class="" id="StorageID" name="StorageID">
-                                        <option value="">--请选择仓库名称--</option>
                                         @foreach (var item in storages)
                                         {
                                             <option value="@item.StorageID">@item.StorageName</option>
                                         }
                                     </select>
                                 </label>
-                                <label>
+                                @*<label>
                                     需要<input type="text" id="NeedStorageLocationCount" />个库位
-                                </label>
+                                </label>*@
                                 @*<label>
                                     仓库库位:
                                     <select tabindex="1" class="" id="StorageAreaNo" name="StorageAreaNo">
