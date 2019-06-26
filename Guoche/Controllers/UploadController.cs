@@ -25,8 +25,8 @@ namespace GuoChe.Controllers
             }
             string orderid=Request.Form["dataId"];
             string urlSufix = DateTime.Now.ToString("yyyyMMdd");
-            string reuploadPath = "~/UploadFiles/" + urlSufix + "/";
-            string uploadPath = Server.MapPath("../UploadFiles/" + urlSufix+"/");
+            string reuploadPath = "/UploadFiles/" + urlSufix + "/";
+            string uploadPath = Server.MapPath("~/UploadFiles/" + urlSufix+"/");
 
             // 如果UploadFiles文件夹不存在则先创建
             if (!Directory.Exists(uploadPath))
@@ -78,7 +78,15 @@ namespace GuoChe.Controllers
                     {
                         attachments = entity.AttachmentIDs;
                     }
-                    entity.AttachmentIDs = attachments + "," + attachment.AttachmentID;
+                    if (!string.IsNullOrEmpty(attachments))
+                    {
+                        entity.AttachmentIDs = attachments + "," + attachment.AttachmentID;
+                    }
+                    else
+                    {
+                        entity.AttachmentIDs = attachment.AttachmentID.ToString();
+                    }
+                    
                     OrderService.UpdateOrderAttachmentIDs(entity);
 
                     //更新订单状态 已回单

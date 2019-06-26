@@ -97,7 +97,7 @@
                     </div>
                     <div>
                         <p>送货时间</p>
-                        <h5>@entity.SendDate</h5>
+                        <h5>@entity.SendDate.ToShortDateString()</h5>
                     </div>
                 </div>
 
@@ -139,7 +139,7 @@
                     </div>
                     <div>
                         <p>订单属性</p>
-                        <h5>@entity.OrderType</h5>
+                        <h5>@entity.OrderTypeDesc</h5>
                     </div>
                 </div>
                 <div class="lcDivList">
@@ -176,14 +176,14 @@
                     <div class="showDiv" isok="true">
                         订单详情
                     </div>
+                    @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
+                    {
+                        <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
+                            查看回单
+                        </div>
+                    }
                     @if (ViewBag.PageType == "verify")
                     {
-                        if (!string.IsNullOrEmpty(entity.AttachmentIDs))
-                        { 
-                            <div class="查看回单" onclick="javascript:showImg(@entity.AttachmentIDs)">
-                                查看回单
-                            </div>
-                        }
                         <div class="showDiv">
                             <a href="/Order/OrderPass?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">通过</a>
                         </div>

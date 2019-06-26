@@ -90,7 +90,7 @@
                     </div>
                     <div>
                         <p>送货时间</p>
-                        <h5>@entity.SendDate</h5>
+                        <h5>@entity.SendDate.ToShortDateString()</h5>
                     </div>
                 </div>
 
@@ -132,7 +132,7 @@
                     </div>
                     <div>
                         <p>订单属性</p>
-                        <h5>@entity.OrderType</h5>
+                        <h5>@entity.OrderTypeDesc</h5>
                     </div>
                 </div>
                 <div class="lcDivList">
@@ -166,7 +166,7 @@
                     </div>
                     <div>
                         <p>送达时间</p>
-                        <h5><label id="arrivertime@(entity.OrderID)">@entity.SendDate.ToString()</label></h5>
+                        <h5><label id="arrivertime@(entity.OrderID)">@entity.ArriverDate.ToString()</label></h5>
                     </div>
                     <input type="hidden" id="AttachmentIDs" name="AttachmentIDs" value="@entity.AttachmentIDs">
                 </div>
@@ -184,7 +184,7 @@
                     }      
                     @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
                     { 
-                        <div class="查看回单" onclick="javascript:showImg(@entity.AttachmentIDs)">
+                        <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
                             查看回单
                         </div>
                     }

@@ -70,11 +70,16 @@ namespace DataRepository.DataModel
         [DataMapping("OrderDate", DbType.DateTime)]
         public DateTime OrderDate { get; set; }
         /// <summary>
-        /// 送达时间
+        /// 开始送货时间
         /// </summary>
         [DataMapping("SendDate", DbType.DateTime)]
         public DateTime SendDate { get; set; }
-
+        
+        /// <summary>
+        /// 送达时间
+        /// </summary>
+        [DataMapping("ArriverDate", DbType.DateTime)]
+        public DateTime ArriverDate { get; set; }
         /// <summary>
         /// 运输应收
         /// </summary>

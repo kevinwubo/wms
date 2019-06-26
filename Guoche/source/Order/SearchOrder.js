@@ -84,7 +84,7 @@ var orderInfo = {
             if (date) {
                 $.ajax({
                     type: "post",
-                    url: "OrderChangeArriverTime",
+                    url: "/Order/OrderChangeArriverTime",
                     data: {
                         orderid: orderid,
                         arrivertime: date
@@ -109,23 +109,21 @@ var orderInfo = {
 function showImg(idss) {
     if (idss != "") {
         $.ajax({
-            url: "searchAttachmentByIDs",
+            url: "/Order/searchAttachmentByIDs",
             type: 'POST',
             async: false,
             data: { ids: idss },
             success: function (data) {
+                console.log(data);
                 if (!!data) {
-                    for (var i; i < data.length; i++) {
+                    for (var i = 0; i < data.length; i++) {
                         if (i == 0) {
                             $(".docs-pictures").append(" <img data-original='" + data[i].FileName + "' style='display: none;' id='top1' src='" + data[i].FilePath + "' >");
                         }
                         else {
                             $(".docs-pictures").append(" <img data-original='" + data[i].FileName + "' style='display: none;' src='" + data[i].FilePath + "' >");
                         }
-                    }
-                    $(".docs-pictures").append(" <img data-original='11_37_20190524091717_1' style='display: none;' id='top1' src='http://www.arapnet.com/lcimg//11/37/11_37_20190524091717_XloenQ.jpg' alt='Cuo Na Lake' >");
-                    $(".docs-pictures").append(" <img data-original='11_37_20190524091717_2' style='display: none;' src='http://www.arapnet.com/lcimg//11/37/11_37_20190522202033_ILaNZy.jpg' alt='Cuo Na '>");
-                    $(".docs-pictures").append(" <img data-original='11_37_20190524091717_3' style='display: none;' src='http://www.arapnet.com/lcimg//11/37/11_37_20190522202026_O0YTiR.jpg' alt='Cuo Lake'>");                    
+                    }                 
                     $('.docs-pictures').viewer("data-original");
                     $('#top1').click();
                 }

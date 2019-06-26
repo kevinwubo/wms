@@ -125,10 +125,10 @@ namespace DataRepository.DataAccess.Order
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public int UpdateOrderSendDate(OrderInfo order)
+        public int UpdateOrderArriverDate(OrderInfo order)
         {
-            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderStatement.UpdateOrderSendDate, "Text"));
-            command.AddInputParameter("@SendDate", DbType.String, order.SendDate);
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderStatement.UpdateOrderArriverDate, "Text"));
+            command.AddInputParameter("@ArriverDate", DbType.DateTime, order.ArriverDate);
             command.AddInputParameter("@OrderID", DbType.Int32, order.OrderID);
             return command.ExecuteNonQuery();
         }
@@ -270,7 +270,7 @@ namespace DataRepository.DataAccess.Order
             }
             if (!string.IsNullOrEmpty(orderno))
             {
-                builder.Append(" AND orderno '%'+@orderno+'%' ");
+                builder.Append(" AND orderno=@orderno ");
             }
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {
@@ -368,7 +368,7 @@ namespace DataRepository.DataAccess.Order
             }
             if (!string.IsNullOrEmpty(orderno))
             {
-                builder.Append(" AND orderno LIKE '%'+@orderno+'%' ");
+                builder.Append(" AND orderno=@orderno ");
             }
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {

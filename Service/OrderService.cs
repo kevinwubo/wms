@@ -79,6 +79,7 @@ namespace Service
                 entity.OrderNo = info.OrderNo;
                 entity.MergeNo = info.MergeNo;
                 entity.OrderType = info.OrderType;
+                entity.OrderTypeDesc = StringHelper.getOrderType(info.OrderType);
                 entity.ReceiverID = info.ReceiverID;
                 entity.CustomerID = info.CustomerID;
                 entity.SendStorageID = info.SendStorageID;
@@ -86,7 +87,7 @@ namespace Service
                 entity.CarrierID = info.CarrierID;
                 entity.OrderDate = info.OrderDate.ToShortDateString();
                 entity.SendDate = info.SendDate;
-
+                entity.ArriverDate = info.ArriverDate;
                 entity.configPrice = info.configPrice;
                 entity.configHandInAmt = info.configHandInAmt;
                 entity.configSortPrice = info.configSortPrice;
@@ -114,7 +115,7 @@ namespace Service
                 entity.customer = CustomerService.GetCustomerById(entity.CustomerID);
                 entity.sendstorage = StorageService.GetStorageEntityById(entity.SendStorageID);
                 entity.contact = new OrderContactEntity();
-
+                entity.AttachmentIDs = info.AttachmentIDs;
                 if (isContact)
                 {
                     OrderContactEntity item = new OrderContactEntity();
@@ -201,24 +202,25 @@ namespace Service
             info.UploadStatus = uploadstatus;
             return mr.UpdateUploadStatus(info);
         }
-        public static int UpdateOrderSendDate(OrderEntity entity)
+        public static int UpdateOrderArriverDate(OrderEntity entity)
         {
             OrderRepository mr = new OrderRepository();
             OrderInfo info = new OrderInfo();
             info.OrderID = entity.OrderID;
-            info.SendDate = entity.SendDate;
-            return mr.UpdateOrderSendDate(info);
+            info.ArriverDate = entity.ArriverDate;
+            return mr.UpdateOrderArriverDate(info);
         }
 
 
         public static bool ModifyOrder(OrderEntity entity)
         {
+            long OrderID = 0;
             long result = 0;
             if (entity != null)
             {
                 OrderRepository mr = new OrderRepository();
 
-                OrderInfo OrderInfo = TranslateOrderInfo(entity);
+                OrderInfo orderInfo = TranslateOrderInfo(entity);
 
                 OrderJsonEntity jsonlist = null;
                 if (!string.IsNullOrEmpty(entity.orderDetailJson))
@@ -237,21 +239,24 @@ namespace Service
                 //订单信息更新
                 if (entity.OrderID > 0)
                 {
-                    OrderInfo.OrderID = entity.OrderID;
-                    OrderInfo.ChangeDate = DateTime.Now;
-                    result = mr.ModifyOrder(OrderInfo);
+                    orderInfo.OrderID = entity.OrderID;
+                    orderInfo.ChangeDate = DateTime.Now;
+                    result = mr.ModifyOrder(orderInfo);
+                    OrderID = entity.OrderID;
                 }
                 else
                 {
-                    OrderInfo.ChangeDate = DateTime.Now;
-                    OrderInfo.CreateDate = DateTime.Now;
-                    result = mr.CreateNew(OrderInfo);
+                    orderInfo.ChangeDate = DateTime.Now;
+                    orderInfo.CreateDate = DateTime.Now;
+                    result = mr.CreateNew(orderInfo);
+                    OrderID = result;
                 }
 
                 #region 订单明细更新
 
                 if (jsonlist != null)
                 {
+                    List<OrderDetailInfo> oldOrderDetail = new List<OrderDetailInfo>();//修改 涉及到库存数量更改
                     List<OrderDetailJsonEntity> list = jsonlist.listOrderDetail;
                     if (list != null && list.Count > 0)
                     {
@@ -291,6 +296,7 @@ namespace Service
      
                             if (info.ID > 0)
                             {
+                                oldOrderDetail.Add(info);
                                 info.ChangeDate = DateTime.Now;
                                 mrdetail.ModifyOrderDetail(info);
                             }
@@ -299,9 +305,11 @@ namespace Service
                                 info.CreateDate = DateTime.Now;
                                 info.ChangeDate = DateTime.Now;
                                 mrdetail.CreateNew(info);
-                            }
+                            }                            
                         }
                     }
+                    //库存更新
+                    OrderInventoryProcess(OrderID, orderInfo.OrderType, orderInfo.OperatorID, oldOrderDetail);
                 }
 
                 #endregion
@@ -456,7 +464,7 @@ namespace Service
         /// <param name="orderid"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static bool OrderInventoryProcess(int orderid,string type,long operatorID)
+        public static bool OrderInventoryProcess(long orderid, string type, long operatorID, List<OrderDetailInfo> oldOrderDetail = null)
         {
             InventoryRepository mr = new InventoryRepository();
             OrderEntity orderinfo = GetOrderByOrderID(orderid);
@@ -476,7 +484,7 @@ namespace Service
                             {
                                 #region 库存扣减
                                 InventoryInfo inventinfo = new InventoryInfo();
-                                inventinfo.Quantity = inventory.Quantity - detail.Quantity;//仓库库存减去订单明细中出库库存
+                                inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail, oldOrderDetail);//仓库库存减去订单明细中出库库存
                                 inventinfo.InventoryID = inventory.InventoryID;
                                 inventinfo.ChangeDate = DateTime.Now;
                                 mr.ModifyInventoryQuantity(inventinfo);
@@ -504,7 +512,7 @@ namespace Service
                             {
                                 #region 发货仓库库存扣减
                                 InventoryInfo inventinfo = new InventoryInfo();
-                                inventinfo.Quantity = inventory.Quantity - detail.Quantity;//仓库库存减去订单明细中出库库存
+                                inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail,oldOrderDetail);//仓库库存减去订单明细中出库库存
                                 inventinfo.InventoryID = inventory.InventoryID;
                                 inventinfo.ChangeDate = DateTime.Now;
                                 mr.ModifyInventoryQuantity(inventinfo);
@@ -552,6 +560,26 @@ namespace Service
             return true;
         }
 
+
+        /// <summary>
+        /// 修改 如果修改出库数量
+        /// </summary>
+        /// <param name="detail"></param>
+        /// <param name="oldOrderDetail"></param>
+        /// <returns></returns>
+        public static int UpdateQuantity(OrderDetailEntity detail, List<OrderDetailInfo> oldOrderDetail)
+        {
+            int quantity = detail.Quantity;
+            if (oldOrderDetail != null && oldOrderDetail.Count > 0)
+            {
+                OrderDetailInfo olddetail = oldOrderDetail.Find(p => p.ID == detail.ID);
+                if (olddetail != null)
+                {
+                    quantity = detail.Quantity - olddetail.Quantity;
+                }
+            }
+            return quantity;
+        }
 
         /// <summary>
         /// 库存更新

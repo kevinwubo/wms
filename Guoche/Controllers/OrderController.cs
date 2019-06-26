@@ -231,11 +231,11 @@ namespace GuoChe.Controllers
         /// <param name="p"></param>
         /// <returns></returns>
         public ActionResult OrderSearch(string type = "", int carrierid = 0, int storageid = 0, int customerid = 0, int orderstatus = -1, string orderno = ""
-            , string begindate = "", string enddate = "", int operatorid = -1, int p = 1)
+            , string begindate = "", string enddate = "", int operatorid = -1, string ordertype = "", int p = 1)
         {
             List<OrderEntity> mList = null;
 
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, orderstatus, -1, -1, "", orderno, begindate, enddate, operatorid);
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, orderstatus, -1, -1, ordertype, orderno, begindate, enddate, operatorid);
 
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
@@ -243,9 +243,9 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "OrderSearch";
 
-            if (orderstatus > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || operatorid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            if (orderstatus > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || operatorid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
             {
-                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, orderstatus, -1, -1, "", orderno, begindate, enddate, operatorid);
+                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, orderstatus, -1, -1, ordertype, orderno, begindate, enddate, operatorid);
             }
             else
             {
@@ -262,8 +262,10 @@ namespace GuoChe.Controllers
             //操作人
             ViewBag.Users = UserService.GetUserAll();
             ViewBag.BeginDate = begindate;
+            ViewBag.OrderNo = orderno;
             ViewBag.EndDate = enddate;
             ViewBag.PageType = type;
+            ViewBag.OrderType = ordertype;
             ViewBag.OperatorID = operatorid;
             ViewBag.OrderStatus = orderstatus;
             ViewBag.carrierid = carrierid;
@@ -331,7 +333,7 @@ namespace GuoChe.Controllers
         //    pager.PageIndex = p;
         //    pager.PageSize = PAGESIZE;
         //    pager.SumCount = count;
-        //    pager.URL = "/OrderSearch_DCS";
+        //    pager.URL = "OrderSearch_DCS";
 
         //    ViewBag.OrderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList" && t.Status == 1).ToList();
 
@@ -366,19 +368,19 @@ namespace GuoChe.Controllers
         /// <returns></returns>
         public ActionResult OrderSearch_Carrier(string type, int uploadstatus = -1, string ordertype = "", string orderno = "", int p = 1)
         {
-            int orderstatus=-1;            
+            int orderstatus = -1;    //未配送 = 0,配送中 = 1, 已配送 = 2, 已回单 = 3, 订单完成 = 4, 已拒绝 = 5        
             if(type.Equals("tc_download"))
             {
                 //orderstatus=0;
             }
             else if(type.Equals("tc_confirm"))
             {
-                orderstatus = 1;//已配送
+                orderstatus = -1;//已配送
                 uploadstatus = 1;//已下载
             }
             else if(type.Equals("tc_search"))
             {
-                orderstatus = 3;//订单完成
+                orderstatus = -1;//订单完成
                 uploadstatus = 1;//已下载
             }
 
@@ -434,11 +436,11 @@ namespace GuoChe.Controllers
             int i = -1;
             if (!string.IsNullOrEmpty(arrivertime))
             {
-                entity.SendDate = DateTime.Parse(arrivertime);
-                i = OrderService.UpdateOrderSendDate(entity);
+                entity.ArriverDate = DateTime.Parse(arrivertime);
+                i = OrderService.UpdateOrderArriverDate(entity);
 
                 //更新订单状态 已配送
-                OrderService.UpdateOrderStatus(orderid.ToInt(0), 1);
+                OrderService.UpdateOrderStatus(orderid.ToInt(0), 2);
             }
             return new JsonResult
             {
@@ -551,7 +553,7 @@ namespace GuoChe.Controllers
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
-            pager.URL = "OrderSearch_Modify";
+            pager.URL = "OrderSearch";
 
             int orderstatus = 0;
             int uploadstatus = 0;
@@ -603,7 +605,7 @@ namespace GuoChe.Controllers
         public void OrderDelete(int orderid)
         {
             OrderService.Delete(orderid);
-            Response.Redirect("/OrderSearch_Modify/");
+            Response.Redirect("OrderSearch_Modify/");
         }
         #endregion
 
@@ -618,50 +620,12 @@ namespace GuoChe.Controllers
         public JsonResult searchAttachmentByIDs(string ids)
         {
             List<AttachmentEntity> listAtt = new List<AttachmentEntity>();
-            listAtt = BaseDataService.GetAttachmentInfoByKyes(ids);
+            if(!string.IsNullOrEmpty(ids))
+            {
+                listAtt = BaseDataService.GetAttachmentInfoByKyes(ids.TrimEnd(','));
+            }            
             return Json(listAtt);
         }
         #endregion
-
-        #region 测试数据导入
-        public ActionResult BaseDataImport()
-        {
-            return View();
-        }
-
-        /// <summary>
-        /// 订单导入
-        /// </summary>
-        /// <returns></returns>
-        public JsonResult OrderBaseDataImport()
-        {
-            List<ImportOrderEntity> list = new List<ImportOrderEntity>();
-            DataSet ds = new DataSet();
-            if (Request.Files.Count == 0)
-            {
-                throw new Exception("请选择导入文件！");
-            }
-
-            String token = Request["token"];
-            string importType = Request["importType"];//导入类型
-            // 保存文件到UploadFiles文件夹
-            for (int i = 0; i < Request.Files.Count; i++)
-            {
-                HttpPostedFileBase file = Request.Files[i];
-                var fileName = file.FileName;
-                var filePath = Server.MapPath(string.Format("~/{0}", "UploadFiles"));
-                string path = Path.Combine(filePath, fileName);
-                file.SaveAs(path);
-
-                ds = ExcelHelper.ImportBaseExceltoDt(path);
-                OrderService.GetBaseImportList(ds);
-
-                //存入缓存
-                Cache.Add(token, list);
-            }
-            return Json(list);
-        }
-        #endregion
-
     }
 }

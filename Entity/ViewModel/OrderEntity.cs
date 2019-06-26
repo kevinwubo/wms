@@ -25,6 +25,8 @@ namespace Entity.ViewModel
         /// </summary>
         public string OrderType { get; set; }
 
+        public string OrderTypeDesc { get; set; }
+
         /// <summary>
         /// 收货门店ID
         /// </summary>
@@ -56,10 +58,14 @@ namespace Entity.ViewModel
         /// </summary>
         public string OrderDate { get; set; }
         /// <summary>
-        /// 送达时间
+        /// 送货时间
         /// </summary>
         public DateTime SendDate { get; set; }
 
+        /// <summary>
+        /// 送达时间
+        /// </summary>
+        public DateTime ArriverDate { get; set; }
         /// <summary>
         /// 运输应收
         /// </summary>

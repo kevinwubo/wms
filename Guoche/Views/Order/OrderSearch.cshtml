@@ -34,10 +34,10 @@
                     <div class="">
                         <form action="/Order/OrderSearch" method="get">
                             <div class="dataTables_length" id="menus_filter">
-                                <table class="table table-bordered" style="width:70%;">
+                                <table class="table table-bordered" style="width:70%;border:0px;">
                                     <tr>
                                         <td>
-                                            <input type="text" id="orderno" name="orderno" style="width:200px" placeholder="订单号查询" />
+                                            <input type="text" id="orderno" name="orderno" style="width:200px" value="@ViewBag.OrderNo" placeholder="订单号查询" />
                                         </td>
                                         <td>
                                             <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
@@ -81,6 +81,15 @@
                                     </tr>
                                     <tr>
                                         <td>
+                                            <select class="span3" style="width: 200px" id="ordertype" name="ordertype">
+                                                <option value="" @(ViewBag.OrderType == "" ? "selected" : "")>--订单类型--</option>
+                                                <option value="CPDD" @(ViewBag.OrderType == "CPDD" ? "selected" : "")>仓配订单</option>
+                                                <option value="DBDD" @(ViewBag.OrderType == "DBDD" ? "selected" : "")>调拨订单</option>
+                                                <option value="YSDDA" @(ViewBag.OrderType == "YSDDA" ? "selected" : "")>运输订单A</option>
+                                                <option value="YSDDB" @(ViewBag.OrderType == "YSDDB" ? "selected" : "")>运输订单B</option>
+                                            </select>
+                                        </td>
+                                        <td>
                                             <select tabindex="1" class="" style="width: 200px" id="operatorid" name="operatorid">
                                                 <option value="">--请选择操作人--</option>
                                                 @foreach (var item in users)
@@ -92,8 +101,7 @@
                                         <td>
                                             <input type="text" aria-controls="menus" style="width:200px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" autocomplete="off" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="begindate">
                                         </td>
-                                        <td><input type="text" aria-controls="menus" style="width:200px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" autocomplete="off" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="enddate"></td>
-                                        <td></td>
+                                        <td><input type="text" aria-controls="menus" style="width:200px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" autocomplete="off" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="enddate"></td>                                        
                                         <td><button class="btn btn-info" type="submit">搜索</button></td>
                                     </tr>
                                 </table>
@@ -124,7 +132,7 @@
                     </div>
                     <div>
                         <p>送货时间</p>
-                        <h5>@entity.SendDate</h5>
+                        <h5>@entity.SendDate.ToShortDateString()</h5>
                     </div>
                 </div>
 
@@ -166,7 +174,7 @@
                     </div>
                     <div>
                         <p>订单属性</p>
-                        <h5>@entity.OrderType</h5>
+                        <h5>@entity.OrderTypeDesc</h5>
                     </div>
                 </div>
                 <div class="lcDivList">
@@ -205,7 +213,7 @@
                     </div>
                     @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
                     { 
-                        <div class="查看回单" onclick="javascript:showImg(@entity.AttachmentIDs)">
+                        <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
                             查看回单
                         </div>                                     
                     }

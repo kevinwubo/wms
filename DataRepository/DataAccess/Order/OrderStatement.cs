@@ -27,7 +27,7 @@ namespace DataRepository.DataAccess.Order
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH ordera AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY Status DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 )as T ) 
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY OrderDate DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 )as T ) 
 		                                                  SELECT *  FROM ordera 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize
 	                                                  END";
@@ -47,7 +47,7 @@ namespace DataRepository.DataAccess.Order
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH ordera AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY Status DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 ";
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY OrderDate DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 ";
         public static string GetAllOrderInfoByRulePagerFooter = @")as T ) 
 		                                                  SELECT *  FROM ordera 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize
@@ -86,7 +86,7 @@ namespace DataRepository.DataAccess.Order
         /// <summary>
         /// 更新送达时间
         /// </summary>
-        public static string UpdateOrderSendDate = @"UPDATE wms_OrderInfo SET SendDate = @SendDate,ChangeDate = GetDate() WHERE OrderID=@OrderID";
+        public static string UpdateOrderArriverDate = @"UPDATE wms_OrderInfo SET ArriverDate = @ArriverDate,ChangeDate = GetDate() WHERE OrderID=@OrderID";
 
         /// <summary>
         /// 更新订单状态
