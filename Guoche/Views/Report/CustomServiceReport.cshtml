@@ -38,7 +38,7 @@
                                         <option value="">--请选择仓库--</option>
                                         @foreach (var item in storages)
                                         {
-                                            <option value="@item.storageid" @(item.storageid == viewbag.storageid ? "selected" : "")>@item.storagename</option>
+                                            <option value="@item.StorageID" @(item.StorageID == ViewBag.storageid ? "selected" : "")>@item.StorageName</option>
                                         }
                                     </select>
                                 </label>
