@@ -167,6 +167,18 @@ namespace GuoChe.Controllers
             return Json(contact);
         }
 
+
+        /// <summary>
+        /// 根据客户ID 查询对应的门店信息
+        /// </summary>
+        /// <param name="rid"></param>
+        /// <returns></returns>
+        public JsonResult GetReceiverByCustomerID(int customerID)
+        {
+            List<ReceiverEntity> list = ReceiverService.GetReceiverByCustomerID(customerID);
+            return Json(list);
+        }
+
         public JsonResult GetReceiver(string type)
         {
             List<ReceiverEntity> listReceiver = new List<ReceiverEntity>();

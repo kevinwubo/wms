@@ -1,0 +1,118 @@
+﻿@using Entity.ViewModel;
+@using Common;
+@{
+    ViewBag.Title = "客服日常报表";
+    List<ReportEntity> reportList = (List<ReportEntity>)ViewBag.reportList;    
+    List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
+    List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
+    List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
+    PagerInfo p = (PagerInfo)ViewBag.Pager;
+}
+<link href="~/source/assets/css/setprice.css" rel="stylesheet" />
+<div class="row-fluid">
+    <h2 class="heading" style="margin-top:20px">客服日常报表</h2>
+</div>
+<div class="row-fluid">
+    <div class="widget widget-padding span12">
+        <div class="widget-header">
+            <i class="icon-laptop"></i>
+            <h5>客服日常报表</h5>
+        </div>
+        <div class="widget-body" style="margin-bottom:50px">
+            <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
+                <div class="row-fluid">
+                    <div class="">
+                        <form action="/PriceSet/Index" method="get">
+                            <div class="dataTables_length" id="menus_filter">
+                                <label>
+                                    <select tabindex="1" class="" style="width: 200px" id="customerid" name="customerid">
+                                        <option value="">--请选择客户--</option>
+                                        @foreach (var item in customers)
+                                        {
+                                            <option value="@item.CustomerID" @(item.CustomerID == ViewBag.customerid ? "selected" : "")>@item.CustomerName</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
+                                        <option value="">--请选择仓库--</option>
+                                        @foreach (var item in storages)
+                                        {
+                                            <option value="@item.storageid" @(item.storageid == viewbag.storageid ? "selected" : "")>@item.storagename</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    <select tabindex="1" class="" style="width: 200px" id="carrierid" name="carrierid">
+                                        <option value="">--请选择承运商--</option>
+                                        @foreach (var item in carriers)
+                                        {
+                                            <option value="@item.CarrierID" @(item.CarrierID == ViewBag.carrierid ? "selected" : "")>@item.CarrierName</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    <select class="span3" style="width: 200px" id="ordertype" name="ordertype">
+                                        <option value="" @(ViewBag.OrderType == "" ? "selected" : "")>--订单类型--</option>
+                                        <option value="CPDD" @(ViewBag.OrderType == "CPDD" ? "selected" : "")>仓配订单</option>
+                                        <option value="DBDD" @(ViewBag.OrderType == "DBDD" ? "selected" : "")>调拨订单</option>
+                                        <option value="YSDDA" @(ViewBag.OrderType == "YSDDA" ? "selected" : "")>运输订单A</option>
+                                        <option value="YSDDB" @(ViewBag.OrderType == "YSDDB" ? "selected" : "")>运输订单B</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    <input type="text" id="orderno" name="orderno" style="width:200px" value="@ViewBag.ReceiverName" placeholder="请输入收货方" />
+                                </label>
+                                <button class="btn btn-info" type="submit">查询</button>
+                                <button class="btn btn-info" type="button" onclick="DownloadReport('KFR')">客服报表导出</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>              
+                @*//序号	订单编号	订单属性	订单归属	发货仓库	供应商	下单日期	收货方	收货地址	货物重量	配送数量*@
+                <table id="users" class="table table-striped table-bordered dataTable" aria-describedby="users_info">
+                    <thead>
+                        <tr role="row">
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">序号</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单编号</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单属性</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单归属</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">发货仓库</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">供应商</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">下单日期</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货方</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货地址</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">货物重量</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">配送数量</th>
+                        </tr>
+                    </thead>
+                    @if (reportList != null && reportList.Count > 0)
+                    {
+                        <tbody role="alert" aria-live="polite" aria-relevant="all">
+                            @foreach (ReportEntity entity in reportList)
+                            {
+
+                                <tr class="">
+                                    <td class=" sorting_1">@entity.ID</td>
+                                    <td class=" ">@entity.OrderNo</td>
+                                    <td class=" ">@entity.OrderType</td>
+                                    <td class=" ">@entity.OrderOwner</td>
+                                    <td class=" ">@entity.SendStorageName</td>
+                                    <td class=" ">@entity.CarrierName</td>
+                                    <td class=" ">@entity.OrderDate.ToShortDateString()</td>
+                                    <td class=" ">@entity.ReceiverName</td>
+                                    <td class=" ">@entity.ReceiverAddress</td>
+                                    <td class=" ">@entity.Weight</td>
+                                    <td class=" ">@entity.Quantity</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    }
+                </table>
+                
+                @{ Html.RenderPartial("../Pager", p); }
+            </div>
+        </div> <!-- /widget-body -->
+    </div> <!-- /widget -->
+</div>

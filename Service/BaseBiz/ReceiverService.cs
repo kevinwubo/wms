@@ -27,6 +27,30 @@ namespace Service.BaseBiz
             return result;
         }
 
+        public static List<ReceiverEntity> GetReceiverByCustomerID(int customerID)
+        {
+            List<ReceiverEntity> all = new List<ReceiverEntity>();
+            ReceiverRepository mr = new ReceiverRepository();
+            List<ReceiverInfo> miList = null;//Cache.Get<List<ReceiverInfo>>("GetReceiverByCustomerID" + customerID);
+            if (miList.IsEmpty())
+            {
+                miList = mr.GetReceiverByCustomerID(customerID);
+                Cache.Add("GetReceiverByCustomerID" + customerID, miList);
+            }
+            if (!miList.IsEmpty())
+            {
+                foreach (ReceiverInfo mInfo in miList)
+                {
+                    ReceiverEntity ReceiverEntity = TranslateReceiverEntity(mInfo);
+                    all.Add(ReceiverEntity);
+                }
+            }
+
+            return all;
+
+        }
+        
+
         private static ReceiverInfo TranslateReceiverInfo(ReceiverEntity entity)
         {
             ReceiverInfo info = new ReceiverInfo();

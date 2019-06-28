@@ -67,6 +67,7 @@
     <Compile Include="ViewModel\PriceSetEntity.cs" />
     <Compile Include="ViewModel\Province.cs" />
     <Compile Include="ViewModel\ReceiverEntity.cs" />
+    <Compile Include="ViewModel\ReportEntity.cs" />
     <Compile Include="ViewModel\ReservationsEntity.cs" />
     <Compile Include="ViewModel\RoleEntity.cs" />
     <Compile Include="ViewModel\SalerEntity.cs" />

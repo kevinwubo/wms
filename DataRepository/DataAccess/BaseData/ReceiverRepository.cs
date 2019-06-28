@@ -20,6 +20,15 @@ namespace DataRepository.DataAccess.BaseData
             return result;
         }
 
+        public List<ReceiverInfo> GetReceiverByCustomerID(int CustomerID)
+        {
+            List<ReceiverInfo> result = new List<ReceiverInfo>();
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(ReceiverStatement.GetReceiverByCustomerID, "Text"));
+            command.AddInputParameter("@CustomerID", DbType.Int32, CustomerID);            
+            result = command.ExecuteEntityList<ReceiverInfo>();
+            return result;
+        }
+
         public List<ReceiverInfo> GetReceiverByKeys(string keys)
         {
             List<ReceiverInfo> result = new List<ReceiverInfo>();

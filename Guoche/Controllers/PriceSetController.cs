@@ -24,7 +24,7 @@ namespace GuoChe.Controllers
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
-            pager.URL = "/PriceSet";
+            pager.URL = "/PriceSet/";
 
 
             ViewBag.PriceSetModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "PriceSetCode" && t.Status == 1).ToList();

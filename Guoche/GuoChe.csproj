@@ -210,6 +210,7 @@
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\GoodsController.cs" />
     <Compile Include="Controllers\GroupController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RevController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
@@ -779,6 +780,7 @@
     <Content Include="source\Order\ImportOrder.js" />
     <Content Include="source\Order\inputOrder.js" />
     <Content Include="source\Order\SearchOrder.js" />
+    <Content Include="source\Report.js" />
     <Content Include="source\Saler.js" />
     <Content Include="source\Store.js" />
     <Content Include="Web.config">
@@ -924,6 +926,10 @@
     <Content Include="Views\Line\Index.cshtml" />
     <Content Include="Views\PdfView\PreviewImport.cshtml" />
     <Content Include="Views\Order\BaseDataImport.cshtml" />
+    <Content Include="Views\Report\CarrierReport.cshtml" />
+    <Content Include="Views\Report\CustomerReport.cshtml" />
+    <Content Include="Views\Report\CustomServiceReport.cshtml" />
+    <Content Include="Views\Report\ProfitReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

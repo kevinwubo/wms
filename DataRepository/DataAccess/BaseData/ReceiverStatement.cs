@@ -61,6 +61,8 @@ namespace DataRepository.DataAccess.BaseData
 
         public static string GetReceiverByKey = @"SELECT * FROM wms_ReceiverInfo(NOLOCK) WHERE ReceiverID=@ReceiverID";
 
+        public static string GetReceiverByCustomerID = @"SELECT * FROM wms_ReceiverInfo(NOLOCK) WHERE CustomerID=@CustomerID";
+
         public static string Remove = @"UPDATE wms_ReceiverInfo SET Status=0 WHERE ReceiverID=@ReceiverID";
 
         public static string GetReceiverByKeys = @"SELECT * FROM wms_ReceiverInfo(NOLOCK) WHERE ReceiverID IN (#ids#)";

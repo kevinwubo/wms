@@ -224,6 +224,26 @@ var orderInfo = {
 
             $("#tr_ContactInfo").show();
 
+            //选择客户自动带出门店信息
+            $("#CustomerID").click(function () {
+                var CID = $("#CustomerID").val();
+                $("#ReceiverID").html("").append("<option value=''>--请选择门店--</option>");
+                jQuery.ajax({
+                    url: "GetReceiverByCustomerID",
+                    data: { customerID: CID },
+                    type: "post",
+                    success: function (data) {
+                        if (data) {
+                            if (data != "") {                                
+                                for (var i = 0; i < data.length; i++) {
+                                    $("#ReceiverID").append("<option value='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</option>");
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+
             $("#ReceiverID").val($("#ReceiverID").val()).trigger("change");
         }
         else {
