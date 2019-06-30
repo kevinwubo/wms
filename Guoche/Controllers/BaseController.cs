@@ -212,25 +212,40 @@ namespace GuoChe.Controllers
                     foreach (MenuEntity entity in list)
                     {
                         entity.IsShow = false;
-                        if (string.IsNullOrEmpty(code))
-                        {                            
-                            if (entity.URL.Contains(action))
+                        //if (string.IsNullOrEmpty(code))
+                        //{                            
+                        //    if (entity.URL.Contains(action))
+                        //    {
+                        //        entity.IsShow = true;
+                        //    }
+                        //}
+                        try
+                        {
+                            String[] str = entity.URL.Split('/');
+                            if (str[1].Equals(action))
                             {
                                 entity.IsShow = true;
                             }
                         }
-                        else
-                        {                            
-                            if (entity.GroupCode.Equals(code))
-                            {
-                                entity.IsShow = true;
-                            }
+                        catch (Exception ex)
+                        {
+                                                      
                         }
+                        //else
+                        //{
+                        //    if (entity.GroupCode.Equals(code))
+                        //    {
+                        //        entity.IsShow = true;
+                        //    }
+                        //}
                         listNew.Add(entity);
                     }
                 }
                 ViewBag.Username = CurrentUser != null ? CurrentUser.UserName : "";
-                ViewBag.CommonMenus = listNew;
+
+                List<MenuEntity> listN= listNew.OrderBy(p => p.GroupCode).ToList();
+
+                ViewBag.CommonMenus = listN;
                 ViewBag.CurrentSelectMenus = action;
             }
             //获取菜单信息

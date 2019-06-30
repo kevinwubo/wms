@@ -36,9 +36,9 @@ namespace GuoChe.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ContentResult SaveInInventory(int StorageID, string productDate, int needCount, string json)
+        public ContentResult SaveInInventory(int StorageID, string productDate, string json)
         {
-            bool result = InventoryService.ModifyInventory(StorageID, productDate, needCount, json, CurrentUser.UserID, Common.OperatorType.IN);
+            bool result = InventoryService.ModifyInventory(StorageID, productDate, 0, json, CurrentUser.UserID, Common.OperatorType.IN);
             return Content(result ? "T" : "F");
         }
 
@@ -146,7 +146,7 @@ namespace GuoChe.Controllers
         /// <param name="status"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public ActionResult GoodsSelect(string name, string mcode, int CustomerID = 0, int status = -1, int p = 1)
+        public ActionResult GoodsSelect(string name, string mcode, int CustomerID = -1, int status = -1, int p = 1)
         {
             List<GoodsEntity> mList = null;
 
@@ -161,7 +161,7 @@ namespace GuoChe.Controllers
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
             ViewBag.GoodsModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "GoodsCode" && t.Status == 1).ToList();
-            if (!string.IsNullOrEmpty(name) || status > -1 || !string.IsNullOrEmpty(mcode))
+            if (!string.IsNullOrEmpty(name) || CustomerID > -1 || status > -1 || !string.IsNullOrEmpty(mcode))
             {
                 mList = GoodsService.GetGoodsInfoByRule(name, mcode, CustomerID, status, pager);
             }
@@ -191,7 +191,7 @@ namespace GuoChe.Controllers
         /// <param name="inventoryDate">出入库时间</param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public ActionResult Inventory(string name, string batchNumber, int StorageID = 0, int customerID = 0, int p = 1)
+        public ActionResult Inventory(string name, string batchNumber, int StorageID = -1, int customerID = -1, int p = 1)
         {
             PagerInfo pager = new PagerInfo();
             int count = InventoryService.GetInventoryCount(name, batchNumber, StorageID, customerID);
@@ -200,7 +200,7 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "Inventory";
             List<InventoryEntity> mList = null;
-            if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(batchNumber) || StorageID > 0 || customerID > 0)
+            if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(batchNumber) || StorageID > -1 || customerID >-1)
             {
                 mList = InventoryService.GetInventoryInfoByRule(name, batchNumber, StorageID, customerID, pager);
             }
@@ -237,7 +237,7 @@ namespace GuoChe.Controllers
         /// <param name="inventoryDate">出入库时间</param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public ActionResult InventoryCheck(string name, string batchNumber, int StorageID = 0, int customerID = 0, int p = 1)
+        public ActionResult InventoryCheck(string name, string batchNumber, int StorageID = -1, int customerID = -1, int p = 1)
         {
             PagerInfo pager = new PagerInfo();
             int count = InventoryService.GetInventoryCount(name, batchNumber, StorageID, customerID);
@@ -246,7 +246,7 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "InventoryCheck";
             List<InventoryEntity> mList = null;
-            if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(batchNumber) || StorageID > 0 || customerID > 0)
+            if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(batchNumber) || StorageID > -1 || customerID > -1)
             {
                 mList = InventoryService.GetInventoryInfoByRule(name, batchNumber, StorageID, customerID, pager);
             }
@@ -348,7 +348,7 @@ namespace GuoChe.Controllers
         /// <param name="status"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public ActionResult InventoryLocation(int storageid = 0, string storageareano = "", string storagesubareano = "", int status = -1, int p = 1)
+        public ActionResult InventoryLocation(int storageid = -1, string storageareano = "", string storagesubareano = "", int status = -1, int p = 1)
         {
             List<StorageLocationEntity> mList = null;
             int storageidn = storageid;
@@ -365,7 +365,7 @@ namespace GuoChe.Controllers
             //ViewBag.AreasNo = StorageLocationService.GetAreaNoByStorageID(storageid, status);
             ////库位子区域
             //ViewBag.SubAreasNo = StorageLocationService.GetSubAreaNoByStorageAreaNo(storageareano, status);
-            if (storageidn > 0 || status > -1 || !string.IsNullOrEmpty(storageareano) || !string.IsNullOrEmpty(storagesubareano))
+            if (storageidn > -1 || status > -1 || !string.IsNullOrEmpty(storageareano) || !string.IsNullOrEmpty(storagesubareano))
             {
                 mList = StorageLocationService.GetStorageLocationInfoByRule(storageidn, storageareano, storagesubareano, status, pager);
             }

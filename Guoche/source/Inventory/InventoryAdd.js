@@ -68,7 +68,7 @@ var inventoryInfo = {
                     url: "SaveInInventory",
                     type: 'POST',
                     async: false,
-                    data: { StorageID: $("#StorageID").val(), productDate: $("#ProductDate").val(), needCount: $("#NeedStorageLocationCount").val(), json: $("#SaveInventoryJson").val() },
+                    data: { StorageID: $("#StorageID").val(), productDate: $("#ProductDate").val(), json: $("#SaveInventoryJson").val() },
                     success: function (data) {
                         if (data == "T") {
                             alert("入库操作成功");

@@ -14,7 +14,7 @@ namespace GuoChe.Controllers
         //
         // GET: /Goods/
         public int PAGESIZE = 20;
-        public ActionResult Index(string name,string mcode,int CustomerID=0,int status = -1, int p = 1)
+        public ActionResult Index(string name,string mcode,int CustomerID=-1,int status = -1, int p = 1)
         {
             List<GoodsEntity> mList = null;
 
@@ -29,7 +29,7 @@ namespace GuoChe.Controllers
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
             ViewBag.GoodsModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "GoodsCode" && t.Status == 1).ToList();
-            if (!string.IsNullOrEmpty(name) || status > -1 || !string.IsNullOrEmpty(mcode))
+            if (!string.IsNullOrEmpty(name) || status > -1 || CustomerID > -1 || !string.IsNullOrEmpty(mcode))
             {
                 mList = GoodsService.GetGoodsInfoByRule(name, mcode, CustomerID, status, pager);
             }
