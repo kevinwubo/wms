@@ -14,7 +14,7 @@ namespace GuoChe.Controllers
         //
         // GET: /Receiver/
         public int PAGESIZE = 20;
-        public ActionResult Index(string name, string receiverType, int customerID = 0, int status = -1, int p = 1)
+        public ActionResult Index(string name, string receiverType, int customerID = -1, int status = -1, int p = 1)
         {
             List<ReceiverEntity> mList = null;
 
@@ -31,7 +31,7 @@ namespace GuoChe.Controllers
             //收货方类型
             ViewBag.ReceiverList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "Reveiver00" && t.Status == 1).ToList();
 
-            if (!string.IsNullOrEmpty(name) || status > -1 || !string.IsNullOrEmpty(receiverType))
+            if (!string.IsNullOrEmpty(name) || status > -1 || customerID > -1 || !string.IsNullOrEmpty(receiverType))
             {
                 mList = ReceiverService.GetReceiverInfoByRule(name, receiverType,customerID, status, pager);
             }
