@@ -222,10 +222,11 @@
                     @if (entity.orderDetailList != null && entity.orderDetailList.Count > 0)
                     {
                         List<OrderDetailEntity> list = entity.orderDetailList;
+                        int j=1;
                         for (int i = 0; i < list.Count; i++)
                         {
                             <tr>
-                                <td>@i++</td>
+                                <td>@(j++)</td>
                                 <td>@list[i].GoodsNo</td>
                                 <td>@list[i].GoodsName</td>
                                 <td>@list[i].GoodsModel</td>
