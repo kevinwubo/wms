@@ -64,7 +64,7 @@
                                     <input type="text" id="orderno" name="orderno" style="width:200px" value="@ViewBag.ReceiverName" placeholder="请输入收货方" />
                                 </label>
                                 <button class="btn btn-info" type="submit">查询</button>
-                                <button class="btn btn-info" type="button" onclick="DownloadReport('LRR')">应收应付导出</button>
+                                <button class="btn btn-info" type="button" onclick="DownloadReport('LRR', '@ViewBag.GUID')">应收应付导出</button>
                             </div>
                         </form>
                     </div>
@@ -122,3 +122,8 @@
         </div> <!-- /widget-body -->
     </div> <!-- /widget -->
 </div>
+@section Footer{
+    <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+    <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+    <script type="text/javascript" src="~/source/Report.js"></script>
+}

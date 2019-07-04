@@ -2,6 +2,7 @@
 using Entity.ViewModel;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using Service;
 using Service.BaseBiz;
 using System;
 using System.Collections.Generic;
@@ -43,12 +44,25 @@ namespace GuoChe.Controllers
         public ActionResult CustomServiceReport(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
-            int count = 0;
+
+            List<OrderEntity> mList = null;
+
+            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
             pager.URL = "CustomServiceReport";
+
+            if (carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            {
+                mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            }
+            else
+            {
+                mList = ReportService.GetOrderInfoPager(pager);
+            }
+
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
@@ -56,7 +70,10 @@ namespace GuoChe.Controllers
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
 
-            ViewBag.customList = new List<ReportEntity>();
+            ViewBag.reportList = ReportService.CreateReportList(mList);
+            ViewBag.GUID = System.Guid.NewGuid().ToString();
+            //存入缓存
+            Cache.Add(ViewBag.GUID, ViewBag.reportList);
             ViewBag.Pager = pager;
             return View();
         }
@@ -75,12 +92,23 @@ namespace GuoChe.Controllers
         public ActionResult CustomerReport(int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
-            int count = 0;
+            List<OrderEntity> mList = null;
+
+            int count = ReportService.GetOrderCount("", -1, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
             pager.URL = "CustomerReport";
+
+            if ( storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            {
+                mList = ReportService.GetOrderInfoByRule(pager, "", -1, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            }
+            else
+            {
+                mList = ReportService.GetOrderInfoPager(pager);
+            }
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
@@ -88,8 +116,12 @@ namespace GuoChe.Controllers
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
 
-            ViewBag.customList = new List<ReportEntity>();
             ViewBag.Pager = pager;
+
+            ViewBag.reportList = ReportService.CreateReportList(mList);
+            ViewBag.GUID = System.Guid.NewGuid().ToString();
+            //存入缓存
+            Cache.Add(ViewBag.GUID, ViewBag.reportList);
             return View();
         }
 
@@ -107,19 +139,33 @@ namespace GuoChe.Controllers
         public ActionResult CarrierReport(int storageid = 0, int carrierid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
-            int count = 0;
+            List<OrderEntity> mList = null;
+            int count = ReportService.GetOrderCount("", carrierid, storageid, -1, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
             pager.URL = "CarrierReport";
+
+            if (storageid > 0 || carrierid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            {
+                mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, -1, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            }
+            else
+            {
+                mList = ReportService.GetOrderInfoPager(pager);
+            }
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
             ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
 
-            ViewBag.customList = new List<ReportEntity>();
             ViewBag.Pager = pager;
+
+            ViewBag.reportList = ReportService.CreateReportList(mList);
+            ViewBag.GUID = System.Guid.NewGuid().ToString();
+            //存入缓存
+            Cache.Add(ViewBag.GUID, ViewBag.reportList);
             return View();
         }
 
@@ -140,12 +186,22 @@ namespace GuoChe.Controllers
         public ActionResult ProfitReport(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
-            int count = 0;
+            List<OrderEntity> mList = null;
+            int count = ReportService.GetOrderCount("", carrierid, storageid,customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
             pager.URL = "ProfitReport";
+
+            if (storageid > 0 || carrierid > 0 || customerid>0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            {
+                mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            }
+            else
+            {
+                mList = ReportService.GetOrderInfoPager(pager);
+            }
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
@@ -153,7 +209,10 @@ namespace GuoChe.Controllers
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
 
-            ViewBag.customList = new List<ReportEntity>();
+            ViewBag.reportList = ReportService.CreateReportList(mList);
+            ViewBag.GUID = System.Guid.NewGuid().ToString();
+            //存入缓存
+            Cache.Add(ViewBag.GUID, ViewBag.reportList);
             ViewBag.Pager = pager;
             return View();
         }
@@ -164,10 +223,11 @@ namespace GuoChe.Controllers
         /// </summary>
         /// <param name="type">利润分析表:LRR /客服日常报表:KFR /客户对账单:KHR 供应商对账单:GYSR</param>
         /// <returns></returns>
-        public FileResult ReportExportExcel(string type)
+        public FileResult ReportExportExcel(string type,string guid)
         {
-            //获取list数据
-            List<ReportEntity> list = new List<ReportEntity>();
+            //获取list数据         
+
+            List<ReportEntity> list = Cache.Get<List<ReportEntity>>(guid);
             //创建Excel文件的对象
             HSSFWorkbook book = new HSSFWorkbook();
             //添加一个sheet
@@ -198,7 +258,7 @@ namespace GuoChe.Controllers
             {
                 row1.CreateCell(K++).SetCellValue("应收总额");
             }
-            else if ("GYSR".Equals(type) || "LRR".Equals(type))
+            if ("GYSR".Equals(type) || "LRR".Equals(type))
             {
                 row1.CreateCell(K++).SetCellValue("应付总额");
             }
@@ -231,7 +291,7 @@ namespace GuoChe.Controllers
                 {
                     rowtemp.CreateCell(KK++).SetCellValue(list[i].TotalReceiverFee.ToString());
                 }
-                else if ("GYSR".Equals(type) || "LRR".Equals(type))
+                if ("GYSR".Equals(type) || "LRR".Equals(type))
                 {
                     rowtemp.CreateCell(KK++).SetCellValue(list[i].TotalPayFee.ToString());
                 }

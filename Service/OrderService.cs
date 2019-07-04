@@ -70,7 +70,7 @@ namespace Service
             return info;
         }
 
-        private static OrderEntity TranslateOrderEntity(OrderInfo info, bool isContact = true)
+        public static OrderEntity TranslateOrderEntity(OrderInfo info, bool isContact = true)
         {
             OrderEntity entity = new OrderEntity();
             if (info != null)

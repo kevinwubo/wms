@@ -65,6 +65,7 @@
     <Compile Include="NewsService.cs" />
     <Compile Include="OrderDetailService.cs" />
     <Compile Include="OrderService.cs" />
+    <Compile Include="ReportService.cs" />
     <Compile Include="ReservationsService.cs" />
     <Compile Include="SalerService.cs" />
     <Compile Include="StoreService.cs" />
