@@ -12,7 +12,7 @@
 <link href="~/source/assets/css/img.css" rel="stylesheet" />
 <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
 <link href="~/source/assets/css/lctypein-alert.css" rel="stylesheet" />
-<script src="/source/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<link href="~/source/layui/css/layui.css" rel="stylesheet" />
 <div class="row-fluid">
     <h2 class="heading" style="margin-top:20px">@ViewBag.TitleName</h2>
 </div>
@@ -276,7 +276,7 @@
             请选择送达时间
         </div>
         <div class="coumpLayerItem">            
-            <input type="text" class="dateInput" id="txt_arrivertime" placeholder="请选择送达日期" onclick="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm' })" style="margin-top: 15px;">
+            <input type="text" class="dateInput" id="txt_arrivertime" placeholder="请选择送达日期" class="layui-input" lay-key="1" style="margin-top: 15px;">
         </div>
     </div>
     <div class="coumpClickDiv">
@@ -295,10 +295,21 @@
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
 <script type="text/javascript" src="~/source/Order/SearchOrder.js"></script>
 <script type="text/javascript" src="~/source/assets/js/viewer-jquery.min.js"></script>
+<script src="~/source/layui/layui.js"></script>
 <script>
     $(document).ready(function () {
         orderInfo.init();        
     });
+
+    layui.use('laydate', function () {
+
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#txt_arrivertime'//指定元素
+            , type: 'datetime'
+        });
+    });
+
 </script>
 
 }

@@ -5,7 +5,6 @@
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
 }
 @section Header{
-<script src="/source/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
 <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
     <style>
         .picRemove {
@@ -52,7 +51,7 @@
                                         <option value="">--请选择仓库库位--</option>
                                     </select>
                                 </label> 
-                                <label>入库时间: <input type="text" aria-controls="menus" id="ProductDate" autocomplete="off" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="ProductDate" value="@DateTime.Now.ToString("yyyy-MM-dd")"></label>
+                                <label>入库时间: <input type="text" aria-controls="menus" id="ProductDate" autocomplete="off" lay-key="1" name="ProductDate" value="@DateTime.Now.ToString("yyyy-MM-dd")"></label>
                                 <input type="hidden" id="SaveInventoryJson" name="SaveInventoryJson" />
                                 <button class="btn btn-primary" type="button" id="select_goods">选择商品</button>
                                 <button class="btn btn-primary" type="button" id="save">保存</button>
@@ -91,9 +90,17 @@
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
 <script type="text/javascript" src="~/source/Inventory/LossInventory.js"></script>
+<script src="~/source/layui/layui.js"></script>
 <script>
     $(document).ready(function () {
         inventoryLoss.init();
+    });
+
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#ProductDate' //指定元素
+        });
     });
 </script>
 }

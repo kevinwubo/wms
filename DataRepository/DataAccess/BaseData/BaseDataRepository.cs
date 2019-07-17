@@ -24,6 +24,13 @@ namespace DataRepository.DataAccess.BaseData
 {
     public class BaseDataRepository : DataAccessBase
     {
+        public DataSet GetAllTest()
+        {
+            DataSet result = new DataSet();
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(BaseDataStatement.TempTest, "Text"));
+            result = command.ExecuteDataSet();
+            return result;
+        }
 
         public List<CityInfo> GetAllCity()
         {

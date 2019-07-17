@@ -15,7 +15,7 @@
 @section Header{
 <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
 <link href="~/source/assets/css/lctypein.css" rel="stylesheet" />
-<script src="/source/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<link href="~/source/layui/css/layui.css" rel="stylesheet" />
 <style>
     .picRemove {
         height: 15px;
@@ -78,7 +78,7 @@
                             </td>
                             <td style="width:5%"><label class="control-label">下单时间</label></td>
                             <td style="width:20%">
-                                <input type="text" aria-controls="menus" placeholder="下单时间" id="OrderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="OrderDate">
+                                <input type="text" aria-controls="menus" placeholder="下单时间" id="OrderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="1" name="OrderDate">
                             </td>
                         </tr>
                         <tr id="tr_ContactInfo" style="display:none">
@@ -116,7 +116,7 @@
                             </td>
                             <td style="width:5%"><label class="control-label">送达时间</label></td>
                             <td style="width:20%">
-                                <input type="text" style="width:220px" aria-controls="menus" placeholder="送达时间" value="@DateTime.Now.ToString("yyyy-MM-dd")" id="SendDate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="SendDate">
+                                <input type="text" style="width:220px" aria-controls="menus" placeholder="送达时间" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="2" id="SendDate" name="SendDate">
                             </td>
                         </tr>
                         <tr>
@@ -340,12 +340,26 @@
     </div>
 </div>
 @section Footer{
-    <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
-    <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
-    <script type="text/javascript" src="~/source/Order/inputOrder.js"></script>
-    <script>
-        $(document).ready(function () {
-            orderInfo.init();
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script type="text/javascript" src="~/source/Order/inputOrder.js"></script>
+<script src="~/source/layui/layui.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        orderInfo.init();
+    });
+
+    layui.use('laydate', function () {
+
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#OrderDate' //指定元素
         });
-    </script>
+        laydate.render({
+            elem: '#SendDate' //指定元素
+        });
+    });
+</script>
 }

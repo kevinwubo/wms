@@ -7,7 +7,7 @@
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
-<script src="/source/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<link href="~/source/layui/css/layui.css" rel="stylesheet" />
 <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
 <div class="row-fluid">
     <h2 class="heading" style="margin-top:20px">报损单明细查询</h2>
@@ -51,7 +51,7 @@
                                         }
                                     </select>
                                 </label>
-                                <label><input type="text" aria-controls="menus" placeholder="出入库日期" id="inventoryDate" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="inventoryDate" value="@ViewBag.inventoryDate"></label>
+                                <label><input type="text" aria-controls="menus" placeholder="出入库日期" id="inventoryDate" lay-key="1" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="inventoryDate" value="@ViewBag.inventoryDate"></label>
                                 <button class="btn btn-info" type="submit">搜索</button>
                             </div>
                         </form>
@@ -115,3 +115,18 @@
         </div> <!-- /widget-body -->
     </div> <!-- /widget -->
 </div>
+@section Footer{
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script src="~/source/layui/layui.js"></script>
+<script>
+
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#inventoryDate' //指定元素
+        });
+    });
+</script>
+
+}

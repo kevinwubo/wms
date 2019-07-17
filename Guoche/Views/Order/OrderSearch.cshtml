@@ -15,7 +15,7 @@
 <link href="~/source/assets/css/comfirm.css" rel="stylesheet" />
 <link href="~/source/assets/css/viewer.min.css" rel="stylesheet" />
 <link href="~/source/assets/css/img.css" rel="stylesheet" />
-<script src="/source/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+<link href="~/source/layui/css/layui.css" rel="stylesheet" />
 <div class="row-fluid">
     <h2 class="heading" style="margin-top:20px">订单查询</h2>
 </div>
@@ -91,11 +91,11 @@
                                         }
                                     </select>
                                 </label>
-                                <label>
-                                    <input type="text" aria-controls="menus" style="width:200px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" autocomplete="off" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="begindate">
+                                <label>                                    
+                                    <input type="text" aria-controls="menus" class="layui-input" style="width:200px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" lay-key="1" autocomplete="off" name="begindate">
                                 </label>
                                 <label>
-                                    <input type="text" aria-controls="menus" style="width:200px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" autocomplete="off" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="enddate">
+                                    <input type="text" aria-controls="menus" class="layui-input" style="width:200px" placeholder="订单开始时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
                                 </label>
                                 <label><button class="btn btn-info" type="submit">搜索</button></label>
                             </div>
@@ -302,9 +302,20 @@
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
 <script type="text/javascript" src="~/source/Order/SearchOrder.js"></script>
 <script type="text/javascript" src="~/source/assets/js/viewer-jquery.min.js"></script>
+<script src="~/source/layui/layui.js"></script>
 <script>
     $(document).ready(function () {
         orderInfo.init();        
+    });
+    layui.use('laydate', function () {
+
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#begindate' //指定元素
+        });
+        laydate.render({
+            elem: '#enddate' //指定元素
+        });
     });
 </script>
 

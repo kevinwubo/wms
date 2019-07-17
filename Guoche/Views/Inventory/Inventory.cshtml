@@ -7,8 +7,9 @@
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
-<script src="/source/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+
 <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<link href="~/source/layui/css/layui.css" rel="stylesheet" />
 <div class="row-fluid">
     <h2 class="heading" style="margin-top:20px">库存查询</h2>
 </div>
@@ -112,8 +113,16 @@
     </div> <!-- /widget -->
 </div>
 <script type="text/javascript" src="~/source/assets/js/jquery.min.js"></script>
+<script src="~/source/layui/layui.js"></script>
 <script type="text/javascript">
     jQuery("#export").click(function () {
         window.location.href = "/Inventory/ExportExcel";
     });
+    //layui.use('laydate', function () {
+
+    //    var laydate = layui.laydate;
+    //    laydate.render({
+    //        elem: '#begindate' //指定元素lay-key="1" 
+    //    });
+    //});
 </script>

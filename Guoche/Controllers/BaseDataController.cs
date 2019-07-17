@@ -14,6 +14,17 @@ namespace GuoChe.Controllers
 {
     public class BaseDataController : BaseController
     {
+
+        public ActionResult InsertData()
+        {
+            return View();
+        }
+
+        public ActionResult Insert()
+        {
+            BaseDataService.GetAllTest();
+            return View();
+        }
         public ActionResult Index(string name)
         {
             List<BaseDataEntity> list = null;
