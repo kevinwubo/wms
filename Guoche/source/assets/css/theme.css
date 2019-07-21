@@ -1451,7 +1451,7 @@ table.table thead .sorting_desc_disabled { background: url('../img/sort_desc_dis
     }
 }
 /* Large desktop */
-@media (min-width: 1200px) {
+@media (min-width: 900px) {
     .nav-collapse.collapse {
         position: fixed;
         width: 230px;

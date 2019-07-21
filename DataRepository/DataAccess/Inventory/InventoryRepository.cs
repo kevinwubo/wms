@@ -163,12 +163,25 @@ namespace DataRepository.DataAccess.BaseData
         }
 
 
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="batchNumber"></param>
+        /// <param name="StorageID"></param>
+        /// <param name="customerID"></param>
+        /// <param name="pager"></param>
+        /// <returns></returns>
         public List<InventoryInfo> GetInventoryInfoByRule(string name, string batchNumber, int StorageID, int customerID, PagerInfo pager)
         {
             List<InventoryInfo> result = new List<InventoryInfo>();
 
             StringBuilder builder = new StringBuilder();
 
+            if (!string.IsNullOrEmpty(name))
+            {
+                builder.Append(" and GoodsID in(select GoodsID from wms_GoodsInfo where GoodsName like '%" + name + "%')");
+            }
             if (!string.IsNullOrEmpty(batchNumber))
             {
                 builder.Append(" AND batchNumber=@batchNumber");
@@ -208,6 +221,10 @@ namespace DataRepository.DataAccess.BaseData
         {
             StringBuilder builder = new StringBuilder();
             builder.Append(InventoryStatement.GetCount);
+            if (!string.IsNullOrEmpty(name))
+            {
+                builder.Append(" and GoodsID in(select GoodsID from wms_GoodsInfo where GoodsName like '%" + name + "%')");
+            }
             if (!string.IsNullOrEmpty(batchNumber))
             {
                 builder.Append(" AND batchNumber=@batchNumber");

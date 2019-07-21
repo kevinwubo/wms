@@ -55,7 +55,9 @@ namespace GuoChe.Controllers
             ViewBag.GoodsModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "GoodsCode" && t.Status == 1).ToList();            
             if (!string.IsNullOrEmpty(cid))
             {
-                ViewBag.Goods = GoodsService.GetGoodsEntityById(cid.ToLong(0));
+                GoodsEntity entity= GoodsService.GetGoodsEntityById(cid.ToLong(0));
+                entity.Url = UrlPar;
+                ViewBag.Goods = entity;
             }
             else
             {
@@ -72,7 +74,7 @@ namespace GuoChe.Controllers
                 goods.OperatorID = CurrentUser.UserID; 
             }
             GoodsService.ModifyGoods(goods);
-            Response.Redirect("/Goods/");
+            Response.Redirect("/Goods/Index?" + goods.Url);
         }
 
         public void Remove(string GoodsID)

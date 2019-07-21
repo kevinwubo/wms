@@ -31,7 +31,7 @@ namespace Service.BaseBiz
         {
             List<ReceiverEntity> all = new List<ReceiverEntity>();
             ReceiverRepository mr = new ReceiverRepository();
-            List<ReceiverInfo> miList = null;//Cache.Get<List<ReceiverInfo>>("GetReceiverByCustomerID" + customerID);
+            List<ReceiverInfo> miList = Cache.Get<List<ReceiverInfo>>("GetReceiverByCustomerID" + customerID);
             if (miList.IsEmpty())
             {
                 miList = mr.GetReceiverByCustomerID(customerID);
@@ -41,7 +41,7 @@ namespace Service.BaseBiz
             {
                 foreach (ReceiverInfo mInfo in miList)
                 {
-                    ReceiverEntity ReceiverEntity = TranslateReceiverEntity(mInfo);
+                    ReceiverEntity ReceiverEntity = TranslateReceiverEntity(mInfo,false);
                     all.Add(ReceiverEntity);
                 }
             }
@@ -76,7 +76,7 @@ namespace Service.BaseBiz
             return info;
         }
 
-        private static ReceiverEntity TranslateReceiverEntity(ReceiverInfo info)
+        private static ReceiverEntity TranslateReceiverEntity(ReceiverInfo info, bool isRead = true)
         {
             ReceiverEntity entity = new ReceiverEntity();
             if (info != null)
@@ -98,12 +98,17 @@ namespace Service.BaseBiz
                 entity.ChangeDate = info.ChangeDate;
                 entity.ReceiverID = info.ReceiverID;
 
-                City city = BaseDataService.GetAllCity().FirstOrDefault(t => t.CityID == info.CityID) ?? new City();
-                Province province = BaseDataService.GetAllProvince().FirstOrDefault(t => t.ProvinceID == info.ProvinceID) ?? new Province();
-                entity.province = province;
-                entity.city = city;
-                entity.customer = new CustomerEntity();
-                entity.customer = CustomerService.GetCustomerById(info.CustomerID);
+                if (isRead)
+                {
+                    City city = BaseDataService.GetAllCity().FirstOrDefault(t => t.CityID == info.CityID) ?? new City();
+                    Province province = BaseDataService.GetAllProvince().FirstOrDefault(t => t.ProvinceID == info.ProvinceID) ?? new Province();
+                    entity.province = province;
+                    entity.city = city;
+                    entity.customer = new CustomerEntity();
+                    entity.customer = CustomerService.GetCustomerById(info.CustomerID);
+                }
+                //获取联系人信息
+                entity.listContact = ContactService.GetContactByRule(UnionType.Receiver.ToString(), info.ReceiverID);
             }
 
             return entity;
@@ -195,7 +200,7 @@ namespace Service.BaseBiz
             return result;
         }
 
-        public static List<ReceiverEntity> GetReceiverAll()
+        public static List<ReceiverEntity> GetReceiverAll(bool isRead=true)
         {
             List<ReceiverEntity> all = new List<ReceiverEntity>();
             ReceiverRepository mr = new ReceiverRepository();
@@ -209,7 +214,7 @@ namespace Service.BaseBiz
             {
                 foreach (ReceiverInfo mInfo in miList)
                 {
-                    ReceiverEntity ReceiverEntity = TranslateReceiverEntity(mInfo);
+                    ReceiverEntity ReceiverEntity = TranslateReceiverEntity(mInfo, isRead);
                     all.Add(ReceiverEntity);
                 }
             }

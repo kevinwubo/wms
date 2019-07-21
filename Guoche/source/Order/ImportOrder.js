@@ -22,7 +22,7 @@ var orderInfo = {
         orderInfo.regEvent();
     },
 
-    regEvent: function () {      
+    regEvent: function () {
 
         //下载送货单
         $("#OrderDownload_SHD").click(function () {
@@ -69,7 +69,7 @@ var orderInfo = {
                 }).done(function (data) {
                     if ("" != data) {
                         console.log(data);
-                       
+
                         for (var i = 0; i < data.length; i++) {
                             var html = "";
                             if (type == "Costa") {
@@ -98,31 +98,37 @@ var orderInfo = {
 
         //订单生成
         $("#OrderGeneration").click(function () {
-            $.ajax({
-                type: "post",
-                url: "GenerateOrder",
-                data: {
-                    token: $("#hid_Token").val(),
-                    ordersource: $("#hid_Type").val()
-                },
-                success: function (data) {
-                    console.log(data);
-                    if (data)
-                    {
-                        if (data.SHDIds != "")
-                        {
-                            $("#hid_SHDids").val(data.SHDIds);
-                            $("#OrderDownload_SHD").show()
+            var orderType = $("#orderType").val();
+            if (orderType == "") {
+                alert("请选择要生成的订单类型。");
+                return false;
+            }
+            if (confirm("确定要生成" + orderType + "订单?")) {
+                $.ajax({
+                    type: "post",
+                    url: "GenerateOrder",
+                    data: {
+                        token: $("#hid_Token").val(),
+                        ordersource: $("#hid_Type").val(),
+                        orderType: orderType
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (data) {
+                            if (data.SHDIds != "") {
+                                $("#hid_SHDids").val(data.SHDIds);
+                                $("#OrderDownload_SHD").show()
+                            }
+                            if (data.BSDIds != "") {
+                                $("#hid_BSDids").val(data.BSDIds);
+                                $("#OrderDownload_BSD").show()
+                            }
+                            alert("订单生成成功！")
                         }
-                        if (data.BSDIds != "") {
-                            $("#hid_BSDids").val(data.BSDIds);
-                            $("#OrderDownload_BSD").show()
-                        }                        
-                        alert("订单生成成功！")
                     }
-                }
-            })
+                })
+            }
         })
     },
-    
+
 }

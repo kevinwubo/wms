@@ -38,6 +38,7 @@
                     <div class="control-group">
                         <label class="control-label">客户信息及名称</label>
                         <div class="controls">
+                            <input type="hidden" id="Url" name="Url" value="@ReceiverEntity.Url" />
                             <select tabindex="1" class="span2" id="CustomerID" name="CustomerID">
                                 @foreach (var item in customerlist)
                                 {

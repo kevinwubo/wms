@@ -125,5 +125,10 @@ namespace Entity.ViewModel
         /// 默认客户
         /// </summary>
         public CustomerEntity customer { get; set; }
+
+        /// <summary>
+        /// URL参数
+        /// </summary>
+        public string Url { get; set; }
     }
 }

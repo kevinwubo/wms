@@ -66,9 +66,9 @@
                             <input type="hidden" id="hid_ID" value="-1" />
                             <label>线路: <input type="text" aria-controls="menus" id="txt_LineID" onkeyup="value=value.replace(/[^\d]/g, '')" name="txt_LineID"></label>
                             <label>
-                                系统门店: <input type="text" aria-controls="menus" id="ReceiverName" name="ReceiverName">
-                                <div id="div_items" style="display:none">                                   
-                                </div>                                
+                                系统门店: <input type="text" aria-controls="menus" autocomplete="off" id="ReceiverName" name="ReceiverName">
+                                    <div id="div_items" style="display:none">                                   
+                                    </div>                                
                             </label>
                             <button class="btn btn-info" type="button" id="saveLine">新增线路</button>
                         </div>

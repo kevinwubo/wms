@@ -36,6 +36,7 @@
                         <div class="control-group">
                             <label class="control-label">商品类型</label>
                             <div class="controls" id="brandContainer">
+                                <input type="hidden" id="Url" name="Url" value="@goodsEntity.Url" />
                                 <select tabindex="1" class="span5" id="TypeCode" name="TypeCode">
                                     <option value="">--请选择商品类型--</option>
                                     @foreach (var item in goodsType)

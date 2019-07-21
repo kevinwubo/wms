@@ -75,16 +75,16 @@ namespace Common
             {
                 switch (type)
                 {
-                    case "YSDDA":
-                        return OrderType.运输订单A.ToString();
-                    case "YSDDB":
-                        return OrderType.运输订单B.ToString();
                     case "CPDD":
-                        return OrderType.仓配订单.ToString();
+                        return "仓配订单";
                     case "DBDD":
-                        return OrderType.调拨订单.ToString();
-                    case "BSDD":
-                        return OrderType.报损订单.ToString();
+                        return "调拨订单";
+                    case "YSDDA":
+                        return "运输订单A";
+                    case "YSDDB":
+                        return "运输订单B";
+                    case "RKD":
+                        return "入库单";
                     default:
                         return type;
                 }

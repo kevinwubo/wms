@@ -64,7 +64,9 @@ namespace GuoChe.Controllers
             ViewBag.ReceiverList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "Reveiver00" && t.Status == 1).ToList();
             if (!string.IsNullOrEmpty(cid))
             {
-                ViewBag.Receiver = ReceiverService.GetReceiverEntityById(cid.ToLong(0));
+                ReceiverEntity entity = ReceiverService.GetReceiverEntityById(cid.ToLong(0));
+                entity.Url = UrlPar;
+                ViewBag.Receiver = entity;
             }
             else
             {
@@ -81,7 +83,7 @@ namespace GuoChe.Controllers
                 Receiver.OperatorID = CurrentUser.UserID;
             }
             ReceiverService.ModifyReceiver(Receiver);
-            Response.Redirect("/Receiver/");
+            Response.Redirect("/Receiver/Index?" + Receiver.Url);
         }
 
         public void Remove(string cid)

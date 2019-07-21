@@ -28,15 +28,26 @@ namespace Common
     }
 
     //订单类型：
+    //public enum OrderType
+    //{
+    //    运输订单A = "YSDDA",
+    //    运输订单B = "YSDDB",
+    //    仓配订单 = "CPDD",
+    //    调拨订单 = "DBDD",
+    //    报损订单 = "BSDD",
+    //    入库单 = "RKD",
+    //}
+
+
     public enum OrderType
     {
-        运输订单A,
-        运输订单B,
-        仓配订单,
-        调拨订单, 
-        报损订单
+        YSDDA,//运输订单A
+        YSDDB,//运输订单B
+        CPDD,//仓配订单
+        DBDD,//调拨订单,
+        BSDD,//报损订单
+        RKD,//入库单
     }
-
     /// <summary>
     /// 库存状态
     /// </summary>

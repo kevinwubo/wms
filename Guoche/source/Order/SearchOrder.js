@@ -19,6 +19,19 @@ var orderInfo = {
             location.href = "/PdfView/DownloadPdf?ids=" + orderids;            
         });
 
+        //下载Excel
+        $("#download_Excel").click(function () {
+            var orderids = "";
+            $.each($('input:checkbox:checked'), function () {
+                orderids = orderids + $(this).val() + ",";
+            });
+            if (orderids == "") {
+                alert("请勾选需要导出的配送单！");
+                return false;
+            }
+            location.href = "/Order/DownloadExcel?ids=" + orderids;
+        });
+
         //订单详情显示
         $(".lcQueryItem").on("click", ".showDiv", function () {
             if ($(this).attr("isOk") == "true") {

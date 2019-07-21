@@ -194,7 +194,8 @@
                             <a href="/Order/OrderAdd?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">修改</a>
                         </div>
                         <div class="del">
-                            <a href="/Order/OrderDelete?orderid=@entity.OrderID" style="color:white">删除</a>
+                            @*<a href="/Order/OrderDelete?orderid=@entity.OrderID"  style="color:white">删除</a>*@
+                            <a href="javascript:delOrder(@entity.OrderID)" style="color:white">删除</a>
                         </div>
                     }
                 </div>
@@ -294,6 +295,11 @@
     $(document).ready(function () {
         orderInfo.init();        
     });
+    function delOrder(id) {
+        if (confirm("确定删除订单?")) {
+            window.location.href = "/Order/OrderDelete?orderid=" + id;
+        }
+    }
 </script>
 
 }

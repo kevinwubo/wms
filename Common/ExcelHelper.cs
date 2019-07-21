@@ -294,6 +294,29 @@ namespace Common
             return ds;
         }
 
+        public static DataSet ImportExceltoDt_New(string strFileName)
+        {
+            DataSet ds = new DataSet();
+            HSSFWorkbook hssfworkbook;
+            using (FileStream file = new FileStream(strFileName, FileMode.Open, FileAccess.Read))
+            {
+                hssfworkbook = new HSSFWorkbook(file);
+            }
+
+            for (int i = 0; i < hssfworkbook.NumberOfSheets; i++)
+            {
+                DataTable dt = new DataTable();
+                HSSFSheet sheet = hssfworkbook.GetSheetAt(i) as HSSFSheet;
+                if (sheet != null)
+                {
+                    dt = ImportDt(sheet, 0, true, sheet.SheetName);
+                    ds.Tables.Add(dt);
+                }
+
+            }
+            return ds;
+        }
+
 
         public static DataSet ImportBaseExceltoDt(string strFileName)
         {

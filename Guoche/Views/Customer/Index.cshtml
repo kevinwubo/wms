@@ -21,7 +21,7 @@
         <div class="widget-body" style="margin-bottom:50px">
             <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
                 <div class="row-fluid">
-                    <div class="span6">
+                    <div >
                         <form action="/Customer/Index" method="get">
                             <div class="dataTables_length" id="menus_filter">
                                 <label>客户信息: <input type="text" placeholder="客户信息" aria-controls="menus" id="name" name="name" value="@ViewBag.Name"></label>
@@ -87,7 +87,7 @@
                                             </a>
                                             <ul class="dropdown-menu pull-right">
                                                 <li><a href="/Customer/Edit?cid=@Customer[i].CustomerID"><i class="icon-edit"></i> 编辑</a></li>
-                                                <li><a href="/Customer/Remove?cid=@Customer[i].CustomerID"><i class="icon-trash"></i> 删除</a></li>
+                                                <li><a href="/Customer/Remove?cid=@Customer[i].CustomerID"><i class="icon-trash"></i> 暂停合作</a></li>
                                             </ul>
                                         </div>
                                     </td>

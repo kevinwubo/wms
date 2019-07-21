@@ -11,6 +11,8 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Common;
+using System.Data;
+using Service;
 namespace GuoChe.Controllers
 {
     public class InventoryController : BaseController
@@ -80,7 +82,7 @@ namespace GuoChe.Controllers
         public ActionResult LossInventoryDetail(string name, string inventoryType, int StorageID = 0, int customerID = 0, string inventoryDate = "", int p = 1)
         {
             PagerInfo pager = new PagerInfo();
-            int count = InventoryDetailService.GetInventoryCount(name, inventoryType, StorageID, customerID, inventoryDate, OrderType.报损订单.ToString());
+            int count = InventoryDetailService.GetInventoryCount(name, inventoryType, StorageID, customerID, inventoryDate, OrderType.BSDD.ToString());
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
@@ -88,7 +90,7 @@ namespace GuoChe.Controllers
             List<InventoryDetailEntity> mList = null;
             if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(inventoryType) || StorageID > 0 || customerID > 0 || !string.IsNullOrEmpty(inventoryDate))
             {
-                mList = InventoryDetailService.GetInventoryDetailInfoByRule(name, inventoryType, StorageID, customerID, inventoryDate, OrderType.报损订单.ToString(), pager);
+                mList = InventoryDetailService.GetInventoryDetailInfoByRule(name, inventoryType, StorageID, customerID, inventoryDate, OrderType.BSDD.ToString(), pager);
             }
             else
             {
@@ -463,5 +465,45 @@ namespace GuoChe.Controllers
             return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMdd") + "库存信息.xls");
         }
         #endregion     
+
+
+        #region 库存数据导入
+
+        public ActionResult Import()
+        {
+            return View();
+        }
+
+        public JsonResult InventoryDataImport()
+        {
+            List<ImportInventoryEntity> list = new List<ImportInventoryEntity>();
+            DataSet ds = new DataSet();
+            if (Request.Files.Count == 0)
+            {
+                throw new Exception("请选择导入文件！");
+            }
+
+            String token = Request["token"];
+            string importType = Request["importType"];//导入类型
+            // 保存文件到UploadFiles文件夹
+            for (int i = 0; i < Request.Files.Count; i++)
+            {
+                HttpPostedFileBase file = Request.Files[i];
+                var fileName = file.FileName;
+                var filePath = Server.MapPath(string.Format("~/{0}", "UploadFiles"));
+                string path = Path.Combine(filePath, fileName);
+                file.SaveAs(path);
+
+                ds = ExcelHelper.ImportExceltoDt_New(path);
+                list = InventoryService.GetInventoryImportList(ds);
+
+                InventoryService.insertInventory(list);
+                //存入缓存
+                Cache.Add(token, list);
+            }
+            return Json(list);
+        }
+        #endregion
+
     }
 }

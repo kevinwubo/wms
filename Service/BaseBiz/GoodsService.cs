@@ -42,11 +42,11 @@ namespace Service.BaseBiz
             return result;
         }
 
-        public static List<GoodsEntity> GetGoodsByRule(string name, int status, string BarCode="")
+        public static List<GoodsEntity> GetGoodsByRule(string goodsNo, int status, string goodsName = "", string goodsModel = "", string BarCode = "")
         {
             List<GoodsEntity> all = new List<GoodsEntity>();
             GoodsRepository mr = new GoodsRepository();
-            List<GoodsInfo> miList = mr.GetGoodsByRule(name, status, BarCode);
+            List<GoodsInfo> miList = mr.GetGoodsByRule(goodsNo, status, goodsName, goodsModel, BarCode);
 
             if (!miList.IsEmpty())
             {

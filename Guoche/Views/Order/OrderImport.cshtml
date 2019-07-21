@@ -4,6 +4,7 @@
     ViewBag.Title = ViewBag.ImportTypeDesc + "订单导入";
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;    
     PagerInfo p = (PagerInfo)ViewBag.Pager;
+    List<BaseDataEntity> orderTypeList = ((List<BaseDataEntity>)ViewBag.orderTypeList) ?? new List<BaseDataEntity>();
     //Layout = null;
 }
 <div class="row-fluid">
@@ -14,9 +15,10 @@
         width: 80px;
         height: 40px;
         text-align: center;
+        padding: 6px 18px;
         line-height: 40px;
-        font-size: 12px;
-        background: #00a7d0;
+        font-size: 14px;
+        background: #42C1F7;
         color: #fff;
         cursor: pointer;
         border-radius: 3px;
@@ -45,7 +47,7 @@
         <div class="widget-body" style="margin-bottom:50px">
             <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
                 <div class="row-fluid">
-                    <div class="span6">
+                    <div class="">
                         <div class="dataTables_length" id="menus_filter">
                             <label>
                                 <select tabindex="1" class="" style="width: 200px" id="customerid" name="customerid">
@@ -58,8 +60,17 @@
                                 <input type="hidden" id="hid_Token" value="@ViewBag.Token" />
                                 <input type="hidden" id="hid_Type" value="@ViewBag.Type" />
                                 <span class="lcQueryItem">
-                                    批量导入<input class="upfile" type="file" />
+                                    订单导入<input class="upfile" type="file" />
                                 </span>
+                                <label>
+                                    <select class="span3" style="width: 200px" id="orderType" name="orderType">
+                                        <option value="" @(ViewBag.OrderType == "" ? "selected" : "")>--订单类型--</option>
+                                        @foreach (var item in orderTypeList)
+                                        {
+                                            <option value="@item.TypeCode" @(item.TypeCode == ViewBag.OrderType ? "selected" : "")>@item.ValueInfo</option>
+                                        }
+                                    </select>
+                                </label>
                                 <input name="OrderGeneration" id="OrderGeneration" class="btn btn-info" type="button" value="订单生成" />
                                 <input type="hidden" id="hid_SHDids" value="" />
                                 <input type="hidden" id="hid_BSDids" value="" />

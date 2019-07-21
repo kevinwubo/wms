@@ -29,6 +29,11 @@
         <div class="pdfpage">
         <table style="width: 100%; border-collapse: separate; border-spacing: 0px 10px;" cellpadding="0" cellspacing="0">
             <tr>
+                <td colspan="6">
+                    <img src="http://47.103.198.197//source/assets/img/logo.png" style="width:230px;height:40px" />
+                </td>
+            </tr>
+            <tr>
                 <td colspan="6" style="font-size: xx-large; font-weight: 100;text-align: center; ">@entity.CompanyName</td>
             </tr>
             <tr>
@@ -39,9 +44,9 @@
             </tr>
             <tr>
                 <td>客户名称:</td>
-                <td>@(entity.customer != null ? entity.customer.CustomerName : "")</td>
-                <td>门店:</td>
                 <td>@(entity.contact != null ? entity.contact.name : "")</td>
+                @*<td>门店:</td>
+                <td>@(entity.contact != null ? entity.contact.name : "")</td>*@
                 <td>送货单号:</td>
                 <td>@entity.OrderNo</td>
             </tr>
@@ -97,15 +102,15 @@
             <tr>
                 <td colspan="2">备注:@entity.Remark</td>
             </tr>
-            <tr>
+            @*<tr>
                 <td colspan="2" align="right">业务人员:@entity.SalesMan</td>
-            </tr>
+            </tr>*@
             <tr>
                 <td colspan="2" align="right">促销人员:@entity.PromotionMan</td>
             </tr>
-            <tr>
+            @*<tr>
                 <td colspan="2" align="right">送货单号:@(entity.OrderDate + (entity.contact != null ? entity.contact.name : ""))</td>
-            </tr>
+            </tr>*@
         </table>
         </div>
     }

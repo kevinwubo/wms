@@ -126,34 +126,35 @@ var orderInfo = {
         });
 
         //筛选联系人信息
-        $("#ReceiverID").on("change", function () {
-            var $this = $(this);
-            if (!!$this.val()) {
-                $.ajax({
-                    url: "GetReceiverByGoodsID",
-                    type: 'POST',
-                    async: false,
-                    data: { rid: $this.val() },
-                    success: function (data) {
-                        if (!!data) {
-                            $("#contactName").val(data.ContactName);
-                            $("#contactMobile").val(data.Mobile);
-                            $("#contactAddress").val(data.Address);
-                        }
-                    }
-                });
-            }
-            else {
-                $("#contactName").val("");
-                $("#contactMobile").val("");
-                $("#contactAddress").val("");
-            }
-        });
+        //$("#ReceiverName").on("change", function () {
+        //    var $this = $(this);
+        //    var ID = $("#ReceiverID").val();
+        //    if (!!ID) {
+        //        $.ajax({
+        //            url: "GetReceiverByGoodsID",
+        //            type: 'POST',
+        //            async: false,
+        //            data: { rid: ID },
+        //            success: function (data) {
+        //                if (!!data) {
+        //                    $("#contactName").val(data.ContactName);
+        //                    $("#contactMobile").val(data.Mobile);
+        //                    $("#contactAddress").val(data.Address);
+        //                }
+        //            }
+        //        });
+        //    }
+        //    else {
+        //        $("#contactName").val("");
+        //        $("#contactMobile").val("");
+        //        $("#contactAddress").val("");
+        //    }
+        //});
 
         //计算价格-弹框
         $("#coumpLayer_price").click(function () {            
             var cusid = $("#CustomerID").val();
-            var rid = $("#ReceiverID").val(); ReceiverStorageID
+            var rid = $("#ReceiverID").val(); 
             var ssid = $("#SendStorageID").val();
             var cid = $("#CarrierID").val();
             var otype = $("#Hid_Type").val();
@@ -218,6 +219,7 @@ var orderInfo = {
         if (type == "CPDD" || type == "YSDDB") {
             $("#choose_Receiver").show(); 
             $("#ReceiverID").show();
+            $("#ReceiverName").show();
 
             $("#choose_Storage").hide();
             $("#ReceiverStorageID").hide();
@@ -225,31 +227,133 @@ var orderInfo = {
             $("#tr_ContactInfo").show();
 
             //选择客户自动带出门店信息
+            //$("#CustomerID").click(function () {
+            //    var CID = $("#CustomerID").val();
+            //    $("#ReceiverID").html("").append("<option value=''>--请选择门店--</option>");
+            //    jQuery.ajax({
+            //        url: "GetReceiverByCustomerID",
+            //        data: { customerID: CID },
+            //        type: "post",
+            //        success: function (data) {
+            //            if (data) {
+            //                if (data != "") {                                
+            //                    for (var i = 0; i < data.length; i++) {
+            //                        $("#ReceiverID").append("<option value='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</option>");
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    });
+            //});
+
             $("#CustomerID").click(function () {
                 var CID = $("#CustomerID").val();
-                $("#ReceiverID").html("").append("<option value=''>--请选择门店--</option>");
+
+                $("#ReceiverName").val("");
+                //$("#ReceiverID").html("").append("<option value=''>--请选择门店--</option>");
                 jQuery.ajax({
                     url: "GetReceiverByCustomerID",
-                    data: { customerID: CID },
+                    data: { customerID: CID},
                     type: "post",
                     success: function (data) {
+                        console.log(data);
                         if (data) {
-                            if (data != "") {                                
-                                for (var i = 0; i < data.length; i++) {
-                                    $("#ReceiverID").append("<option value='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</option>");
-                                }
+                            $("#div_items").html("")
+                            $("#div_items").show();
+                            for (var i = 0; i < data.length; i++) {
+                                $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
                             }
                         }
+
                     }
                 });
             });
 
-            $("#ReceiverID").val($("#ReceiverID").val()).trigger("change");
+            $("#div_items").on("click", "li", function () {
+                var name = $(this).text();
+                var id = $(this).attr("id");
+                $('#ReceiverID').val(id);
+                $('#ReceiverName').val(name);
+                $('#div_items').hide(500);
+                if (!!id) {
+                    $.ajax({
+                        url: "GetReceiverByGoodsID",
+                        type: 'POST',
+                        async: false,
+                        data: { rid: id },
+                        success: function (data) {
+                            if (!!data) {
+                                $("#contactName").val(data.ContactName);
+                                $("#contactMobile").val(data.Mobile);
+                                $("#contactAddress").val(data.Address);
+                            }
+                        }
+                    });
+                }
+                else {
+                    $("#contactName").val("");
+                    $("#contactMobile").val("");
+                    $("#contactAddress").val("");
+                }
+            });
+
+            $('#ReceiverName').blur(function () {
+                $('#div_items').hide(500);
+            })
+            $("#ReceiverName").keyup(function () {
+                var CID = $("#CustomerID").val();
+                var Name = $("#ReceiverName").val();
+                $.ajax({
+                    type: "post",
+                    url: "GetReceiverByCustomerID",
+                    data: {
+                        customerID: CID, customerName: Name,
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (data) {
+                            $("#div_items").html("")
+                            $("#div_items").show();
+                            for (var i = 0; i < data.length; i++) {
+                                $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
+                            }
+                        }
+                    }
+                })
+
+            })
+            $("#ReceiverName").focus(function () {
+                var CID = $("#CustomerID").val();
+                var Name = $("#ReceiverName").val();
+                $.ajax({
+                    type: "post",
+                    url: "GetReceiverByCustomerID",
+                    data: {
+                        customerID: CID, customerName: Name,
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (data) {
+                            $("#div_items").html("")
+                            $("#div_items").show();
+                            for (var i = 0; i < data.length; i++) {
+                                $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
+                            }
+                        }
+                    }
+                })
+
+            })
+
+
+            $("#ReceiverName").val($("#ReceiverName").val()).trigger("change");
+
         }
         else {
             //调拨订单 运输订单A显示 +仓库信息
             $("#choose_Receiver").hide();
             $("#ReceiverID").hide();
+            $("#ReceiverName").hide();
 
             $("#choose_Storage").show();
             $("#ReceiverStorageID").show();

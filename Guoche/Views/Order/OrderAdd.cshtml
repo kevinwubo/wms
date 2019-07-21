@@ -28,6 +28,34 @@
             -moz-opacity: 0.7;
             -khtml-opacity: 0.7;*/
     }
+    #div_items {
+        width: 206px;
+        height: 200px;
+        border: 1px solid #66afe9;
+        border-top: 0px;
+        overflow: auto;
+        display: none;
+        position: absolute;
+        background: #FFF;
+    }
+
+    .div_item {
+        width: 100%;
+        height: auto;
+        margin-top: 1px;
+        font-size: 13px;
+        line-height: 20px;
+        left: 20px;
+        list-style-type: none;
+    }
+
+    .div_itembuttom {
+        width: 100%;
+        height: auto;
+        margin-top: 1px;
+        font-size: 13px;
+        line-height: 20px;
+    }
 </style>
 
 }
@@ -44,10 +72,10 @@
                     <input type="hidden" id="Hid_Type" name="Hid_Type" value="@ViewBag.Type" />
                     <input type="hidden" id="OrderType" name="OrderType" value="@(string.IsNullOrEmpty(entity.OrderType)?ViewBag.Type:entity.OrderType)" />
                     <input type="hidden" id="orderDetailJson" name="orderDetailJson" />
-                    <table class="table table-bordered" style="width:90%">
+                    <table class="table table-bordered" >
                         <tr>
-                            <td style="width:5%"><label class="control-label">选择客户</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">选择客户</label></td>
+                            <td style="">
                                 <select tabindex="1" class="" id="CustomerID" name="CustomerID">
                                     @foreach (var item in customers)
                                     {
@@ -55,49 +83,50 @@
                                     }
                                 </select>
                             </td>
-                            <td style="width:5%">
+                            <td style="">
                                 <label class="control-label" id="choose_Receiver" style="display:none">选择门店</label>
 
                                 <label class="control-label" id="choose_Storage" style="display:none">选择仓库</label>
                             </td>
-                            <td style="width:20%">
-                                <select tabindex="1" class="" id="ReceiverID" style="display:none"  name="ReceiverID">
-                                    <option value="-1">请选择门店</option>
-                                    @*@foreach (var item in receivers)
-                                    {
-                                        <option value="@item.ReceiverID">@item.ReceiverName</option>
-                                    }*@
-                                </select>
+                            <td style="">
+                                @*<select tabindex="1" class="" id="ReceiverID" style="display:none"  name="ReceiverID">
+                                    <option value="-1">请选择门店</option> 
+                                </select>*@
+                                <input type="hidden" id="ReceiverID" name="ReceiverID" value="-1" />
+                                <input type="text" aria-controls="menus" autocomplete="off" id="ReceiverName" name="ReceiverName">                                    
+                                    <div id="div_items" style="display:none">
+                                </div>
 
                                 <select tabindex="1" class="" id="ReceiverStorageID" style="display:none" name="ReceiverStorageID">
+                                    <option value="-1">请选择仓库</option> 
                                     @foreach (var item in storages)
                                     {
                                         <option value="@item.StorageID" @(item.StorageID == entity.ReceiverStorageID ? "selected" : "")>@item.StorageName</option>
                                     }
                                 </select>
                             </td>
-                            <td style="width:5%"><label class="control-label">下单时间</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">下单时间</label></td>
+                            <td style="">
                                 <input type="text" aria-controls="menus" placeholder="下单时间" id="OrderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="1" name="OrderDate">
                             </td>
                         </tr>
                         <tr id="tr_ContactInfo" style="display:none">
-                            <td style="width:5%"><label class="control-label">联系人</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">联系人</label></td>
+                            <td style="">
                                 <input type="text" style="width:220px" readonly="readonly" id="contactName" aria-controls="menus" />
                             </td>
-                            <td style="width:5%"><label class="control-label">联系方式</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">联系方式</label></td>
+                            <td style="">
                                 <input type="text" style="width:220px" readonly="readonly" id="contactMobile" aria-controls="menus" />
                             </td>
-                            <td style="width:5%"><label class="control-label">联系地址</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">联系地址</label></td>
+                            <td style="">
                                 <input type="text" style="width:220px" readonly="readonly" id="contactAddress" aria-controls="menus" />
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:5%"><label class="control-label">发货库仓</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">发货库仓</label></td>
+                            <td style="">
                                 <select tabindex="1" class="" id="SendStorageID" name="SendStorageID">
                                     @foreach (var item in storages)
                                     {
@@ -105,8 +134,8 @@
                                     }
                                 </select>
                             </td>
-                            <td style="width:5%"><label class="control-label">承运商</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">承运商</label></td>
+                            <td style="">
                                 <select tabindex="1" class="" id="CarrierID" name="CarrierID">
                                     @foreach (var item in carriers)
                                     {
@@ -114,20 +143,20 @@
                                     }
                                 </select>
                             </td>
-                            <td style="width:5%"><label class="control-label">送达时间</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">送达时间</label></td>
+                            <td style="">
                                 <input type="text" style="width:220px" aria-controls="menus" placeholder="送达时间" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="2" id="SendDate" name="SendDate">
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:5%"><label class="control-label">订单编号</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">订单编号</label></td>
+                            <td style="">
                                 <input class="" type="text" style="width:220px" readonly="readonly" placeholder="订单编号" id="OrderNo" name="OrderNo" value='@(string.IsNullOrEmpty(entity.OrderNo) ? DateTime.Now.ToString("yyyymmddhhmmss") : entity.OrderNo)' maxlength=" 200">
                             </td>
-                            <td style="width:5%"><label class="control-label">合并编号</label></td>
-                            <td style="width:20%"><input style="width:220px" class="" type="text" placeholder="合并编号" id="MergeNo" name="MergeNo" value="@entity.MergeNo" maxlength="200"></td>
-                            <td style="width:5%"><label class="control-label">温度</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">合并编号</label></td>
+                            <td style=""><input style="width:220px" class="" type="text" placeholder="合并编号" id="MergeNo" name="MergeNo" value="@entity.MergeNo" maxlength="200"></td>
+                            <td style=""><label class="control-label">温度</label></td>
+                            <td style="">
                                 <select tabindex="1" class="" id="TempType" name="TempType">
                                     @foreach (var item in tems)
                                     {
@@ -138,42 +167,42 @@
                   
                         </tr>
                         <tr>
-                            <td style="width: 5%; border-top: 1px solid red;border-left:1px solid red" ><label class="control-label">运输应收</label></td>
+                            <td style=" border-top: 1px solid red;" ><label class="control-label">运输应收</label></td>
                             <td style="width: 20%; border-top: 1px solid red;">
                                 <input class="" type="text" style="width:220px" placeholder="运输应收" id="configPrice" name="configPrice" value="@entity.configPrice" maxlength="100">
                             </td>
-                            <td style="width: 5%; border-top: 1px solid red;"><label class="control-label">装卸应收</label></td>
+                            <td style=" border-top: 1px solid red;"><label class="control-label">装卸应收</label></td>
                             <td style="width: 20%; border-top: 1px solid red;">
                                 <input class="" type="text" style="width:220px" placeholder="装卸应收" id="configHandInAmt" name="configHandInAmt" value="@entity.configHandInAmt" maxlength="200">
                             </td>
-                            <td style="width: 5%; border-top: 1px solid red;"><label class="control-label">分拣应收</label></td>
-                            <td style="width: 20%; border-top: 1px solid red; border-right: 1px solid red; ">
+                            <td style=" border-top: 1px solid red;"><label class="control-label">分拣应收</label></td>
+                            <td style="width: 20%; border-top: 1px solid red;  ">
                                 <input class="" type="text" style="width:220px" placeholder="分拣应收" id="configSortPrice" name="configSortPrice" value="@entity.configSortPrice" maxlength="200">
                             </td>
                         </tr>
                         <tr>
-                            <td style="width: 5%; border-left: 1px solid red;"><label class="control-label">运输应付</label></td>
-                            <td style="width:20%">
+                            <td style=" "><label class="control-label">运输应付</label></td>
+                            <td style="">
                                 <input class="" type="text" style="width:220px" placeholder="运输应付" id="configCosting" name="configCosting" value="@entity.configCosting" maxlength="200">
                             </td>
-                            <td style="width:5%"><label class="control-label">装卸应付</label></td>
-                            <td style="width:20%">
+                            <td style=""><label class="control-label">装卸应付</label></td>
+                            <td style="">
                                 <input class="" type="text" style="width:220px" placeholder="装卸应付" id="configHandOutAmt" name="configHandOutAmt" value="@entity.configHandOutAmt" maxlength="200">
                             </td>
-                            <td style="width:5%"><label class="control-label">分拣应付</label></td>
-                            <td style="width: 20%; border-right: 1px solid red; ">
+                            <td style=""><label class="control-label">分拣应付</label></td>
+                            <td style="width: 20%; ">
                                 <input class="" type="text" style="width:220px" placeholder="分拣应付" id="configSortCosting" name="configSortCosting" value="@entity.configSortCosting" maxlength="200">
                             </td>
                         </tr>
                         <tr>
-                            <td style="width: 5%; border-top: 1px solid red;"><label class="control-label">备注</label></td>
-                            <td style="width: 20%; border-top: 1px solid red;">
-                                <input class="" type="text" style="width:220px" placeholder="备注" id="Remark" name="Remark" value="@entity.Remark" maxlength="200">
+                            <td style=" "><label class="control-label">备注</label></td>
+                            <td style="width: 20%;" colspan="5">
+                                <input class="" type="text" style="width:600px" placeholder="备注" id="Remark" name="Remark" value="@entity.Remark" maxlength="600">
                             </td>                            
-                            <td style="width: 5%; border-top: 1px solid red;"><label class="control-label"></label></td>
-                            <td style="width: 20%; border-top: 1px solid red;"></td>
-                            <td style="width: 5%; border-top: 1px solid red;"><label class="control-label"></label></td>
-                            <td style="width: 20%; border-top: 1px solid red;"></td>
+                            @*<td style=" "><label class="control-label"></label></td>
+                            <td style="width: 20%; "></td>
+                            <td style=" "><label class="control-label"></label></td>
+                            <td style="width: 20%; "></td>*@
                         </tr>
                     </table>
                 </div>

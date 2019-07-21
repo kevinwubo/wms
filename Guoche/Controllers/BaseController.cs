@@ -13,6 +13,27 @@ namespace GuoChe.Controllers
 {
     public class BaseController : Controller
     {
+        /// <summary>
+        /// url参数
+        /// </summary>
+        public string UrlPar
+        {
+            get
+            {
+                string par = "";
+                string url = Request.Url.AbsoluteUri;
+                if (!string.IsNullOrEmpty(url))
+                {
+                    string[] strUrl = url.Split('?');
+                    if (strUrl != null && strUrl.Length > 1)
+                    {
+                        par = strUrl[1];
+                    }
+                }
+                return par;
+            }
+        }
+
         public CacheRuntime Cache { 
              get { 
                  CacheRuntime cache=new CacheRuntime(); 
@@ -77,35 +98,34 @@ namespace GuoChe.Controllers
         public JsonResult SearchByName(string name)
         {
             List<ReceiverEntity> list = new List<ReceiverEntity>();
-            List<ReceiverEntity> reveiverList = ReceiverService.GetReceiverAll();
+            List<ReceiverEntity> reveiverList = ReceiverService.GetReceiverAll(false);
             if (reveiverList != null && reveiverList.Count > 0)
             {
-                //foreach (ReceiverEntity entity in reveiverList)
+
+                if (!string.IsNullOrEmpty(name))
                 {
-                    if (!string.IsNullOrEmpty(name))
-                    {
-                        var v = from d in reveiverList where d.ReceiverName.Contains(name) select d;
+                    var v = from d in reveiverList where d.ReceiverName.Contains(name) select d;
 
-                        if (v != null)
-                        {
-                            foreach (var k in v)
-                            {
-                                ReceiverEntity model = new ReceiverEntity();
-                                model.ReceiverID = k.ReceiverID;
-                                model.ReceiverName = k.ReceiverName;
-                                list.Add(model);
-
-                            }
-                        }
-                    }
-                    else
+                    if (v != null)
                     {
-                        foreach (ReceiverEntity entity in reveiverList)
+                        foreach (var k in v)
                         {
-                            list.Add(entity);
+                            ReceiverEntity model = new ReceiverEntity();
+                            model.ReceiverID = k.ReceiverID;
+                            model.ReceiverName = k.ReceiverName;
+                            list.Add(model);
+
                         }
                     }
                 }
+                else
+                {
+                    foreach (ReceiverEntity entity in reveiverList)
+                    {
+                        list.Add(entity);
+                    }
+                }
+
             }
             return Json(list);
         }
@@ -173,10 +193,41 @@ namespace GuoChe.Controllers
         /// </summary>
         /// <param name="rid"></param>
         /// <returns></returns>
-        public JsonResult GetReceiverByCustomerID(int customerID)
+        public JsonResult GetReceiverByCustomerID(int customerID, string customerName = "")
         {
+            List<ReceiverEntity> outList = new List<ReceiverEntity>();
             List<ReceiverEntity> list = ReceiverService.GetReceiverByCustomerID(customerID);
-            return Json(list);
+
+            if (list != null && list.Count > 0)
+            {
+
+                if (!string.IsNullOrEmpty(customerName))
+                {
+                    var v = from d in list where d.ReceiverName.Contains(customerName) select d;
+
+                    if (v != null)
+                    {
+                        foreach (var k in v)
+                        {
+                            ReceiverEntity model = new ReceiverEntity();
+                            model.ReceiverID = k.ReceiverID;
+                            model.ReceiverName = k.ReceiverName;
+                            outList.Add(model);
+
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (ReceiverEntity entity in list)
+                    {
+                        outList.Add(entity);
+                    }
+                }
+
+            }
+
+            return Json(outList);
         }
 
         public JsonResult GetReceiver(string type)

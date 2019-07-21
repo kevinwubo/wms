@@ -1946,7 +1946,7 @@ legend + .control-group {
 }
 .form-horizontal .control-label {
   float: left;
-  width: 160px;
+  /*width: 160px;*/
   padding-top: 5px;
   text-align: left;
 }
@@ -5623,7 +5623,7 @@ button.close {
     width: 28px;
   }
 }
-@media (min-width: 1200px) {
+@media (min-width: 900px) {
   .row {
     margin-left: -30px;
     *zoom: 1;

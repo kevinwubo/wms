@@ -1012,6 +1012,12 @@
     <Content Include="source\layui\font\iconfont.ttf" />
     <Content Include="source\layui\font\iconfont.woff" />
     <Content Include="source\layui\font\iconfont.woff2" />
+    <Content Include="Views\Inventory\Import.cshtml" />
+    <Content Include="source\Template\Costa模版.xlsx" />
+    <Content Include="source\Template\卜蜂莲花Template.xls" />
+    <Content Include="source\Template\大润发Template.xls" />
+    <Content Include="source\Template\家乐福Template.xls" />
+    <Content Include="source\Template\永辉Template.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

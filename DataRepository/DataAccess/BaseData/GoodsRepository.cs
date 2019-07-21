@@ -42,13 +42,21 @@ namespace DataRepository.DataAccess.Goods
         /// <param name="status">状态</param>
         /// <param name="BarCode">条形码</param>
         /// <returns></returns>
-        public List<GoodsInfo> GetGoodsByRule(string name, int status, string BarCode)
+        public List<GoodsInfo> GetGoodsByRule(string goodsNo, int status, string goodsName, string goodsModel, string BarCode)
         {
             List<GoodsInfo> result = new List<GoodsInfo>();
             string sqlText = GoodsStatement.GetAllGoodsByRule;
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(goodsNo))
             {
-                sqlText += " AND GroupName LIKE '%'+@key+'%'";
+                sqlText += " AND GoodsNo = @goodsNo";
+            }
+            if (!string.IsNullOrEmpty(goodsName))
+            {
+                sqlText += " AND goodsName = @goodsName";
+            }
+            if (!string.IsNullOrEmpty(goodsModel))
+            {
+                sqlText += " AND goodsModel = @goodsModel";
             }
             if (status > -1)
             {
@@ -61,9 +69,17 @@ namespace DataRepository.DataAccess.Goods
 
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(goodsNo))
             {
-                command.AddInputParameter("@key", DbType.String, name);
+                command.AddInputParameter("@goodsNo", DbType.String, goodsNo);
+            }
+            if (!string.IsNullOrEmpty(goodsName))
+            {
+                command.AddInputParameter("@goodsName", DbType.String, goodsName);
+            }
+            if (!string.IsNullOrEmpty(goodsModel))
+            {
+                command.AddInputParameter("@goodsModel", DbType.String, goodsModel);
             }
             if (status > -1)
             {

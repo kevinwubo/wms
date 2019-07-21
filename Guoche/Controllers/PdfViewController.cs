@@ -37,7 +37,7 @@ namespace GuoChe.Controllers
             string htmlText = this.ViewPdf("Preview", info);
             byte[] pdfFile = this.ConvertHtmlTextToPDF(htmlText);
 
-            return new BinaryContentResult(pdfFile, "application/pdf", "送货单");//StringHelper.getOrderType(orderlist[0].OrderType)
+            return new BinaryContentResult(pdfFile, "application/pdf", DateTime.Now.ToString("yyyymmddhhmmss") + "送货单");//StringHelper.getOrderType(orderlist[0].OrderType)
         }
 
         /// <sum
@@ -53,7 +53,7 @@ namespace GuoChe.Controllers
             string htmlText = this.ViewPdf("PreviewImport", info);
             byte[] pdfFile = this.ConvertHtmlTextToPDF(htmlText);
 
-            return new BinaryContentResult(pdfFile, "application/pdf", typedesc);
+            return new BinaryContentResult(pdfFile, "application/pdf", DateTime.Now.ToString("yyyymmddhhmmss") + typedesc);
         }
 
         /// <summary>
@@ -120,6 +120,7 @@ namespace GuoChe.Controllers
             PdfDestination pdfDest = new PdfDestination(PdfDestination.XYZ, 0, doc.PageSize.Height, 1f);
             //開啟Document文件 
             doc.Open();
+            
             //使用XMLWorkerHelper把Html parse到PDF檔裡
             XMLWorkerHelper.GetInstance()
                 .ParseXHtml(writer, doc, msInput, null, Encoding.UTF8, new UnicodeFontFactory());

@@ -371,4 +371,64 @@ namespace Entity.ViewModel
         /// </summary>
         public string Remark { get; set; }
     }
+
+
+    public class ImportInventoryEntity
+    {
+        /// <summary>
+        /// 所属客户
+        /// </summary>
+        public string CustomerName { get; set; }
+
+        /// <summary>
+        /// 仓库编号
+        /// </summary>
+        public string StorageNo { get; set; }
+
+        /// <summary>
+        /// 仓库名称
+        /// </summary>
+        public string StorageName { get; set; }
+
+        /// <summary>
+        /// 商品编号
+        /// </summary>
+        public string GoodsNo { get; set; }
+
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        public string GoodsName { get; set; }
+        /// <summary>
+        /// 规格型号
+        /// </summary>
+        public string Models { get; set; }
+
+        /// <summary>
+        /// 单位
+        /// </summary>
+        public string Units { get; set; }
+
+        /// <summary>
+        /// 批次号
+        /// </summary>
+        public string BatchNumber { get; set; }
+
+        /// <summary>
+        /// 生产日期
+        /// </summary>
+        public string ProductDate { get; set; }
+
+        /// <summary>
+        /// 到期日期
+        /// </summary>
+        public string ExitDate { get; set; }
+
+        /// <summary>
+        /// 余量
+        /// </summary>
+        public string Quantity { get; set; }
+    }
+    //										
+
 }

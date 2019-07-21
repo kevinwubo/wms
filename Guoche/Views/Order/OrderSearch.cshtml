@@ -9,6 +9,7 @@
     List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
     List<UserEntity> users = (List<UserEntity>)ViewBag.Users;
+    List<BaseDataEntity> orderTypeList = ((List<BaseDataEntity>)ViewBag.orderTypeList) ?? new List<BaseDataEntity>();
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
 <link href="~/source/assets/css/queryItem.css" rel="stylesheet" />
@@ -75,11 +76,11 @@
                                 </label>
                                 <label>
                                     <select class="span3" style="width: 200px" id="ordertype" name="ordertype">
-                                        <option value="" @(ViewBag.OrderType == "" ? "selected" : "")>--订单类型--</option>
-                                        <option value="CPDD" @(ViewBag.OrderType == "CPDD" ? "selected" : "")>仓配订单</option>
-                                        <option value="DBDD" @(ViewBag.OrderType == "DBDD" ? "selected" : "")>调拨订单</option>
-                                        <option value="YSDDA" @(ViewBag.OrderType == "YSDDA" ? "selected" : "")>运输订单A</option>
-                                        <option value="YSDDB" @(ViewBag.OrderType == "YSDDB" ? "selected" : "")>运输订单B</option>
+                                        <option value="" @(ViewBag.OrderType == "" ? "selected" : "")>--订单类型--</option>                                        
+                                        @foreach (var item in orderTypeList)
+                                        {
+                                            <option value="@item.TypeCode" @(item.TypeCode == ViewBag.OrderType ? "selected" : "")>@item.ValueInfo</option>
+                                        }
                                     </select>
                                 </label>
                                 <label>
@@ -95,9 +96,11 @@
                                     <input type="text" aria-controls="menus" class="layui-input" style="width:200px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" lay-key="1" autocomplete="off" name="begindate">
                                 </label>
                                 <label>
-                                    <input type="text" aria-controls="menus" class="layui-input" style="width:200px" placeholder="订单开始时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
+                                    <input type="text" aria-controls="menus" class="layui-input" style="width:200px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
                                 </label>
                                 <label><button class="btn btn-info" type="submit">搜索</button></label>
+                                <button class="btn btn-info" type="button" id="download_SHD">导出PDF</button>
+                                <button class="btn btn-info" type="button" id="download_Excel">导出Excel</button>
                             </div>
                         </form>
                     </div>

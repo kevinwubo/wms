@@ -42,14 +42,36 @@ var LineInfo = {
             
         })
 
-        //选中
-        $("#div_items").click(function () {
-            $(".div_item").each(function () {
-                $(this).click(function () {
-                    $("#ReceiverName").val($(this).html());
-                })
+        $("#ReceiverName").focus(function () {
+            var Name = $("#ReceiverName").val();
+            $.ajax({
+                type: "post",
+                url: "SearchByName",
+                data: {
+                    name: Name,
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        $("#div_items").html("")
+                        $("#div_items").show();
+                        for (var i = 0; i < data.length; i++) {
+                            $("#div_items").append("<li class='div_item'>" + data[i].ReceiverName + "</li>");
+                        }
+                    }
+                }
             })
-        })        
+
+        })
+ 
+        $("#div_items").on("click", "li", function () {
+            var name = $(this).text();
+            $('#ReceiverName').val(name);
+        });
+
+        $('#ReceiverName').blur(function () {
+            $('#div_items').hide(500);
+        })
 
         $("#saveLine").click(function () {
             var lineID = $("#txt_LineID").val();

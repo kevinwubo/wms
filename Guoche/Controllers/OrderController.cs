@@ -2,6 +2,8 @@
 using DataRepository.DataAccess.Order;
 using Entity.ViewModel;
 using Infrastructure.Cache;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
 using Service;
 using Service.ApiBiz;
 using Service.BaseBiz;
@@ -64,7 +66,7 @@ namespace GuoChe.Controllers
             {
                 ViewBag.Order = OrderService.GetOrderByOrderID(orderid);
             }
-            ViewBag.TypeName = ConvertHelper.GetOrderType(type);
+            ViewBag.TypeName = StringHelper.getOrderType(type);
             ViewBag.Type = type;
             return View();
         }
@@ -93,14 +95,15 @@ namespace GuoChe.Controllers
         #endregion
 
         #region 订单保存
-        public void Modify(OrderEntity order)
+        public ContentResult Modify(OrderEntity order)
         {
             if (order != null)
             {
                 order.OperatorID = CurrentUser.UserID.ToString().ToInt(0);
             }
             OrderService.ModifyOrder(order);
-            Response.Redirect("/Order/");
+            //Response.Redirect("/Order/");
+            return Content("<script>alert('订单添加成功！');window.location.href='/Order/OrderSearch?orderno=" + order.OrderNo + "'</script>");
         }
         #endregion
 
@@ -155,7 +158,7 @@ namespace GuoChe.Controllers
                 ViewBag.GoodsModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "GoodsCode" && t.Status == 1).ToList();
                 if (!string.IsNullOrEmpty(name) || storageID > 0 )
                 {
-                    inventoryList = InventoryService.GetInventoryInfoByRule(name, "", storageID, 0, pager);
+                    inventoryList = InventoryService.GetInventoryInfoByRule(name, "", storageID, customerid, pager);
                 }
                 else
                 {
@@ -259,6 +262,8 @@ namespace GuoChe.Controllers
             ViewBag.Goods = GoodsService.GetGoodsByRule("", 1);//只显示使用中的数据
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
+            //订单类型
+            List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
             //操作人
             ViewBag.Users = UserService.GetUserAll();
             ViewBag.BeginDate = begindate;
@@ -272,6 +277,7 @@ namespace GuoChe.Controllers
             ViewBag.customerid = customerid;
             ViewBag.storageid = storageid;
             ViewBag.OrderList = mList;
+            ViewBag.orderTypeList = orderTypeList;
             ViewBag.Pager = pager;
             return View();
         }
@@ -461,9 +467,11 @@ namespace GuoChe.Controllers
             ViewBag.Token = Guid.NewGuid();
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
-
+            //订单类型
+            List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
             ViewBag.ImportTypeDesc = StringHelper.GetOrderSource(type);
             ViewBag.Type = type;
+            ViewBag.orderTypeList = orderTypeList;
             return View();
         }
 
@@ -511,7 +519,7 @@ namespace GuoChe.Controllers
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public JsonResult GenerateOrder(string token, string ordersource)
+        public JsonResult GenerateOrder(string token, string ordersource,string orderType)
         {
             long operatorID = 0;
             if (CurrentUser != null)
@@ -522,7 +530,7 @@ namespace GuoChe.Controllers
             ImportIDSEntity idsEntity=new ImportIDSEntity();
             if (list != null && list.Count > 0)
             {
-                idsEntity = OrderService.GenerateOrder(list, ordersource, operatorID);
+                idsEntity = OrderService.GenerateOrder(list, ordersource, orderType, operatorID);
             }
             return new JsonResult
             {
@@ -608,6 +616,161 @@ namespace GuoChe.Controllers
             Response.Redirect("OrderSearch_Modify/");
         }
         #endregion
+
+
+        #region 下载Excel
+        public FileResult DownloadExcel(string ids)
+        {
+            List<OrderEntity> list = getOrderList(ids);
+            //创建Excel文件的对象
+            HSSFWorkbook book = new HSSFWorkbook();
+            //添加一个sheet
+            ISheet sheet1 = book.CreateSheet("Sheet1");
+            ////公共样式：加边框
+            //NPOI.SS.UserModel.ICellStyle style = book.CreateCellStyle();
+            //style.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            //style.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            //style.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+            //style.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            //style.Alignment = HorizontalAlignment.Center;
+
+            //NPOI.SS.UserModel.ICellStyle styleHeader = book.CreateCellStyle();
+            //styleHeader.CloneStyleFrom(style);//克隆公共的样式
+            //styleHeader.Alignment = HorizontalAlignment.Center;//单元格水平居中
+            //IFont fontHeader = book.CreateFont();//新建一个字体样式对象
+            //fontHeader.Boldweight = short.MaxValue;//设置字体加粗样式
+            //styleHeader.SetFont(fontHeader);//使用SetFont方法将字体样式添加到单元格样式中
+            //将数据逐步写入sheet1各个行
+            int Row=0;
+            for (int i = 0; i < list.Count; i++)
+            {
+
+                //给sheet1添加第一行的头部标题
+                NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(Row);
+                row1.CreateCell(0).SetCellValue("订单编号");
+                row1.CreateCell(1).SetCellValue("下单时间");
+                row1.CreateCell(2).SetCellValue("送货时间");
+                row1.CreateCell(3).SetCellValue("收货方");
+                row1.CreateCell(4).SetCellValue("收货人");
+                row1.CreateCell(5).SetCellValue("联系方式");
+                row1.CreateCell(6).SetCellValue("配送地址");
+                row1.CreateCell(7).SetCellValue("承运商");
+                row1.CreateCell(8).SetCellValue("备注");
+                row1.CreateCell(9).SetCellValue("温区");
+                row1.CreateCell(10).SetCellValue("订单属性");
+                row1.CreateCell(11).SetCellValue("合并编号");
+                row1.CreateCell(12).SetCellValue("制单人");
+                row1.CreateCell(13).SetCellValue("制单时间");
+                row1.CreateCell(14).SetCellValue("订单归属");
+                row1.CreateCell(15).SetCellValue("发货仓库");
+                row1.CreateCell(16).SetCellValue("订单状态");
+
+                Row = Row + 1;
+                NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(Row);
+                rowtemp.CreateCell(0).SetCellValue(list[i].OrderNo);
+                rowtemp.CreateCell(1).SetCellValue(list[i].OrderDate.ToString());
+                rowtemp.CreateCell(2).SetCellValue(list[i].SendDate.ToString());
+                rowtemp.CreateCell(3).SetCellValue(list[i].contact.name);
+                rowtemp.CreateCell(4).SetCellValue(list[i].contact.contact);
+                rowtemp.CreateCell(5).SetCellValue(list[i].contact.telephone);
+                rowtemp.CreateCell(6).SetCellValue(list[i].contact.address);
+                rowtemp.CreateCell(7).SetCellValue(list[i].carrier.CarrierName);
+                rowtemp.CreateCell(8).SetCellValue(list[i].Remark);
+                rowtemp.CreateCell(9).SetCellValue(list[i].TempType);
+                rowtemp.CreateCell(10).SetCellValue(list[i].OrderTypeDesc);
+                rowtemp.CreateCell(11).SetCellValue(list[i].MergeNo);
+                rowtemp.CreateCell(12).SetCellValue(list[i].user != null ? list[i].user.UserName : "");
+                rowtemp.CreateCell(13).SetCellValue(list[i].OrderDate);
+                rowtemp.CreateCell(14).SetCellValue(list[i].customer != null ? list[i].customer.CustomerName : "");
+                rowtemp.CreateCell(15).SetCellValue(list[i].sendstorage != null ? list[i].sendstorage.StorageName : "");
+                rowtemp.CreateCell(16).SetCellValue(list[i].OrderStatusDesc + list[i].UploadStatusDesc);
+
+
+                List<OrderDetailEntity> listDetail= list[i].orderDetailList;
+                if (listDetail != null && listDetail.Count > 0)
+                {
+                    Row = Row + 1;
+                    NPOI.SS.UserModel.IRow row2 = sheet1.CreateRow(Row);
+                    row2.CreateCell(0).SetCellValue("");
+                    row2.CreateCell(1).SetCellValue("");
+                    row2.CreateCell(2).SetCellValue("");
+                    row2.CreateCell(3).SetCellValue("");
+                    row2.CreateCell(4).SetCellValue("");
+                    row2.CreateCell(5).SetCellValue("");
+                    row2.CreateCell(6).SetCellValue("");                    
+                    row2.CreateCell(7).SetCellValue("项次");
+                    row2.CreateCell(8).SetCellValue("商品编号");
+                    row2.CreateCell(9).SetCellValue("名称");
+                    row2.CreateCell(10).SetCellValue("规格");
+                    row2.CreateCell(11).SetCellValue("数量");
+                    row2.CreateCell(12).SetCellValue("单位");
+                    row2.CreateCell(13).SetCellValue("重量");
+                    row2.CreateCell(14).SetCellValue("批次号");
+                    row2.CreateCell(15).SetCellValue("生产日期");
+                    row2.CreateCell(16).SetCellValue("到期日期");
+
+                    int jj = 1;
+                    for (int j = 0; j < listDetail.Count; j++)
+                    {
+                        Row = Row + 1;
+                        NPOI.SS.UserModel.IRow rowtemp2 = sheet1.CreateRow(Row);
+                        rowtemp2.CreateCell(0).SetCellValue("");
+                        rowtemp2.CreateCell(1).SetCellValue("");
+                        rowtemp2.CreateCell(2).SetCellValue("");
+                        rowtemp2.CreateCell(3).SetCellValue("");
+                        rowtemp2.CreateCell(4).SetCellValue("");
+                        rowtemp2.CreateCell(5).SetCellValue("");
+                        rowtemp2.CreateCell(6).SetCellValue("");
+                        rowtemp2.CreateCell(7).SetCellValue(jj++);
+                        rowtemp2.CreateCell(8).SetCellValue(listDetail[j].GoodsNo);
+                        rowtemp2.CreateCell(9).SetCellValue(listDetail[j].GoodsName);
+                        rowtemp2.CreateCell(10).SetCellValue(listDetail[j].GoodsModel);
+                        rowtemp2.CreateCell(11).SetCellValue(listDetail[j].Quantity);
+                        rowtemp2.CreateCell(12).SetCellValue(listDetail[j].Units);
+                        rowtemp2.CreateCell(13).SetCellValue(listDetail[j].TotalWeight);
+                        rowtemp2.CreateCell(14).SetCellValue(listDetail[j].BatchNumber);
+                        rowtemp2.CreateCell(15).SetCellValue(listDetail[j].ProductDate.ToShortDateString());
+                        rowtemp2.CreateCell(16).SetCellValue(listDetail[j].ExceedDate.ToShortDateString());
+                    }
+                }
+                Row = Row + 1;
+
+            }
+            // 写入到客户端 
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyymmddhhmmss") + "_Order.xls");
+        }
+
+        /// <summary>
+        /// 获取传入订单号
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="typedesc">送货单、补损单</param>
+        /// <returns></returns>
+        private List<OrderEntity> getOrderList(string ids)
+        {
+            List<OrderEntity> list = new List<OrderEntity>();
+            if (!string.IsNullOrEmpty(ids))
+            {
+                string[] strs = ids.Split(',');
+                foreach (string str in strs)
+                {
+                    if (!string.IsNullOrEmpty(str))
+                    {
+                        OrderEntity entity = OrderService.GetOrderEntityById(str.ToInt(0));                        
+                        if (entity != null)
+                        {
+                            list.Add(entity);
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+        #endregion
+        
 
         public ActionResult OrderSearch_bak()
         {

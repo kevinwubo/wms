@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Helper;
 using Service.BaseBiz;
+using System.Data;
 
 namespace Service.Inventory
 {
@@ -43,7 +44,7 @@ namespace Service.Inventory
                         string str = ex.ToString();
                     }
                 }
-
+                List<InventoryInfo> listInv = new List<InventoryInfo>();
                 if (jsonInfo != null && jsonInfo.listGoods != null && jsonInfo.listGoods.Count > 0)
                 {
                     foreach (InvGoodsDetailEntity entity in jsonInfo.listGoods)
@@ -87,11 +88,16 @@ namespace Service.Inventory
                                 //插入库存
                                 mr.CreateNew(info);
                             }
+                            listInv.Add(info);
 
                             #region 库存明细保存                            
                             CreateInventoryDetail(entity, StorageID, DateTime.Parse(inventoryDate), OperatorID);
                             #endregion
                         }
+
+                        //生成入库单
+                        OrderService.CreateOrderByInventory(listInv);
+
                     }
                 }
             }
@@ -366,5 +372,80 @@ namespace Service.Inventory
             return all;
         }
         #endregion
+
+        public static List<ImportInventoryEntity> GetInventoryImportList(DataSet ds)
+        {
+            List<ImportInventoryEntity> list = new List<ImportInventoryEntity>();
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                foreach (DataTable dt in ds.Tables)
+                {
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            if (!dt.Rows[i]["单位"].ToString().Equals("合计"))
+                            {
+                                //所属客户	仓库编号	仓库名称	商品编号	商品名称	规格型号	单位	批次号	生产日期	到期日期	余量
+
+                                ImportInventoryEntity entity = new ImportInventoryEntity();
+                                entity.CustomerName = dt.Rows[i]["所属客户"].ToString();
+                                entity.StorageNo = dt.Rows[i]["仓库编号"].ToString();
+                                entity.StorageName = dt.Rows[i]["仓库名称"].ToString();
+                                entity.GoodsNo = dt.Rows[i]["商品编号"].ToString();
+                                entity.GoodsName = dt.Rows[i]["商品名称"].ToString();
+                                entity.Models = dt.Rows[i]["规格型号"].ToString();
+                                entity.Units = dt.Rows[i]["单位"].ToString();
+                                entity.BatchNumber = dt.Rows[i]["批次号"].ToString();
+                                entity.ProductDate = dt.Rows[i]["生产日期"].ToString();
+                                entity.ExitDate = dt.Rows[i]["到期日期"].ToString();
+                                entity.Quantity = dt.Rows[i]["余量"].ToString();
+                                list.Add(entity);
+                            }
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
+        public static void insertInventory(List<ImportInventoryEntity> list)
+        {
+            InventoryRepository mr = new InventoryRepository();
+            if(list!=null&&list.Count>0)
+            {
+                foreach (ImportInventoryEntity entity in list)
+                {
+                    InventoryInfo info = new InventoryInfo();
+                    if (entity != null)
+                    {
+                        List<GoodsEntity> listGoods = GoodsService.GetGoodsByRule(entity.GoodsNo, -1);
+                        GoodsEntity entityGood = listGoods != null && listGoods.Count > 0 ? listGoods[0] : null;
+                        List<StorageEntity> listStorage = StorageService.GetStorageByRule(entity.StorageName, -1);
+                        StorageEntity entityStorage = listStorage != null && listStorage.Count > 0 ? listStorage[0] : null;
+
+                        List<CustomerEntity> listCustomer = CustomerService.GetCustomerByRule(entity.CustomerName, -1);
+                        CustomerEntity entityCustomer = listCustomer != null && listCustomer.Count > 0 ? listCustomer[0] : null;
+                        info.GoodsID = entityGood != null ? entityGood.GoodsID : 0;
+                        info.StorageID = entityStorage != null ? entityStorage.StorageID : 0;
+                        info.Quantity = entity.Quantity.ToInt(0);
+                        info.CustomerID = entityCustomer != null ? entityCustomer.CustomerID : 0;
+                        info.InventoryType = Common.InventoryType.入库.ToString();
+                        info.BatchNumber = entity.BatchNumber;
+                        info.ProductDate = DateTime.Parse(entity.ProductDate);
+                        info.InventoryDate = DateTime.Now;
+                        info.UnitPrice = entityGood != null ? entityGood.SalePrice : 0; ;
+                        info.Remark = "";
+                        info.OperatorID = 1;
+                        info.CreateDate = DateTime.Now;
+                        info.ChangeDate = DateTime.Now;
+                        mr.CreateNew(info);
+                    }
+                }
+            }          
+
+        }
+
     }
 }

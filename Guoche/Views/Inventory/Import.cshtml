@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Import";
+}
+
+<h2>Import</h2>
+<span class="lcQueryItem">
+    批量导入<input class="upfile" type="file" />
+</span>
+
+
+<script type="text/javascript" src="/source/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/raphael-min.js"></script>
+<script type="text/javascript" src="/source/assets/js/bootstrap.js"></script>
+
+<script type="text/javascript" src='/source/assets/js/morris.min.js'></script>
+<script type="text/javascript" src="/source/assets/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.masonry.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.imagesloaded.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.facybox.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.alertify.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.knob.js"></script>
+<script type='text/javascript' src='/source/assets/js/fullcalendar.min.js'></script>
+<script type='text/javascript' src='/source/assets/js/jquery.gritter.min.js'></script>
+
+<script type="text/javascript" src="/source/assets/js/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/source/Common.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
+<script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
+<script>
+    //Excel导入
+    $(".lcQueryItem").on("change", ".upfile", function () {
+        var formData = new FormData();
+        formData.append('file', $(this)[0].files[0]);
+        formData.append('token', $("#hid_Token").val());
+        var fileType = $(this)[0].files[0].name.split(".");
+        fileType = fileType[fileType.length - 1];
+
+        if (fileType == "xls" || fileType == "xlsx") {
+            $.ajax({
+                url: "InventoryDataImport",
+                type: 'post',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (data) {
+                if ("" != data) {
+                    console.log(data);
+                }
+            }).fail(function (res) {
+                alert("fail");
+                console.log(res);
+            });
+        } else {
+            alert("请上传png,jpg格式的图片")
+        }
+    })
+</script>

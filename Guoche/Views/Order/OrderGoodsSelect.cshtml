@@ -25,31 +25,32 @@
             <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
                 <div class="row-fluid">
                     <div class="">
-                        <form action="/Order/OrderInventorySelect" method="get">
+                        <form action="/Order/OrderGoodsSelect" method="get">
                             <div class="dataTables_length" id="menus_filter">
                                 <input type="hidden" id="type" name="type" value="@ViewBag.TYPE" />
                                 <input type="hidden" id="storageID" name="storageID" value="@ViewBag.StorageID" />
+                                <input type="hidden" id="storageID" name="customerid" value="@ViewBag.customerid" />
                                 <label>商品名称: <input type="text" aria-controls="menus" id="name" name="name" value="@ViewBag.Name"></label>
                                 &nbsp;&nbsp;
                                 @*<label>
-                                    <select tabindex="1" class="span5" style="width:100px" id="mcode" name="mcode">
-                                        <option value="">--商品类型--</option>
-                                        @foreach (var item in goodsModel)
-                                        {
-                                            <option value="@item.Description" @(ViewBag.GoodsType == item.Description ? "selected")>@item.Description</option>
-                                        }
-                                    </select>
-                                </label>&nbsp;&nbsp;*@
+                    <select tabindex="1" class="span5" style="width:100px" id="mcode" name="mcode">
+                        <option value="">--商品类型--</option>
+                        @foreach (var item in goodsModel)
+                        {
+                            <option value="@item.Description" @(ViewBag.GoodsType == item.Description ? "selected")>@item.Description</option>
+                        }
+                    </select>
+                </label>&nbsp;&nbsp;*@
                                 @*<label>
-                                    <select tabindex="1" class="span5" style="width:100px" id="CustomerID" name="CustomerID">
-                                        <option value="">--所属客户--</option>
-                                        @foreach (var item in customers)
-                                        {
-                                            <option value="@item.CustomerID" @(ViewBag.CustomerID == item.CustomerID ? "selected")>@item.CustomerName</option>
-                                        }
-                                    </select>
-                                </label>
-                                &nbsp;&nbsp;*@
+                    <select tabindex="1" class="span5" style="width:100px" id="CustomerID" name="CustomerID">
+                        <option value="">--所属客户--</option>
+                        @foreach (var item in customers)
+                        {
+                            <option value="@item.CustomerID" @(ViewBag.CustomerID == item.CustomerID ? "selected")>@item.CustomerName</option>
+                        }
+                    </select>
+                </label>
+                &nbsp;&nbsp;*@
                                 <button class="btn btn-info" type="submit">搜索</button>
                             </div>
                         </form>

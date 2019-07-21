@@ -27,7 +27,7 @@ namespace DataRepository.DataAccess.Order
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH ordera AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY OrderDate DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 )as T ) 
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY CreateDate DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 )as T ) 
 		                                                  SELECT *  FROM ordera 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize
 	                                                  END";
@@ -47,7 +47,7 @@ namespace DataRepository.DataAccess.Order
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH ordera AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY OrderDate DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 ";
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY CreateDate DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 ";
         public static string GetAllOrderInfoByRulePagerFooter = @")as T ) 
 		                                                  SELECT *  FROM ordera 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize
