@@ -610,10 +610,10 @@ namespace GuoChe.Controllers
         /// </summary>
         /// <param name="orderid"></param>
         /// <returns></returns>
-        public void OrderDelete(int orderid)
+        public void OrderDelete(int orderid,string type)
         {
             OrderService.Delete(orderid);
-            Response.Redirect("OrderSearch_Modify/");
+            Response.Redirect("/Order/OrderSearch_Modify?type=" + type);
         }
         #endregion
 

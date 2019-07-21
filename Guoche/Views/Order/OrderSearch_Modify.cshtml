@@ -17,7 +17,7 @@
 <link href="~/source/assets/css/img.css" rel="stylesheet" />
 
 <div class="row-fluid">
-    <h2 class="heading" style="margin-top:20px">@ViewBag.TitleName</h2>
+    <h2 class="heading" style="margin-top:60px">@ViewBag.TitleName</h2>
 </div>
 <div class="row-fluid">
     <div class="widget widget-padding span12">
@@ -195,7 +195,7 @@
                         </div>
                         <div class="del">
                             @*<a href="/Order/OrderDelete?orderid=@entity.OrderID"  style="color:white">删除</a>*@
-                            <a href="javascript:delOrder(@entity.OrderID)" style="color:white">删除</a>
+                            <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType')" style="color:white">删除</a>
                         </div>
                     }
                 </div>
@@ -295,9 +295,9 @@
     $(document).ready(function () {
         orderInfo.init();        
     });
-    function delOrder(id) {
+    function delOrder(id,type) {
         if (confirm("确定删除订单?")) {
-            window.location.href = "/Order/OrderDelete?orderid=" + id;
+            window.location.href = "/Order/OrderDelete?orderid=" + id + "&type=" + type;
         }
     }
 </script>
