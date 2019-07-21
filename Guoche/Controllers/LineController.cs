@@ -14,6 +14,10 @@ namespace GuoChe.Controllers
         //
         // GET: /Line/
         public int PAGESIZE = 20;
+        public ActionResult Developing()
+        {
+            return View();
+        }
 
         public ActionResult Index(int LineID = -1, int p = -1)
         {

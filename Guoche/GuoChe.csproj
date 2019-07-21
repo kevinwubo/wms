@@ -1019,6 +1019,7 @@
     <Content Include="source\Template\Regular_Template.xls" />
     <Content Include="source\Template\RtMart_Template.xls" />
     <Content Include="source\Template\YongHui_Template.xls" />
+    <Content Include="Views\Line\Developing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
