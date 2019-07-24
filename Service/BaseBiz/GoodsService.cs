@@ -95,7 +95,7 @@ namespace Service.BaseBiz
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        private static GoodsEntity TranslateGoodsEntity(GoodsInfo info)
+        public static GoodsEntity TranslateGoodsEntity(GoodsInfo info)
         {
             GoodsEntity entity = new GoodsEntity();
             if (info != null)
@@ -136,7 +136,7 @@ namespace Service.BaseBiz
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        private static GoodsInfo TranslateGoodsInfo(GoodsEntity entity)
+        public static GoodsInfo TranslateGoodsInfo(GoodsEntity entity)
         {
             GoodsInfo info = new GoodsInfo();
             if (entity != null)

@@ -1020,6 +1020,9 @@
     <Content Include="source\Template\RtMart_Template.xls" />
     <Content Include="source\Template\YongHui_Template.xls" />
     <Content Include="Views\Line\Developing.cshtml" />
+    <Content Include="Views\BaseData\Import.cshtml" />
+    <Content Include="source\Template\GoodsBaseData.xls" />
+    <Content Include="source\Template\Inventory_Template.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

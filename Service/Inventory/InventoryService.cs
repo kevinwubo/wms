@@ -410,16 +410,19 @@ namespace Service.Inventory
             return list;
         }
 
-        public static void insertInventory(List<ImportInventoryEntity> list)
+        public static int insertInventory(List<ImportInventoryEntity> list)
         {
+            int count = 0;
             InventoryRepository mr = new InventoryRepository();
             if(list!=null&&list.Count>0)
             {
+                
                 foreach (ImportInventoryEntity entity in list)
                 {
                     InventoryInfo info = new InventoryInfo();
                     if (entity != null)
                     {
+                        count++;
                         List<GoodsEntity> listGoods = GoodsService.GetGoodsByRule(entity.GoodsNo, -1);
                         GoodsEntity entityGood = listGoods != null && listGoods.Count > 0 ? listGoods[0] : null;
                         List<StorageEntity> listStorage = StorageService.GetStorageByRule(entity.StorageName, -1);
@@ -443,7 +446,8 @@ namespace Service.Inventory
                         mr.CreateNew(info);
                     }
                 }
-            }          
+            }
+            return count;
 
         }
 

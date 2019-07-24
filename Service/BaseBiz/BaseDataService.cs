@@ -9,12 +9,72 @@ using System.Threading.Tasks;
 using Infrastructure.Helper;
 using System.Data;
 using Common;
+using DataRepository.DataAccess.Goods;
 
 namespace Service.BaseBiz
 {
     public class BaseDataService : BaseService
     {
+        #region 基础数据导入
+        public static List<GoodsEntity> GetImportList(DataSet ds)
+        {
+            List<GoodsEntity> list = new List<GoodsEntity>();
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                foreach (DataTable dt in ds.Tables)
+                {
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            GoodsEntity entity = new GoodsEntity();
+                            CustomerEntity cEntity = null;
+                            List<CustomerEntity> listC = CustomerService.GetCustomerByRule(dr["所属客户"].ToString(), -1);
+                            if (listC != null && listC.Count > 0)
+                            {
+                                cEntity = listC[0];
+                            }
+                            entity.TypeCode = dr["商品类型"].ToString();
+                            entity.CustomerID = cEntity != null ? cEntity.CustomerID : 0;
+                            entity.GoodsNo = dr["商品编号"].ToString();
+                            entity.GoodsName = dr["商品名称"].ToString();
+                            entity.GoodsModel = dr["规格型号"].ToString();
+                            entity.Weight = dr["重量"].ToString();
+                            entity.Size = dr["尺寸"].ToString();
+                            entity.Units = dr["单位"].ToString();
+                            entity.SalePrice = string.IsNullOrEmpty(dr["售价"].ToString()) ? 0 : Decimal.Parse(dr["售价"].ToString());
+                            entity.Torr = dr["托"].ToString();
+                            entity.exDate = dr["保质期"].ToString();
+                            entity.exUnits = dr["保质期单位"].ToString();
+                            entity.BarCode = dr["商品条形码"].ToString();
+                            entity.Remark = dr["备注"].ToString();
+                            list.Add(entity);
+                        }
+                    }
+                }
+            }
+            return list;
+        }
 
+        public static int InsertImport(List<GoodsEntity> list)
+        {
+            GoodsRepository mr = new GoodsRepository();
+            int count = 0;
+            if (list != null && list.Count > 0)
+            {
+                foreach (GoodsEntity entity in list)
+                {
+                    count++;
+                    //检测是否存在
+                    entity.CreateDate = DateTime.Now;
+                    entity.ChangeDate = DateTime.Now;
+                    GoodsInfo info = GoodsService.TranslateGoodsInfo(entity);
+                    mr.CreateNew(info);
+                }
+            }
+            return count;
+        }
+        #endregion
         public static void GetAllTest()
         {
             BaseDataRepository mr = new BaseDataRepository();
