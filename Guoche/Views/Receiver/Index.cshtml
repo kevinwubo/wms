@@ -94,8 +94,8 @@
                                     <td class=" ">@(Receiver[i].city != null ? Receiver[i].city.CityName : "")</td>   
                                     @*<td class=" "></td>    
                                     <td class=" "></td>*@    
-                                    <td class=" ">@Receiver[i].DefaultStorageID</td>    
-                                    <td class=" ">@Receiver[i].DefaultCarrierID</td>    
+                                    <td class=" ">@(Receiver[i].Carrier != null ? Receiver[i].Carrier.CarrierName : "")</td>    
+                                    <td class=" ">@(Receiver[i].Storage != null ? Receiver[i].Storage.StorageName : "")</td>    
                                     <td class=" ">
                                         @if (Receiver[i].Status==1)
                                         {

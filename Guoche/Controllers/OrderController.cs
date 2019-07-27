@@ -462,15 +462,15 @@ namespace GuoChe.Controllers
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public ActionResult OrderImport(string type)
+        public ActionResult OrderImport(string source)
         {
             ViewBag.Token = Guid.NewGuid();
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
             //订单类型
             List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
-            ViewBag.ImportTypeDesc = StringHelper.GetOrderSource(type);
-            ViewBag.Type = type;
+            ViewBag.ImportSourceDesc = StringHelper.GetOrderSource(source);
+            ViewBag.OrderSource = source;
             ViewBag.orderTypeList = orderTypeList;
             return View();
         }
@@ -482,6 +482,7 @@ namespace GuoChe.Controllers
         public JsonResult OrderImportData()
         {
             List<ImportOrderEntity> list = new List<ImportOrderEntity>();
+            List<RegularOrderEntity> listRegular = new List<RegularOrderEntity>();
             DataSet ds = new DataSet();
             if (Request.Files.Count == 0)
             {
@@ -489,7 +490,7 @@ namespace GuoChe.Controllers
             }
 
             String token= Request["token"];
-            string importType = Request["importType"];//导入类型
+            string importSource = Request["importSource"];//导入类型
             // 保存文件到UploadFiles文件夹
             for (int i = 0; i < Request.Files.Count; i++)
             {
@@ -498,18 +499,29 @@ namespace GuoChe.Controllers
                 var filePath = Server.MapPath(string.Format("~/{0}", "UploadFiles"));
                 string path = Path.Combine(filePath, fileName);
                 file.SaveAs(path);
-                if (importType.Equals(OrderSource.Costa.ToString()))
+                if (importSource.Equals(OrderSource.Costa.ToString()))
                 {
                     ds = ExcelHelper.ImportExcelXLSXtoDt(path);
                     list = OrderService.GetCostaImportList(ds);
+                    //存入缓存
+                    Cache.Add(token, list);
+                }
+                else if (importSource.Equals(OrderSource.Regular.ToString()))//
+                {
+                    ds = ExcelHelper.ImportBaseExceltoDt(path);
+                    listRegular = OrderService.GetRegularImportList(ds);
+                    //存入缓存
+                    Cache.Add(token, listRegular);
+                    return Json(listRegular);
                 }
                 else
                 {
                     ds = ExcelHelper.ImportExceltoDt(path);
                     list = OrderService.GetImportList(ds);
+                    //存入缓存
+                    Cache.Add(token, list);
                 }
-                //存入缓存
-                Cache.Add(token, list);
+                
             }
             return Json(list);
         }
@@ -517,21 +529,37 @@ namespace GuoChe.Controllers
         /// <summary>
         /// 订单生成
         /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <param name="token">缓存读取</param>
+        /// <param name="ordersource">订单来源：大润发/家乐福/卜蜂莲花/上蔬永辉/Costa/常规订单</param>
+        /// <param name="orderType">订单类型：仓配订单/调拨订单/入库单/运输订单A/运输订单B</param>
         public JsonResult GenerateOrder(string token, string ordersource,string orderType)
         {
+            ImportIDSEntity idsEntity = new ImportIDSEntity();
             long operatorID = 0;
             if (CurrentUser != null)
             {
                 operatorID = CurrentUser.UserID;
             }
-            List<ImportOrderEntity> list = Cache.Get<List<ImportOrderEntity>>(token);
-            ImportIDSEntity idsEntity=new ImportIDSEntity();
-            if (list != null && list.Count > 0)
+            //常规订单
+            if (ordersource.Equals(OrderSource.Regular.ToString()))
             {
-                idsEntity = OrderService.GenerateOrder(list, ordersource, orderType, operatorID);
+                List<RegularOrderEntity> list = Cache.Get<List<RegularOrderEntity>>(token);
+                if (list != null && list.Count > 0)
+                {
+                    idsEntity = OrderService.GenerateRegularOrder(list, ordersource, orderType, operatorID);
+                }
             }
+            else
+            {
+                //商超订单+Costa订单
+                List<ImportOrderEntity> list = Cache.Get<List<ImportOrderEntity>>(token);
+                if (list != null && list.Count > 0)
+                {
+                    idsEntity = OrderService.GenerateOrder(list, ordersource, orderType, operatorID);
+                }
+            }
+
+
             return new JsonResult
             {
                 Data = idsEntity

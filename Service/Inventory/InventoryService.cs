@@ -385,10 +385,9 @@ namespace Service.Inventory
                     {
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
-                            if (!dt.Rows[i]["单位"].ToString().Equals("合计"))
+                            if (!string.IsNullOrEmpty(dt.Rows[i]["所属客户"].ToString()))
                             {
                                 //所属客户	仓库编号	仓库名称	商品编号	商品名称	规格型号	单位	批次号	生产日期	到期日期	余量
-
                                 ImportInventoryEntity entity = new ImportInventoryEntity();
                                 entity.CustomerName = dt.Rows[i]["所属客户"].ToString();
                                 entity.StorageNo = dt.Rows[i]["仓库编号"].ToString();
@@ -444,6 +443,10 @@ namespace Service.Inventory
                         info.CreateDate = DateTime.Now;
                         info.ChangeDate = DateTime.Now;
                         mr.CreateNew(info);
+                        List<InventoryInfo> listInv = new List<InventoryInfo>();
+                        listInv.Add(info);
+                        //生成入库单
+                        OrderService.CreateOrderByInventory(listInv);
                     }
                 }
             }

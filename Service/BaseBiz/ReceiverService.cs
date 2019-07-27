@@ -106,6 +106,12 @@ namespace Service.BaseBiz
                     entity.city = city;
                     entity.customer = new CustomerEntity();
                     entity.customer = CustomerService.GetCustomerById(info.CustomerID);
+
+                    CarrierEntity carrier = CarrierService.GetCarrierById(info.DefaultCarrierID);
+                    entity.Carrier = carrier;
+
+                    StorageEntity storage = StorageService.GetStorageEntityById(info.DefaultStorageID);
+                    entity.Storage = storage;
                 }
                 //获取联系人信息
                 entity.listContact = ContactService.GetContactByRule(UnionType.Receiver.ToString(), info.ReceiverID);

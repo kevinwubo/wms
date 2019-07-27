@@ -50,10 +50,10 @@ var orderInfo = {
 
         //Excel导入
         $(".lcQueryItem").on("change", ".upfile", function () {
-            var type = $("#hid_Type").val();
+            var orderSource = $("#hid_OrderSource").val();
             var formData = new FormData();
             formData.append('file', $(this)[0].files[0]);
-            formData.append('importType', type);
+            formData.append('importSource', orderSource);
             formData.append('token', $("#hid_Token").val());
             var fileType = $(this)[0].files[0].name.split(".");
             fileType = fileType[fileType.length - 1];
@@ -72,10 +72,16 @@ var orderInfo = {
 
                         for (var i = 0; i < data.length; i++) {
                             var html = "";
-                            if (type == "Costa") {
+                            if (orderSource == "Costa") {
                                 html += "<tr>"
                                 html += "<td>" + data[i].GoodsNo + "</td><td>" + data[i].GoodsName + "</td><td>" + data[i].GoodsModel + "</td><td>" + data[i].Units + "</td><td>" + data[i].Quantity + "</td><td>" + data[i].ShopNo + "</td><td>" + data[i].ShopName + "</td>";
                                 html += "<td>" + data[i].OrderNo + "</td><td>" + data[i].OrderDate + "</td><td>" + data[i].YyDate + "</td><td>" + data[i].Remark + "</td>";
+                                html += "</tr>"
+                            }
+                            else if (orderSource == "Regular") {
+                                html += "<tr>"
+                                html += "<td>" + data[i].orderDate + "</td><td>" + data[i].sendDate + "</td><td>" + data[i].sendStorageName + "</td><td>" + data[i].Temp + "</td><td>" + data[i].CarrierName + "</td><td>" + data[i].CustomerName + "</td><td>" + data[i].ReceiverName + "</td>";
+                                html += "<td>" + data[i].GoodsName + "</td><td>" + data[i].Units + "</td><td>" + data[i].Quantity + "</td><td>" + data[i].Remark + "</td>";
                                 html += "</tr>"
                             }
                             else {
@@ -103,27 +109,28 @@ var orderInfo = {
                 alert("请选择要生成的订单类型。");
                 return false;
             }
-            if (confirm("确定要生成" + orderType + "订单?")) {
+            if (confirm("确定要生成" + $("#orderType").find("option:selected").text() + "订单?")) {
                 $.ajax({
                     type: "post",
                     url: "GenerateOrder",
                     data: {
                         token: $("#hid_Token").val(),
-                        ordersource: $("#hid_Type").val(),
+                        ordersource: $("#hid_OrderSource").val(),
                         orderType: orderType
                     },
                     success: function (data) {
                         console.log(data);
                         if (data) {
-                            if (data.SHDIds != "") {
+                            if (data.SHDIds && data.SHDIds != "") {
                                 $("#hid_SHDids").val(data.SHDIds);
                                 $("#OrderDownload_SHD").show()
                             }
-                            if (data.BSDIds != "") {
+                            if (data.BSDIds&&data.BSDIds != "") {
                                 $("#hid_BSDids").val(data.BSDIds);
                                 $("#OrderDownload_BSD").show()
                             }
-                            alert("订单生成成功！")
+                            alert("订单生成成功！");
+                            window.location.reload();
                         }
                     }
                 })

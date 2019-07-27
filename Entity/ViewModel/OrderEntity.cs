@@ -431,4 +431,51 @@ namespace Entity.ViewModel
     }
     //										
 
+    public class RegularOrderEntity
+    {
+        /// <summary>
+        /// 下单时间
+        /// </summary>
+        public string orderDate { get; set; }
+        /// <summary>
+        /// 要求送达时间
+        /// </summary>
+        public string sendDate { get; set; }
+        /// <summary>
+        /// 发货仓库
+        /// </summary>
+        public string sendStorageName { get; set; }
+        /// <summary>
+        /// 温区
+        /// </summary>
+        public string Temp { get; set; }
+        /// <summary>
+        /// 承运商
+        /// </summary>
+        public string CarrierName { get; set; }
+        /// <summary>
+        /// 客户名称
+        /// </summary>
+        public string CustomerName { get; set; }
+        /// <summary>
+        /// 送达方(门店/仓库)
+        /// </summary>
+        public string ReceiverName { get; set; }
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        public string GoodsName { get; set; }
+        /// <summary>
+        /// 单位
+        /// </summary>
+        public string Units { get; set; }
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public string Quantity { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark { get; set; }
+    }
 }

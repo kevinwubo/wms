@@ -67,6 +67,9 @@ namespace Entity.ViewModel
         /// 默认仓库编号
         /// </summary>
         public int DefaultStorageID { get; set; }
+
+        public CarrierEntity Carrier { get; set; }
+        public StorageEntity Storage { get; set; }
         /// <summary>
         /// 状态 1：使用中 0：已删除
         /// </summary>

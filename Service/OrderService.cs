@@ -11,6 +11,7 @@ using Common;
 using DataRepository.DataAccess.Order;
 using Service.BaseBiz;
 using System.Data;
+using Service.Inventory;
 
 namespace Service
 {
@@ -463,15 +464,15 @@ namespace Service
         /// 运输订单B 厂到店，均无视库存。
         /// </summary>
         /// <param name="orderid"></param>
-        /// <param name="type"></param>
+        /// <param name="orderType">订单类型：仓配订单/调拨订单/入库单/运输订单A/运输订单B</param>
         /// <returns></returns>
-        public static bool OrderInventoryProcess(long orderid, string type, long operatorID, List<OrderDetailInfo> oldOrderDetail = null)
+        public static bool OrderInventoryProcess(long orderid, string orderType, long operatorID, List<OrderDetailInfo> oldOrderDetail = null)
         {
             InventoryRepository mr = new InventoryRepository();
             OrderEntity orderinfo = GetOrderByOrderID(orderid);
             if (orderinfo != null)
             {
-                if ("CPDD".Equals(type))
+                if ("CPDD".Equals(orderType))
                 {
                     #region 仓配订单 仓到店，涉及仓的库存扣减，无视门店库存。
                     List<OrderDetailEntity> orderDetailList = orderinfo.orderDetailList;
@@ -499,7 +500,7 @@ namespace Service
                     }
                     #endregion                    
                 }
-                else if ("DBDD".Equals(type))
+                else if ("DBDD".Equals(orderType))
                 {
                     #region 调拨订单 仓到仓，涉及仓仓之间的库存扣减增加。
                     List<OrderDetailEntity> orderDetailList = orderinfo.orderDetailList;
@@ -535,7 +536,7 @@ namespace Service
                     #endregion
                     
                 }
-                else if ("YSDDA".Equals(type))
+                else if ("YSDDA".Equals(orderType))
                 {
                     #region 运输订单A 厂到仓，涉及仓的库存增加，无视厂的库存。
                     List<OrderDetailEntity> orderDetailList = orderinfo.orderDetailList;
@@ -553,7 +554,7 @@ namespace Service
                     }
                     #endregion
                 }
-                else if ("YSDDB".Equals(type))
+                else if ("YSDDB".Equals(orderType))
                 {
                     //运输订单B 厂到店，均无视库存。
                 }
@@ -776,7 +777,8 @@ namespace Service
         /// 订单导入后生成订单
         /// </summary>
         /// <param name="list"></param>
-        /// <param name="ordersource"></param>
+        /// <param name="ordersource">订单来源：大润发/家乐福/卜蜂莲花/上蔬永辉/Costa/常规订单</param>
+        /// <param name="orderType">订单类型：仓配订单/调拨订单/入库单/运输订单A/运输订单B</param>
         /// <param name="OperatorID"></param>
         /// <returns></returns>
         public static ImportIDSEntity GenerateOrder(List<ImportOrderEntity> list, string ordersource,string orderType, long OperatorID)
@@ -882,7 +884,170 @@ namespace Service
 
             return idsEntity;
         }
-        
+
+        /// <summary>
+        /// 从Excel中读取常规订单数据
+        /// </summary>
+        /// <param name="ds"></param>
+        /// <returns></returns>
+        public static List<RegularOrderEntity> GetRegularImportList(DataSet ds)
+        {
+            List<RegularOrderEntity> list = new List<RegularOrderEntity>();
+
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                foreach (DataTable dt in ds.Tables)
+                {
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            RegularOrderEntity entity = new RegularOrderEntity();
+                            if (!string.IsNullOrEmpty(dt.Rows[i]["商品名称"].ToString()) && !string.IsNullOrEmpty(dt.Rows[i]["发货仓库"].ToString()))
+                            {
+                                entity.orderDate = dt.Rows[i]["下单时间"].ToString();
+                                entity.sendDate = dt.Rows[i]["要求送达时间"].ToString();
+                                entity.sendStorageName = dt.Rows[i]["发货仓库"].ToString();
+                                entity.Temp = dt.Rows[i]["温区"].ToString();
+                                entity.CarrierName = dt.Rows[i]["承运商"].ToString();
+                                entity.CustomerName = dt.Rows[i]["客户名称"].ToString();
+                                entity.ReceiverName = dt.Rows[i]["送达方(门店/仓库)"].ToString();
+                                entity.GoodsName = dt.Rows[i]["商品名称"].ToString();
+                                entity.Units = dt.Rows[i]["单位"].ToString();
+                                entity.Quantity = dt.Rows[i]["数量"].ToString();
+                                entity.Remark = dt.Rows[i]["备注"].ToString();
+                                list.Add(entity);
+                            }
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 常规订单生成
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="ordersource">订单来源：大润发/家乐福/卜蜂莲花/上蔬永辉/Costa/常规订单</param>
+        /// <param name="orderType">订单类型：仓配订单/调拨订单/入库单/运输订单A/运输订单B</param>
+        /// <param name="OperatorID"></param>
+        /// <returns></returns>
+        public static ImportIDSEntity GenerateRegularOrder(List<RegularOrderEntity> list, string ordersource, string OrderType, long OperatorID)
+        {
+            ImportIDSEntity idsEntity = new ImportIDSEntity();
+            string ids = "";
+            if (list != null && list.Count > 0)
+            {
+                foreach (RegularOrderEntity entity in list)
+                {
+                    OrderInfo info = new OrderInfo();
+                    //							
+                    //发货仓库
+                    List<StorageEntity> listStorage = StorageService.GetStorageByRule(entity.sendStorageName, -1);
+                    StorageEntity storageEntity = listStorage != null && listStorage.Count > 0 ? listStorage[0] : null;
+                    info.SendStorageID = storageEntity != null ? storageEntity.StorageID : 0;//发货仓库  
+
+                    //承运商
+                    List<CarrierEntity> listCarrier = CarrierService.GetCarrierByRule(entity.CarrierName, -1);
+                    CarrierEntity carrierEntity = listCarrier != null && listCarrier.Count > 0 ? listCarrier[0] : null;
+                    info.CarrierID = carrierEntity != null ? carrierEntity.CarrierID : 0;//承运商
+
+                    //客户名称
+                    List<CustomerEntity> listCustomer = CustomerService.GetCustomerByRule(entity.CustomerName, -1);
+                    CustomerEntity customerEntity = listCustomer != null && listCustomer.Count > 0 ? listCustomer[0] : null;
+                    info.CustomerID = customerEntity != null ? customerEntity.CustomerID : 0;
+
+                    //送达方(门店/仓库)
+                    List<ReceiverEntity> listReceiver = ReceiverService.GetReceiverByRule(entity.ReceiverName, "", "", -1);//门店信息
+                    ReceiverEntity receiverEntity = listReceiver != null && listReceiver.Count > 0 ? listReceiver[0] : null;
+                    info.ReceiverID = receiverEntity != null ? receiverEntity.ReceiverID : 0;
+
+                    List<StorageEntity> listReceiverStorage = StorageService.GetStorageByRule(entity.ReceiverName, -1);//仓库信息
+                    StorageEntity receiverStorageEntity = listReceiverStorage != null && listReceiverStorage.Count > 0 ? listReceiverStorage[0] : null;
+                    info.ReceiverStorageID = receiverStorageEntity != null ? receiverStorageEntity.StorageID : 0;
+
+                    info.OrderNo = DateTime.Now.ToString("yyyymmddhhmmss");
+                    info.MergeNo = "";
+                    info.OrderType = OrderType;                    
+                    info.OrderDate =DateTime.Parse( entity.orderDate);//下单时间
+                    info.SendDate = DateTime.Parse(entity.orderDate);//要求送达时间
+                    info.configPrice = 0;
+                    info.configHandInAmt = 0;
+                    info.configSortPrice = 0;
+                    info.configCosting = 0;
+                    info.configHandOutAmt = 0;
+                    info.configSortCosting = 0;
+                    info.TempType = entity.Temp;//温区
+                    info.OrderStatus = 0;
+                    info.UploadStatus = 0;
+                    info.Status = 1;
+                    info.Remark = entity.Remark;
+                    info.OperatorID = OperatorID.ToString().ToInt(0);
+                    info.CreateDate = DateTime.Now;
+                    info.ChangeDate = DateTime.Now;
+
+                    info.OrderSource = ordersource;
+                    info.SalesMan = "";
+                    info.PromotionMan = "";
+                    info.LineID = GetLineID(entity.CustomerName + (receiverEntity != null ? receiverEntity.ReceiverName : ""));//线路
+                    OrderRepository or = new OrderRepository();
+                    long orderid = or.CreateNew(info);
+
+                    idsEntity.SHDIds += orderid + ",";
+                    if (orderid > 0)
+                    {
+                        #region 订单明细信息
+                        OrderDetailInfo infodetail = new OrderDetailInfo();
+                        GoodsEntity goods = new GoodsEntity();
+                        List<GoodsEntity> listGoods = GoodsService.GetGoodsByRule("", 1, entity.GoodsName);//商品名称	数量	单位	备注
+                        if (listGoods != null && listGoods.Count > 0)
+                        {
+                            goods = listGoods[0];
+                        }
+                        infodetail.OrderID = orderid.ToString().ToInt(0);
+                        infodetail.GoodsID = goods.GoodsID;
+                        infodetail.InventoryID = 0;
+                        infodetail.GoodsNo = string.IsNullOrEmpty(goods.GoodsNo) ? goods.GoodsNo : goods.GoodsNo;
+                        infodetail.GoodsName = string.IsNullOrEmpty(goods.GoodsName) ? goods.GoodsName : goods.GoodsName;
+                        infodetail.GoodsModel = string.IsNullOrEmpty(goods.GoodsModel) ? goods.GoodsModel : goods.GoodsModel;
+                        infodetail.Quantity = entity.Quantity.ToInt(0);
+                        infodetail.Units = string.IsNullOrEmpty(entity.Units) ? goods.Units : entity.Units;
+                        infodetail.Weight = goods.Weight;
+                        List<InventoryEntity> listInventory = InventoryService.GetInventoryByRule(goods.GoodsID, "");
+                        InventoryEntity inventoryEntity = null;
+                        if (listInventory != null && listInventory.Count > 0)
+                        {
+                            inventoryEntity = listInventory[0];
+                        }
+                        infodetail.TotalWeight = "";
+                        if (inventoryEntity != null)
+                        {
+                            infodetail.BatchNumber = inventoryEntity.BatchNumber;
+                            infodetail.ProductDate = inventoryEntity.ProductDate;//DefaultDateTime;
+
+                        }
+                        else
+                        {
+                            infodetail.BatchNumber = "";
+                            infodetail.ProductDate = DefaultDateTime;
+
+                        }
+                        infodetail.ExceedDate = Datehelper.getDateTime(inventoryEntity.ProductDate, goods.exDate.ToInt(0), goods.exUnits);
+
+                        infodetail.CreateDate = DateTime.Now;
+                        infodetail.ChangeDate = DateTime.Now;
+                        OrderDetailRepository ordetail = new OrderDetailRepository();
+                        long id = ordetail.CreateNew(infodetail);
+                        #endregion
+                    }
+                    //订单库存扣减处理
+                    OrderInventoryProcess(orderid.ToString().ToInt(0), OrderType, OperatorID);
+                }
+            }
+            return idsEntity;
+        }
+
         #endregion
 
         #region 基础数据导入
@@ -952,7 +1117,7 @@ namespace Service
                             dinfo.InventoryDate = DateTime.Now;
                             dinfo.InventoryType = InventoryType.入库.ToString();
                             dinfo.OrderNo = "";
-                            dinfo.OrderType = "入库单";
+                            dinfo.OrderType = OrderType.RKD.ToString();;
                             dinfo.ProductDate = DateTime.Parse(dt.Rows[i]["生产日期"].ToString());
                             dinfo.Quantity = int.Parse(dt.Rows[i]["总库存"].ToString());
                             dinfo.StorageID = 13;
@@ -1001,7 +1166,7 @@ namespace Service
                 info.Remark = entity.Remark;
                 info.OperatorID = entity.OperatorID.ToString().ToInt(0);
 
-                info.OrderSource = "入库单";
+                info.OrderSource = OrderType.RKD.ToString();
                 info.SalesMan = "";
                 info.PromotionMan = "";
                 info.CreateDate = entity.CreateDate;
@@ -1034,6 +1199,5 @@ namespace Service
             
         }
         #endregion
-
     }
 }
