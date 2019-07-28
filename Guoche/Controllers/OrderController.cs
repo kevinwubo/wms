@@ -490,6 +490,7 @@ namespace GuoChe.Controllers
             }
 
             String token= Request["token"];
+            Cache.Remove(token);
             string importSource = Request["importSource"];//导入类型
             // 保存文件到UploadFiles文件夹
             for (int i = 0; i < Request.Files.Count; i++)

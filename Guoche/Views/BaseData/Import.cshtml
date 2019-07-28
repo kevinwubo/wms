@@ -125,6 +125,7 @@
                 }).done(function (data) {
                     if ("" != data) {
                         console.log(data);
+                        $("#orderImportList").append("");
                         for (var i = 0; i < data.length; i++) {
                             var html = "";
                                 html += "<tr>"
@@ -182,6 +183,7 @@
                 }).done(function (data) {
                     if ("" != data) {
                         console.log(data);
+                        $("#orderImportList").append("");
                         for (var i = 0; i < data.length; i++) {
                             var html = "";
                             html += "<tr>"

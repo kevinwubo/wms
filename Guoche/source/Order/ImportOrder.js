@@ -69,7 +69,7 @@ var orderInfo = {
                 }).done(function (data) {
                     if ("" != data) {
                         console.log(data);
-
+                        $("#orderImportList").append("");
                         for (var i = 0; i < data.length; i++) {
                             var html = "";
                             if (orderSource == "Costa") {
@@ -130,7 +130,7 @@ var orderInfo = {
                                 $("#OrderDownload_BSD").show()
                             }
                             alert("订单生成成功！");
-                            window.location.reload();
+                            
                         }
                     }
                 })

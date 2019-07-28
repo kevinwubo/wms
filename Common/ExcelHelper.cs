@@ -297,22 +297,29 @@ namespace Common
         public static DataSet ImportExceltoDt_New(string strFileName)
         {
             DataSet ds = new DataSet();
-            HSSFWorkbook hssfworkbook;
-            using (FileStream file = new FileStream(strFileName, FileMode.Open, FileAccess.Read))
+            try
             {
-                hssfworkbook = new HSSFWorkbook(file);
-            }
-
-            for (int i = 0; i < hssfworkbook.NumberOfSheets; i++)
-            {
-                DataTable dt = new DataTable();
-                HSSFSheet sheet = hssfworkbook.GetSheetAt(i) as HSSFSheet;
-                if (sheet != null)
+                HSSFWorkbook hssfworkbook;
+                using (FileStream file = new FileStream(strFileName, FileMode.Open, FileAccess.Read))
                 {
-                    dt = ImportDt(sheet, 0, true, sheet.SheetName);
-                    ds.Tables.Add(dt);
+                    hssfworkbook = new HSSFWorkbook(file);
                 }
 
+                for (int i = 0; i < hssfworkbook.NumberOfSheets; i++)
+                {
+                    DataTable dt = new DataTable();
+                    HSSFSheet sheet = hssfworkbook.GetSheetAt(i) as HSSFSheet;
+                    if (sheet != null)
+                    {
+                        dt = ImportDt(sheet, 0, true, sheet.SheetName);
+                        ds.Tables.Add(dt);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteTextLog("ImportExceltoDt_New", ex.ToString());
             }
             return ds;
         }

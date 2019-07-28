@@ -16,15 +16,15 @@ namespace Common
         /// <param name="action">动作</param>  
         /// <param name="strMessage">日志内容</param>  
         /// <param name="time">时间</param>  
-        public static void WriteTextLog(string action, string strMessage, DateTime time)
+        public static void WriteTextLog(string action, string strMessage)
         {
             string path = AppDomain.CurrentDomain.BaseDirectory + @"\Log\";
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
 
-            string fileFullPath = path + time.ToString("yyyy-MM-dd") + ".System.txt";
+            string fileFullPath = path + DateTime.Now.ToString("yyyy-MM-dd") + ".System.txt";
             StringBuilder str = new StringBuilder();
-            str.Append("Time:    " + time.ToString() + "\r\n");
+            str.Append("Time:    " + DateTime.Now.ToString() + "\r\n");
             str.Append("Action:  " + action + "\r\n");
             str.Append("Message: " + strMessage + "\r\n");
             str.Append("-----------------------------------------------------------\r\n\r\n");

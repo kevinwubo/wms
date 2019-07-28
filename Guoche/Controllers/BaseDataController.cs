@@ -112,6 +112,7 @@ namespace GuoChe.Controllers
             }
 
             String token = Request["token"];
+            Cache.Remove(token);
             // 保存文件到UploadFiles文件夹
             for (int i = 0; i < Request.Files.Count; i++)
             {
@@ -156,28 +157,37 @@ namespace GuoChe.Controllers
         public JsonResult InventoryDataImport()
         {
             List<ImportInventoryEntity> list = new List<ImportInventoryEntity>();
-            DataSet ds = new DataSet();
-            if (Request.Files.Count == 0)
+            try
             {
-                throw new Exception("请选择导入文件！");
+                LogHelper.WriteTextLog("InventoryDataImport", "库存数据导入");
+                DataSet ds = new DataSet();
+                if (Request.Files.Count == 0)
+                {
+                    throw new Exception("请选择导入文件！");
+                }
+
+                String token = Request["token"];
+                Cache.Remove(token);
+                // 保存文件到UploadFiles文件夹
+                for (int i = 0; i < Request.Files.Count; i++)
+                {
+                    HttpPostedFileBase file = Request.Files[i];
+                    var fileName = file.FileName;
+                    var filePath = Server.MapPath(string.Format("~/{0}", "UploadFiles"));
+                    string path = Path.Combine(filePath, fileName);
+                    file.SaveAs(path);
+                    LogHelper.WriteTextLog("InventoryDataImport", path);
+                    ds = ExcelHelper.ImportExceltoDt_New(path);
+                    list = InventoryService.GetInventoryImportList(ds);
+                    LogHelper.WriteTextLog("InventoryDataImport", JsonHelper.ToJson(list));
+
+                    //存入缓存
+                    Cache.Add(token, list);
+                }
             }
-
-            String token = Request["token"];
-            // 保存文件到UploadFiles文件夹
-            for (int i = 0; i < Request.Files.Count; i++)
+            catch (Exception ex)
             {
-                HttpPostedFileBase file = Request.Files[i];
-                var fileName = file.FileName;
-                var filePath = Server.MapPath(string.Format("~/{0}", "UploadFiles"));
-                string path = Path.Combine(filePath, fileName);
-                file.SaveAs(path);
-
-                ds = ExcelHelper.ImportExceltoDt_New(path);
-                list = InventoryService.GetInventoryImportList(ds);
-
-
-                //存入缓存
-                Cache.Add(token, list);
+                LogHelper.WriteTextLog("InventoryDataImport", ex.ToString());
             }
             return Json(list);
         }
