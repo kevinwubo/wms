@@ -269,13 +269,16 @@ namespace Service
                             info.ID = item.ID;
                             info.OrderID = entity.OrderID > 0 ? item.OrderID : result.ToString().ToInt(0);
                             info.GoodsID = item.GoodsID.ToInt(0);
+
+                            GoodsEntity goodsEntity = GoodsService.GetGoodsEntityById(info.GoodsID);
+
                             info.InventoryID = item.InventoryID.ToInt(0);
-                            info.GoodsNo = item.GoodsNo;
-                            info.GoodsName = item.GoodsName;
-                            info.GoodsModel = item.GoodsModel;
+                            info.GoodsNo = goodsEntity != null ? goodsEntity.GoodsNo : item.GoodsNo;
+                            info.GoodsName = goodsEntity != null ? goodsEntity.GoodsName : item.GoodsName;
+                            info.GoodsModel = goodsEntity != null ? goodsEntity.GoodsModel : item.GoodsModel;
                             info.Quantity = item.Quantity.ToInt(0);
-                            info.Units = item.Units;
-                            info.Weight = item.Weight;
+                            info.Units = goodsEntity != null ? goodsEntity.Units: item.Units;
+                            info.Weight = goodsEntity != null ? goodsEntity.Weight : item.Weight;
                             info.TotalWeight = item.TotalWeight;
                             info.BatchNumber = item.BatchNumber;
                             info.ProductDate = string.IsNullOrEmpty(item.ProductDate) ? DateTime.Now : Convert.ToDateTime(item.ProductDate);
@@ -283,7 +286,6 @@ namespace Service
                             {
                                 if (info.GoodsID > 0)
                                 {
-                                    GoodsEntity goodsEntity = GoodsService.GetGoodsEntityById(info.GoodsID);
                                     if (goodsEntity != null)
                                     {
                                         info.ExceedDate = Datehelper.getDateTime(info.ProductDate, goodsEntity.exDate.ToInt(0), goodsEntity.exUnits);
@@ -417,9 +419,9 @@ namespace Service
 
         #region 分页相关
         public static int GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1,
-            int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1)
+            int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "")
         {
-            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid);
+            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource);
         }
 
         public static List<OrderEntity> GetOrderInfoPager(PagerInfo pager)
@@ -436,11 +438,11 @@ namespace Service
         }
 
         public static List<OrderEntity> GetOrderInfoByRule(PagerInfo pager, string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1,
-            int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1)
+            int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "")
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, pager);
+            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, pager);
 
             if (!miList.IsEmpty())
             {

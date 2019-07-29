@@ -10,6 +10,7 @@
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
     List<UserEntity> users = (List<UserEntity>)ViewBag.Users;
     List<BaseDataEntity> orderTypeList = ((List<BaseDataEntity>)ViewBag.orderTypeList) ?? new List<BaseDataEntity>();
+    List<BaseDataEntity> orderSourceList = ((List<BaseDataEntity>)ViewBag.orderSourceList) ?? new List<BaseDataEntity>();    
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
 <link href="~/source/assets/css/queryItem.css" rel="stylesheet" />
@@ -84,6 +85,15 @@
                                     </select>
                                 </label>
                                 <label>
+                                    <select class="span3" style="width: 200px" id="ordersource" name="ordersource">
+                                        <option value="" @(ViewBag.OrderSource == "" ? "selected" : "")>--商超订单--</option>
+                                        @foreach (var item in orderSourceList)
+                                        {
+                                            <option value="@item.TypeCode" @(item.TypeCode == ViewBag.OrderSource ? "selected" : "")>@item.ValueInfo</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
                                     <select tabindex="1" class="" style="width: 200px" id="operatorid" name="operatorid">
                                         <option value="">--请选择操作人--</option>
                                         @foreach (var item in users)
@@ -97,6 +107,15 @@
                                 </label>
                                 <label>
                                     <input type="text" aria-controls="menus" class="layui-input" style="width:200px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
+                                </label>
+                                <label>
+                                    <select tabindex="1" class="" style="width: 65px" id="pageSize" name="pageSize">
+                                        <option value="10" @(ViewBag.PageSize == 10 ? "selected" : "")>10条</option>
+                                        <option value="20" @(ViewBag.PageSize == 20 ? "selected" : "")>20条</option>
+                                        <option value="30" @(ViewBag.PageSize == 30 ? "selected" : "")>30条</option>
+                                        <option value="40" @(ViewBag.PageSize == 40 ? "selected" : "")>40条</option>
+                                        <option value="50" @(ViewBag.PageSize == 50 ? "selected" : "")>50条</option>
+                                    </select>
                                 </label>
                                 <label><button class="btn btn-info" type="submit">搜索</button></label>
                                 <button class="btn btn-info" type="button" id="download_SHD">导出PDF</button>

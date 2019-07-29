@@ -9,7 +9,9 @@ var orderInfo = {
         $("#download_SHD").click(function () {
             var orderids = "";
             $.each($('input:checkbox:checked'), function () {
-                orderids = orderids + $(this).val()+",";
+                if ($(this).val() != "-1") {
+                    orderids = orderids + $(this).val() + ",";
+                }
             });
             if (orderids == "")
             {
@@ -23,7 +25,9 @@ var orderInfo = {
         $("#download_Excel").click(function () {
             var orderids = "";
             $.each($('input:checkbox:checked'), function () {
-                orderids = orderids + $(this).val() + ",";
+                if ($(this).val() != "-1") {
+                    orderids = orderids + $(this).val() + ",";
+                }
             });
             if (orderids == "") {
                 alert("请勾选需要导出的配送单！");

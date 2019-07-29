@@ -58,14 +58,26 @@
                                         }
                                     </select>
                                 </label>
-                                <label>
+                                @*<label>
                                     订单状态: <select class="span3" style="width:150px" id="status" name="status">
                                         <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
                                         <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
                                         <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
                                     </select>
+                                </label>*@
+                                <label>
+                                    <select tabindex="1" class="" style="width: 65px" id="pageSize" name="pageSize">
+                                        <option value="10" @(ViewBag.PageSize == 10 ? "selected" : "")>10条</option>
+                                        <option value="20" @(ViewBag.PageSize == 20 ? "selected" : "")>20条</option>
+                                        <option value="30" @(ViewBag.PageSize == 30 ? "selected" : "")>30条</option>
+                                        <option value="40" @(ViewBag.PageSize == 40 ? "selected" : "")>40条</option>
+                                        <option value="50" @(ViewBag.PageSize == 50 ? "selected" : "")>50条</option>
+                                    </select>
                                 </label>
                                 <button class="btn btn-info" type="submit">搜索</button>
+                                <label>
+                                    <input type="checkbox" id="chk_all" value="-1" />全选
+                                </label>
                                 <button class="btn btn-info" type="button" id="download_SHD">下载送货单</button>
                             </div>
                         </form>
@@ -80,7 +92,7 @@
     <div class="lcItem" dataid="@entity.OrderID" storageid="23">
         <div class="lcItem_t">
             <div class="lcCheckDiv">
-                <input type="checkbox" class="checkbox" value="@entity.OrderID" />
+                <input type="checkbox" class="checkbox" name="chk_name" value="@entity.OrderID" />
             </div>
             <div class="lcItem_t_l">
                 <div class="lcDivList">
@@ -300,6 +312,12 @@
             window.location.href = "/Order/OrderDelete?orderid=" + id + "&type=" + type;
         }
     }
+    $("#chk_all").click(function () {
+        //全选,设置chheckbox name='all' tbody id=tb
+        $("input[name=chk_name]").each(function () {
+            $(this).prop('checked', $(this).is(':checked') ? false : true);
+        });
+    });
 </script>
 
 }

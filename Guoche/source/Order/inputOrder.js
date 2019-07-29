@@ -56,7 +56,7 @@ var orderInfo = {
                     return;
                 }
                 //
-                if (type == "YSDDA" || type == "YSDDB") {
+                if (type == "YSDDA" || type == "YSDDB" || type == "RKD") {
                     //运输订单A 运输订单B
                     //所属客户	商品名称	保质期	(批次号	生产日期	商品数量)	单位	商品重量	商品总重量   
                     var goodsid = tdArr.eq(0).find('input')[0].value;//商品ID

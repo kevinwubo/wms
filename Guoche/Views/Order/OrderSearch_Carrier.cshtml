@@ -52,13 +52,26 @@
                                 }
                                 <label>
                                     <select class="span3" style="width:200px" id="ordertype" name="ordertype">
+                                        <option value="" @(ViewBag.ordertype == "" ? "selected" : "")>--订单类型--</option>  
                                         @foreach (var item in orderTypeModel)
                                         {
-                                            <option value="@item.ValueInfo" @(item.ValueInfo == ViewBag.PageType ? "selected" : "")>@item.ValueInfo</option>
+                                            <option value="@item.TypeCode" @(item.TypeCode == ViewBag.ordertype ? "selected" : "")>@item.ValueInfo</option>
                                         }
                                     </select>
                                 </label>
+                                <label>
+                                    <select tabindex="1" class="" style="width: 65px" id="pageSize" name="pageSize">
+                                        <option value="10" @(ViewBag.PageSize == 10 ? "selected" : "")>10条</option>
+                                        <option value="20" @(ViewBag.PageSize == 20 ? "selected" : "")>20条</option>
+                                        <option value="30" @(ViewBag.PageSize == 30 ? "selected" : "")>30条</option>
+                                        <option value="40" @(ViewBag.PageSize == 40 ? "selected" : "")>40条</option>
+                                        <option value="50" @(ViewBag.PageSize == 50 ? "selected" : "")>50条</option>
+                                    </select>
+                                </label>
                                 <button class="btn btn-info" type="submit">查询配送单</button>
+                                <label>
+                                    <input type="checkbox" id="chk_all" value="-1" />全选
+                                </label>
                                 <button class="btn btn-info" type="button" id="download_SHD">下载送货单</button>
                             </div>
                         </form>
@@ -73,7 +86,7 @@
     <div class="lcItem" dataid="@entity.OrderID" storageid="23">
         <div class="lcItem_t">
             <div class="lcCheckDiv">
-                <input type="checkbox" class="checkbox" value="@entity.OrderID" />
+                <input type="checkbox" class="checkbox" name="chk_name" value="@entity.OrderID" />
             </div>
             <div class="lcItem_t_l">
                 <div class="lcDivList">
@@ -307,6 +320,12 @@
         laydate.render({
             elem: '#txt_arrivertime'//指定元素
             , type: 'datetime'
+        });
+    });
+    $("#chk_all").click(function () {
+        //全选,设置chheckbox name='all' tbody id=tb
+        $("input[name=chk_name]").each(function () {
+            $(this).prop('checked', $(this).is(':checked') ? false : true);
         });
     });
 
