@@ -57,7 +57,9 @@ namespace DataRepository.DataAccess.Order
 
         public static string GetAllOrderByRule = @"SELECT * FROM wms_OrderInfo(NOLOCK) WHERE 1=1 ";
 
-        public static string GetOrderByOrderID = @"SELECT * FROM wms_OrderInfo(NOLOCK) WHERE OrderID=@OrderID";        
+        public static string GetOrderByOrderID = @"SELECT * FROM wms_OrderInfo(NOLOCK) WHERE OrderID=@OrderID";
+
+        public static string GetOrderByOrderNo = @"SELECT * FROM wms_OrderInfo(NOLOCK) WHERE OrderNO=@OrderNO";        
 
         public static string Remove = @"UPDATE wms_OrderInfo SET Status=0 WHERE OrderID=@OrderID";
 
@@ -67,10 +69,10 @@ namespace DataRepository.DataAccess.Order
 
         public static string CreateNewOrder = @"INSERT INTO dbo.wms_OrderInfo(OrderNo,MergeNo,OrderType,ReceiverID,CustomerID,SendStorageID,ReceiverStorageID,CarrierID
                                                 ,OrderDate,SendDate,configPrice,configHandInAmt,configSortPrice,configCosting,configHandOutAmt,configSortCosting,TempType,OrderStatus
-                                                ,UploadStatus,Status,Remark,OperatorID,OrderSource,SalesMan,PromotionMan,LineID,CreateDate,ChangeDate)
+                                                ,UploadStatus,Status,Remark,OperatorID,OrderSource,SalesMan,PromotionMan,LineID,SubOrderType,IsImport,CreateDate,ChangeDate)
 			                                                VALUES(@OrderNo,@MergeNo,@OrderType,@ReceiverID,@CustomerID,@SendStorageID,@ReceiverStorageID,@CarrierID,
                                                 @OrderDate,@SendDate,@configPrice,@configHandInAmt,@configSortPrice,@configCosting,@configHandOutAmt,@configSortCosting,@TempType,@OrderStatus
-                                                ,@UploadStatus,@Status,@Remark,@OperatorID,@OrderSource,@SalesMan,@PromotionMan,@LineID,@CreateDate,@ChangeDate) select @@IDENTITY";
+                                                ,@UploadStatus,@Status,@Remark,@OperatorID,@OrderSource,@SalesMan,@PromotionMan,@LineID,@SubOrderType,@IsImport,@CreateDate,@ChangeDate) select @@IDENTITY";
 
         public static string ModifyOrder = @"UPDATE wms_OrderInfo SET OrderNo = @OrderNo,MergeNo = @MergeNo,OrderType = @OrderType,ReceiverID = @ReceiverID,CustomerID = @CustomerID
                                                 ,SendStorageID = @SendStorageID,ReceiverStorageID = @ReceiverStorageID,CarrierID = @CarrierID,OrderDate = @OrderDate,SendDate = @SendDate

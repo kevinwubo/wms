@@ -28,6 +28,19 @@ namespace Service
             return result;
         }
 
+
+        public static OrderEntity GetOrderByOrderNo(string OrderNo)
+        {
+            OrderEntity result = new OrderEntity();
+            OrderRepository mr = new OrderRepository();
+            OrderInfo info = mr.GetOrderByOrderNo(OrderNo);
+            result = TranslateOrderEntity(info);
+            //获取联系人信息
+            //result.listContact= ContactService.GetContactByRule(UnionType.Order.ToString(), info.OrderID);
+            return result;
+        }
+
+
         private static OrderInfo TranslateOrderInfo(OrderEntity entity)
         {
             OrderInfo info = new OrderInfo();
@@ -37,6 +50,7 @@ namespace Service
                 info.OrderNo = entity.OrderNo;
                 info.MergeNo = entity.MergeNo;
                 info.OrderType = entity.OrderType;
+                info.SubOrderType = entity.SubOrderType;
                 info.ReceiverID = entity.ReceiverID;
                 info.CustomerID = entity.CustomerID;
                 info.SendStorageID = entity.SendStorageID;
@@ -59,6 +73,7 @@ namespace Service
                 info.Remark = entity.Remark;
                 info.OperatorID = entity.OperatorID;
 
+                info.IsImport = entity.IsImport;
                 info.OrderSource = entity.OrderSource;
                 info.SalesMan = entity.SalesMan;
                 info.PromotionMan = entity.PromotionMan;
@@ -80,6 +95,7 @@ namespace Service
                 entity.OrderNo = info.OrderNo;
                 entity.MergeNo = info.MergeNo;
                 entity.OrderType = info.OrderType;
+                entity.SubOrderType = info.SubOrderType;
                 entity.OrderTypeDesc = StringHelper.getOrderType(info.OrderType);
                 entity.ReceiverID = info.ReceiverID;
                 entity.CustomerID = info.CustomerID;
@@ -106,7 +122,7 @@ namespace Service
                 entity.OrderSource = info.OrderSource;
                 entity.SalesMan = info.SalesMan;
                 entity.PromotionMan = info.PromotionMan;
-
+                entity.IsImport = info.IsImport;
                 entity.OperatorID = info.OperatorID;
                 entity.CreateDate = info.CreateDate;
                 entity.ChangeDate = info.ChangeDate;
@@ -223,7 +239,6 @@ namespace Service
                 OrderRepository mr = new OrderRepository();
 
                 OrderInfo orderInfo = TranslateOrderInfo(entity);
-
                 OrderJsonEntity jsonlist = null;
                 if (!string.IsNullOrEmpty(entity.orderDetailJson))
                 {
@@ -250,6 +265,14 @@ namespace Service
                 {
                     orderInfo.ChangeDate = DateTime.Now;
                     orderInfo.CreateDate = DateTime.Now;
+                    if (!string.IsNullOrEmpty(orderInfo.OrderNo))
+                    {
+                        OrderEntity oEntity = OrderService.GetOrderByOrderNo(orderInfo.OrderNo);
+                        if (oEntity != null)
+                        {
+                            oEntity.OrderNo = DateTime.Now.ToString("yyyymmddhhmmss");
+                        }
+                    }
                     result = mr.CreateNew(orderInfo);
                     OrderID = result;
                 }
@@ -831,10 +854,19 @@ namespace Service
                     info.OperatorID = OperatorID.ToString().ToInt(0);
                     info.CreateDate = DateTime.Now;
                     info.ChangeDate = DateTime.Now;
-
+                    info.IsImport = "T";
                     info.OrderSource = ordersource;
+                    if (entity.ImportType.Contains(TypeDesc.送货单.ToString()))
+                    {
+                        info.SubOrderType = SubOrderType.SHD.ToString();
+                    }
+                    if (entity.ImportType.Contains(TypeDesc.补损单.ToString()))
+                    {
+                        info.SubOrderType = SubOrderType.BSD.ToString();
+                    }
                     info.SalesMan = entity.SalesMan;
                     info.PromotionMan = entity.PromotionMan;
+
                     info.LineID = GetLineID(entity.CustomerName + entity.ShopName);//线路
                     OrderRepository or = new OrderRepository();
                     long orderid = or.CreateNew(info);
@@ -971,7 +1003,8 @@ namespace Service
 
                     info.OrderNo = DateTime.Now.ToString("yyyymmddhhmmss");
                     info.MergeNo = "";
-                    info.OrderType = OrderType;                    
+                    info.OrderType = OrderType;
+                    info.SubOrderType = SubOrderType.SHD.ToString();
                     info.OrderDate =DateTime.Parse( entity.orderDate);//下单时间
                     info.SendDate = DateTime.Parse(entity.orderDate);//要求送达时间
                     info.configPrice = 0;
@@ -989,6 +1022,7 @@ namespace Service
                     info.CreateDate = DateTime.Now;
                     info.ChangeDate = DateTime.Now;
 
+                    info.IsImport = "F";//常规订单走普通订单模版
                     info.OrderSource = ordersource;
                     info.SalesMan = "";
                     info.PromotionMan = "";

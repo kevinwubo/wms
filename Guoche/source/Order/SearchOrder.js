@@ -7,18 +7,34 @@ var orderInfo = {
     regEvent: function () {      
         //下载配送单
         $("#download_SHD").click(function () {
-            var orderids = "";
+            var ImportOrderids = "";//导入订单
+            var HandOrderids = "";//手动录入订单
             $.each($('input:checkbox:checked'), function () {
-                if ($(this).val() != "-1") {
-                    orderids = orderids + $(this).val() + ",";
+                var ids = $(this).val();
+                if (ids != "-1") {
+                    var IDS = ids.split("-");
+                    if (IDS[1] == "T") {
+                        ImportOrderids = ImportOrderids + IDS[0] + ",";
+                    }
+                    else {
+                        HandOrderids = HandOrderids + IDS[0] + ",";
+                    }
+                    
                 }
             });
-            if (orderids == "")
-            {
+            if (ImportOrderids == "" && HandOrderids == "") {
                 alert("请勾选需要下载的配送单！");
                 return false;
             }
-            location.href = "/PdfView/DownloadPdf?ids=" + orderids;            
+
+            if (HandOrderids != "") {
+                location.href = "/PdfView/DownloadPdf?ids=" + HandOrderids;
+            }
+
+            if (ImportOrderids != "") {
+                location.href = "/PdfView/DownloadImportPdf?ids=" + ImportOrderids + "&type=SHD";
+            }
+            
         });
 
         //下载Excel
@@ -26,7 +42,7 @@ var orderInfo = {
             var orderids = "";
             $.each($('input:checkbox:checked'), function () {
                 if ($(this).val() != "-1") {
-                    orderids = orderids + $(this).val() + ",";
+                    orderids = orderids + $(this).val().split("-")[0] + ",";
                 }
             });
             if (orderids == "") {

@@ -697,7 +697,6 @@
     <Content Include="source\assets\js\morris.min.js" />
     <Content Include="source\assets\js\raphael-min.js" />
     <Content Include="source\assets\js\realm.js" />
-    <Content Include="source\assets\js\SearchOrder.js" />
     <Content Include="source\assets\js\select2.min.js" />
     <Content Include="source\assets\js\sparkline.js" />
     <Content Include="source\assets\js\viewer-jquery.min.js" />

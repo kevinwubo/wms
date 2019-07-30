@@ -133,7 +133,7 @@
     <div class="lcItem" dataid="@entity.OrderID" storageid="23">
         <div class="lcItem_t">
             <div class="lcCheckDiv">
-                <input type="checkbox" class="checkbox" value="@entity.OrderID" />
+                <input type="checkbox" class="checkbox" value="@(entity.OrderID+"-"+entity.IsImport)"  />
             </div>
             <div class="lcItem_t_l">
                 <div class="lcDivList">
@@ -322,7 +322,7 @@
 @section Footer{
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
-<script type="text/javascript" src="~/source/Order/SearchOrder.js"></script>
+<script type="text/javascript" src="~/source/Order/SearchOrder.js?@(DateTime.Now.ToShortDateString())"></script>
 <script type="text/javascript" src="~/source/assets/js/viewer-jquery.min.js"></script>
 <script src="~/source/layui/layui.js"></script>
 <script>

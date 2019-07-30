@@ -25,6 +25,11 @@ namespace Entity.ViewModel
         /// </summary>
         public string OrderType { get; set; }
 
+        /// <summary>
+        /// 订单子类型  送货单 SHD /补损单 BSD
+        /// </summary>
+        public string SubOrderType { get; set; }
+
         public string OrderTypeDesc { get; set; }
 
         /// <summary>
@@ -176,6 +181,10 @@ namespace Entity.ViewModel
         /// 公司名称  
         /// </summary>
         public string CompanyName { get; set; }
+        /// <summary>
+        /// 是否Excel导入订单 T/F
+        /// </summary>
+        public string IsImport { get; set; }
 
         #region 其他属性
         /// <summary>

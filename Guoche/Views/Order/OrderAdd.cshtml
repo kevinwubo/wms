@@ -74,6 +74,8 @@
             <div class="widget-body" style="overflow: hidden; display: block;">
                 <div class="widget-forms clearfix">
                     <input type="hidden" id="OrderID" name="OrderID" value="@entity.OrderID">
+                    <input type="hidden" id="SubOrderType" name="SubOrderType" value="@(!string.IsNullOrEmpty(entity.SubOrderType) ? entity.SubOrderType: SubOrderType.SHD.ToString())">
+                    <input type="hidden" id="IsImport" name="IsImport" value="@(!string.IsNullOrEmpty(entity.IsImport)?entity.IsImport:"F")">
                     <input type="hidden" id="Hid_Type" name="Hid_Type" value="@ViewBag.Type" />
                     <input type="hidden" id="OrderType" name="OrderType" value="@(string.IsNullOrEmpty(entity.OrderType)?ViewBag.Type:entity.OrderType)" />
                     <input type="hidden" id="orderDetailJson" name="orderDetailJson" />

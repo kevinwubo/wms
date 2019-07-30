@@ -105,4 +105,10 @@ namespace Common
         送货单,
         补损单
     }
+
+    public enum SubOrderType
+    {
+        SHD,//送货单
+        BSD//补损单
+    }
 }

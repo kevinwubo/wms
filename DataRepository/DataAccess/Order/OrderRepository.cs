@@ -72,12 +72,22 @@ namespace DataRepository.DataAccess.Order
             return result;
         }
 
+        public OrderInfo GetOrderByOrderNo(string orderNo)
+        {
+            OrderInfo result = new OrderInfo();
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderStatement.GetOrderByOrderNo, "Text"));
+            command.AddInputParameter("@OrderNO", DbType.String, orderNo);
+            result = command.ExecuteEntity<OrderInfo>();
+            return result;
+        }
+
         public long CreateNew(OrderInfo Order)
         {
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderStatement.CreateNewOrder, "Text"));
             command.AddInputParameter("@OrderNo", DbType.String, Order.OrderNo);
             command.AddInputParameter("@MergeNo", DbType.String, Order.MergeNo);
             command.AddInputParameter("@OrderType", DbType.String, Order.OrderType);
+            command.AddInputParameter("@SubOrderType", DbType.String, Order.SubOrderType);
             command.AddInputParameter("@ReceiverID", DbType.Int32, Order.ReceiverID);
             command.AddInputParameter("@CustomerID", DbType.Int32, Order.CustomerID);            
             command.AddInputParameter("@SendStorageID", DbType.Int32, Order.SendStorageID);
@@ -100,6 +110,7 @@ namespace DataRepository.DataAccess.Order
             command.AddInputParameter("@Remark", DbType.String, Order.Remark);            
             command.AddInputParameter("@OperatorID", DbType.Int32, Order.OperatorID);
 
+            command.AddInputParameter("@IsImport", DbType.String, Order.IsImport); 
             command.AddInputParameter("@OrderSource", DbType.String, Order.OrderSource); 
             command.AddInputParameter("@SalesMan", DbType.String, Order.SalesMan); 
             command.AddInputParameter("@PromotionMan", DbType.String, Order.PromotionMan);

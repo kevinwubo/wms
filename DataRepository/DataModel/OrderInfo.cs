@@ -32,6 +32,13 @@ namespace DataRepository.DataModel
         [DataMapping("OrderType", DbType.String)]
         public string OrderType { get; set; }
 
+
+        /// <summary>
+        /// 订单子类型  送货单 SHD /补损单 BSD
+        /// </summary>
+        [DataMapping("SubOrderType", DbType.String)]
+        public string SubOrderType { get; set; }
+
         /// <summary>
         /// 收货方ID
         /// </summary>
@@ -182,6 +189,11 @@ namespace DataRepository.DataModel
         [DataMapping("PromotionMan", DbType.String)]
         public string PromotionMan { get; set; }
 
+        /// <summary>
+        /// 是否Excel导入订单 T/F
+        /// </summary>
+        [DataMapping("IsImport", DbType.String)]
+        public string IsImport { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
