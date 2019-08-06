@@ -61,7 +61,9 @@ namespace DataRepository.DataAccess.BaseData
 
         public static string GetInventoryByKey = @"SELECT * FROM wms_InventoryInfo(NOLOCK) WHERE InventoryID=@InventoryID";
 
-        public static string Remove = @"UPDATE wms_InventoryInfo SET Status=0 WHERE InventoryID=@InventoryID";
+        public static string Remove = @"UPDATE wms_InventoryInfo SET Status=0 WHERE InventoryID=@InventoryID  ";
+
+        public static string Delete = @"DELETE FROM wms_InventoryInfo WHERE InventoryID=@InventoryID ";
 
         public static string GetInventoryByKeys = @"SELECT * FROM wms_InventoryInfo(NOLOCK) WHERE InventoryID IN (#ids#)";
 

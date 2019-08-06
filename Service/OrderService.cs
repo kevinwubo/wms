@@ -96,7 +96,7 @@ namespace Service
                 entity.MergeNo = info.MergeNo;
                 entity.OrderType = info.OrderType;
                 entity.SubOrderType = info.SubOrderType;
-                entity.OrderTypeDesc = StringHelper.getOrderType(info.OrderType);
+                entity.OrderTypeDesc = StringHelper.getOrderType(info.OrderType) + "-" + StringHelper.getSubOrderType(info.SubOrderType);
                 entity.ReceiverID = info.ReceiverID;
                 entity.CustomerID = info.CustomerID;
                 entity.SendStorageID = info.SendStorageID;
@@ -270,7 +270,7 @@ namespace Service
                         OrderEntity oEntity = OrderService.GetOrderByOrderNo(orderInfo.OrderNo);
                         if (oEntity != null)
                         {
-                            oEntity.OrderNo = DateTime.Now.ToString("yyyymmddhhmmss");
+                            oEntity.OrderNo = DateTime.Now.ToString("yyyyMMddhhmmssfff");
                         }
                     }
                     result = mr.CreateNew(orderInfo);
@@ -1001,7 +1001,7 @@ namespace Service
                     StorageEntity receiverStorageEntity = listReceiverStorage != null && listReceiverStorage.Count > 0 ? listReceiverStorage[0] : null;
                     info.ReceiverStorageID = receiverStorageEntity != null ? receiverStorageEntity.StorageID : 0;
 
-                    info.OrderNo = DateTime.Now.ToString("yyyymmddhhmmss");
+                    info.OrderNo = DateTime.Now.ToString("yyyyMMddhhmmssfff");
                     info.MergeNo = "";
                     info.OrderType = OrderType;
                     info.SubOrderType = SubOrderType.SHD.ToString();
@@ -1177,7 +1177,7 @@ namespace Service
                 entity = List[0];
                 OrderRepository mr = new OrderRepository();
                 OrderInfo info = new OrderInfo();
-                info.OrderNo = DateTime.Now.ToString("yyyymmddhhmmss");
+                info.OrderNo = DateTime.Now.ToString("yyyyMMddhhmmssfff");
                 info.MergeNo = "";
                 info.OrderType = OrderType.RKD.ToString();
                 info.ReceiverID = -1;

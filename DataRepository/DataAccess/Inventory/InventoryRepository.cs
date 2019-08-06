@@ -143,7 +143,7 @@ namespace DataRepository.DataAccess.BaseData
 
         public int Remove(long InventoryID)
         {
-            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(InventoryStatement.Remove, "Text"));
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(InventoryStatement.Delete, "Text"));
             command.AddInputParameter("@InventoryID", DbType.Int64, InventoryID);
             int result = command.ExecuteNonQuery();
             return result;

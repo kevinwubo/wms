@@ -783,7 +783,7 @@ namespace GuoChe.Controllers
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             book.Write(ms);
             ms.Seek(0, SeekOrigin.Begin);
-            return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyymmddhhmmss") + "_Order.xls");
+            return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMddhhmmss") + "_Order.xls");
         }
 
         /// <summary>

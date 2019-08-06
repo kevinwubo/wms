@@ -221,6 +221,7 @@ namespace GuoChe.Controllers
             ViewBag.batchNumber = batchNumber ?? "";
             ViewBag.StorageID = StorageID;
             ViewBag.customerID = customerID;
+            ViewBag.Url = UrlPar;
             ViewBag.Pager = pager;
             return View();
         }
@@ -465,6 +466,13 @@ namespace GuoChe.Controllers
             return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMdd") + "库存信息.xls");
         }
         #endregion     
+
+        public void Remove(string iid)
+        {
+
+            InventoryService.Remove(long.Parse(iid));
+            Response.Redirect("/Inventory/Inventory");
+        }
 
     }
 }

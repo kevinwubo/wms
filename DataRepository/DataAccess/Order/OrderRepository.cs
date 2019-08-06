@@ -279,9 +279,9 @@ namespace DataRepository.DataAccess.Order
             {
                 builder.Append(" AND ordertype=@ordertype");
             }
-            if (!string.IsNullOrEmpty(orderno))
+            if (!string.IsNullOrEmpty(orderno))//订单号 收货方查询
             {
-                builder.Append(" AND orderno=@orderno ");
+                builder.Append(" AND (orderno='" + orderno + "' or ReceiverID in(select ReceiverID from wms_ReceiverInfo where ReceiverName like '%" + orderno + "%') or ReceiverStorageID in (select StorageID from wms_StorageInfo where StorageName like '%" + orderno + "%' )) ");
             }
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {
@@ -327,10 +327,10 @@ namespace DataRepository.DataAccess.Order
             {
                 command.AddInputParameter("@ordertype", DbType.String, ordertype);
             }
-            if (!string.IsNullOrEmpty(orderno))
-            {
-                command.AddInputParameter("@orderno", DbType.String, orderno);
-            }
+            //if (!string.IsNullOrEmpty(orderno))
+            //{
+            //    command.AddInputParameter("@orderno", DbType.String, orderno);
+            //}
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {
                 command.AddInputParameter("@begindate", DbType.String, begindate);
@@ -387,7 +387,8 @@ namespace DataRepository.DataAccess.Order
             }
             if (!string.IsNullOrEmpty(orderno))
             {
-                builder.Append(" AND orderno=@orderno ");
+                //builder.Append(" AND orderno=@orderno ");
+                builder.Append(" AND (orderno='" + orderno + "' or ReceiverID in(select ReceiverID from wms_ReceiverInfo where ReceiverName like '%" + orderno + "%') or ReceiverStorageID in (select StorageID from wms_StorageInfo where StorageName like '%" + orderno + "%' )) ");
             }
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {
@@ -432,10 +433,10 @@ namespace DataRepository.DataAccess.Order
             {
                 command.AddInputParameter("@ordertype", DbType.String, ordertype);
             }
-            if (!string.IsNullOrEmpty(orderno))
-            {
-                command.AddInputParameter("@orderno", DbType.String, orderno);
-            }
+            //if (!string.IsNullOrEmpty(orderno))
+            //{
+            //    command.AddInputParameter("@orderno", DbType.String, orderno);
+            //}
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {
                 command.AddInputParameter("@begindate", DbType.String, begindate);

@@ -91,6 +91,23 @@ namespace Common
             }
             return "";
         }
+
+        public static string getSubOrderType(string subType)
+        {
+            if (!string.IsNullOrEmpty(subType))
+            {
+                switch (subType)
+                {
+                    case "SHD":
+                        return "送货单";
+                    case "BSD":
+                        return "补损单";
+                    default:
+                        return subType;
+                }
+            }
+            return "";
+        }
         /// <summary>
         /// 未配送 = 0,配送中 = 1, 已配送 = 2, 已回单 = 3, 订单完成 = 4, 已拒绝 = 5
         /// </summary>

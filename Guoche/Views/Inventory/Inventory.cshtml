@@ -38,7 +38,7 @@
 
                                 </label>
                                 <label>
-                                    :<select tabindex="1" class="" style="width:150px" id="CustomerID" name="CustomerID">
+                                    <select tabindex="1" class="" style="width:150px" id="CustomerID" name="CustomerID">
                                         <option value="">--所属客户--</option>
                                         @foreach (var item in customers)
                                         {
@@ -71,6 +71,7 @@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">重量</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">出入库日期</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">库存状态</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">操作</th>
                             </tr>
                         </thead>
 
@@ -101,6 +102,10 @@
                                             @("库存正常");
                                         }
                                      </td>
+                                    <td>
+                                        @*<a href="/Inventory/Remove?p=@Request["p"]&iid=@invent[i].InventoryID&url=@ViewBag.Url" onclick="javascript: return deleteInventory();"><i class="icon-trash"></i> 删除</a>*@
+                                        <a href="###" onclick="javascript: return deleteInventory(@invent[i].InventoryID,'@ViewBag.Url');"><i class="icon-trash"></i> 删除</a>
+                                    </td>
                                 </tr>
                             }
 
@@ -125,4 +130,14 @@
     //        elem: '#begindate' //指定元素lay-key="1" 
     //    });
     //});
+    function deleteInventory(id,url) {
+        var msg = "您确定要删除吗?\n请确认！";
+        if (confirm(msg) == true) {
+            window.location.href = "/Inventory/Remove?iid=" + id;
+            alert("库存删除成功!");
+            window.location.href="/Inventory/Inventory?"+url;
+        } else {
+            return false;
+        }
+    }
 </script>

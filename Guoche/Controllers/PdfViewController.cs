@@ -37,7 +37,7 @@ namespace GuoChe.Controllers
             string htmlText = this.ViewPdf("Preview", info);
             byte[] pdfFile = this.ConvertHtmlTextToPDF(htmlText);
 
-            return new BinaryContentResult(pdfFile, "application/pdf", DateTime.Now.ToString("yyyymmddhhmmss") + "送货单");//StringHelper.getOrderType(orderlist[0].OrderType)
+            return new BinaryContentResult(pdfFile, "application/pdf", DateTime.Now.ToString("yyyyMMddhhmmss") + "送货单");//StringHelper.getOrderType(orderlist[0].OrderType)
         }
 
         /// <sum
@@ -53,7 +53,7 @@ namespace GuoChe.Controllers
             string htmlText = this.ViewPdf("PreviewImport", info);
             byte[] pdfFile = this.ConvertHtmlTextToPDF(htmlText);
 
-            return new BinaryContentResult(pdfFile, "application/pdf", DateTime.Now.ToString("yyyymmddhhmmss") + typedesc);
+            return new BinaryContentResult(pdfFile, "application/pdf", DateTime.Now.ToString("yyyyMMddhhmmss") + typedesc);
         }
 
         /// <summary>
