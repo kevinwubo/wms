@@ -133,9 +133,21 @@
     function deleteInventory(id,url) {
         var msg = "您确定要删除吗?\n请确认！";
         if (confirm(msg) == true) {
-            window.location.href = "/Inventory/Remove?iid=" + id;
-            alert("库存删除成功!");
-            window.location.href="/Inventory/Inventory?"+url;
+            $.ajax({
+                type: "post",
+                url: "/Inventory/Remove",
+                data: {
+                    iid: id,
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        alert("库存删除成功!");
+                        window.location.href="/Inventory/Inventory?"+url;
+                            
+                    }
+                }
+            })
         } else {
             return false;
         }

@@ -467,11 +467,14 @@ namespace GuoChe.Controllers
         }
         #endregion     
 
-        public void Remove(string iid)
+        public JsonResult Remove(string iid)
         {
 
             InventoryService.Remove(long.Parse(iid));
-            Response.Redirect("/Inventory/Inventory");
+            return new JsonResult
+            {
+                Data = iid
+            };
         }
 
     }

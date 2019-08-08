@@ -77,9 +77,9 @@ namespace GuoChe.Controllers
             Response.Redirect("/Goods/Index?" + goods.Url);
         }
 
-        public void Remove(string GoodsID)
+        public void Remove(string cid)
         {
-            GoodsService.RemoveGoods(GoodsID);
+            GoodsService.RemoveGoods(cid);
             Response.Redirect("/Goods/");
         }
 

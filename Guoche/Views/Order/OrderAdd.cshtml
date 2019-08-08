@@ -158,7 +158,7 @@
                         <tr>
                             <td style=""><label class="control-label">订单编号</label></td>
                             <td style="">
-                                <input class="" type="text" style="width:220px" readonly="readonly" placeholder="订单编号" id="OrderNo" name="OrderNo" value='@(string.IsNullOrEmpty(entity.OrderNo) ? DateTime.Now.ToString("yyyyMMddhhmmssfff") : entity.OrderNo)' maxlength=" 200">
+                                <input class="" type="text" style="width:220px" readonly="readonly" placeholder="订单编号" id="OrderNo" name="OrderNo" value='@(string.IsNullOrEmpty(entity.OrderNo) ? DateTime.Now.ToString("yyyyMMddhhfff") : entity.OrderNo)' maxlength=" 200">
                             </td>
                             <td style=""><label class="control-label">合并编号</label></td>
                             <td style=""><input style="width:220px" class="" type="text" placeholder="合并编号" id="MergeNo" name="MergeNo" value="@entity.MergeNo" maxlength="200"></td>

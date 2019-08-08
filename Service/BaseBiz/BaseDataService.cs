@@ -68,6 +68,7 @@ namespace Service.BaseBiz
                     //检测是否存在
                     entity.CreateDate = DateTime.Now;
                     entity.ChangeDate = DateTime.Now;
+                    entity.Status = 1;
                     GoodsInfo info = GoodsService.TranslateGoodsInfo(entity);
                     mr.CreateNew(info);
                 }
