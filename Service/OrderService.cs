@@ -313,7 +313,7 @@ namespace Service
                             }
                             else
                             {
-                                goodsEntity = GoodsService.GetGoodsEntityById(info.GoodsID);
+                                goodsEntity = GoodsService.GetGoodsEntityById(goodsID);
                             }
                             info.GoodsID = goodsEntity.GoodsID;
 
@@ -340,7 +340,14 @@ namespace Service
                                 }
                                 else
                                 {
-                                    info.ExceedDate = string.IsNullOrEmpty(item.ExceedDate) ? DateTime.Now : Convert.ToDateTime(item.ExceedDate);
+                                    try
+                                    {
+                                        info.ExceedDate = string.IsNullOrEmpty(item.ExceedDate) ? DateTime.Now : Convert.ToDateTime(item.ExceedDate);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                                                               
+                                    }
                                 }
                             }
                             

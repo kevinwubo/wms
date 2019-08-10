@@ -114,7 +114,7 @@
                             </td>
                             <td style=""><label class="control-label">下单时间</label></td>
                             <td style="">
-                                <input type="text" aria-controls="menus" placeholder="下单时间" id="OrderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="1" name="OrderDate">
+                                <input type="text" aria-controls="menus" placeholder="下单时间" style="width:220px" id="OrderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="1" name="OrderDate">
                             </td>
                         </tr>
                         <tr id="tr_ContactInfo" style="display:none">
@@ -150,19 +150,13 @@
                                     }
                                 </select>
                             </td>
-                            <td style=""><label class="control-label">送达时间</label></td>
+                            <td style=""><label class="control-label">配送时间</label></td>
                             <td style="">
-                                <input type="text" style="width:220px" aria-controls="menus" placeholder="送达时间" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="2" id="SendDate" name="SendDate">
+                                <input type="text" style="width:220px" aria-controls="menus" placeholder="配送时间" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="2" id="SendDate" name="SendDate">
                             </td>
                         </tr>
                         <tr>
-                            <td style=""><label class="control-label">订单编号</label></td>
-                            <td style="">
-                                <input class="" type="text" style="width:220px" readonly="readonly" placeholder="订单编号" id="OrderNo" name="OrderNo" value='@(string.IsNullOrEmpty(entity.OrderNo) ? DateTime.Now.ToString("yyyyMMddhhfff") : entity.OrderNo)' maxlength=" 200">
-                            </td>
-                            <td style=""><label class="control-label">合并编号</label></td>
-                            <td style=""><input style="width:220px" class="" type="text" placeholder="合并编号" id="MergeNo" name="MergeNo" value="@entity.MergeNo" maxlength="200"></td>
-                            <td style=""><label class="control-label">温度</label></td>
+                            <td style=""><label class="control-label">配送温度</label></td>
                             <td style="">
                                 <select tabindex="1" class="" id="TempType" name="TempType">
                                     @foreach (var item in tems)
@@ -171,7 +165,10 @@
                                     }
                                 </select>
                             </td>
-                  
+                            <td style=" "><label class="control-label">备注</label></td>
+                            <td style="width: 20%;" colspan="3">
+                                <input class="" type="text" style="width:600px" placeholder="备注" id="Remark" name="Remark" value="@entity.Remark" maxlength="600">
+                            </td>
                         </tr>
                         <tr>
                             <td style=" border-top: 1px solid red;" ><label class="control-label">运输应收</label></td>
@@ -200,16 +197,6 @@
                             <td style="width: 20%; ">
                                 <input class="" type="text" style="width:220px" placeholder="分拣应付" id="configSortCosting" name="configSortCosting" value="@entity.configSortCosting" maxlength="200">
                             </td>
-                        </tr>
-                        <tr>
-                            <td style=" "><label class="control-label">备注</label></td>
-                            <td style="width: 20%;" colspan="5">
-                                <input class="" type="text" style="width:600px" placeholder="备注" id="Remark" name="Remark" value="@entity.Remark" maxlength="600">
-                            </td>                            
-                            @*<td style=" "><label class="control-label"></label></td>
-                            <td style="width: 20%; "></td>
-                            <td style=" "><label class="control-label"></label></td>
-                            <td style="width: 20%; "></td>*@
                         </tr>
                     </table>
                 </div>
@@ -328,7 +315,7 @@
                 <button class="btn btn-primary" type="button"  id="select_goods">选择商品</button>
                 <button class="btn btn-primary" type="button" style=" float: right;margin-left: 10px;" id="goback">返回</button>
                 <button class="btn btn-primary" type="button" style=" float: right;" id="save">@ViewBag.ButtonName</button>
-                
+                <input class="" type="text" style="width:220px;float: right;" readonly="readonly" placeholder="订单编号"  id="OrderNo" name="OrderNo" value='@(string.IsNullOrEmpty(entity.OrderNo) ? DateTime.Now.ToString("yyyyMMddhhfff") : entity.OrderNo)' maxlength=" 200">
             </div>
 
         </div>
