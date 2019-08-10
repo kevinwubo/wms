@@ -7,6 +7,7 @@
     List<BrandEntity> brands = (List<BrandEntity>)ViewBag.Brands;
     GoodsEntity goodsEntity = (GoodsEntity)ViewBag.Goods;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
+    List<BaseDataEntity> unitsList = (List<BaseDataEntity>)ViewBag.UnitsList;//单位
 }
 @section Header{
     <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
@@ -92,7 +93,14 @@
                         <div class="control-group">
                             <label class="control-label">单位</label>
                             <div class="controls">
-                                <input class="span5" type="text" placeholder="单位" id="Units" name="Units" value="@goodsEntity.Units" maxlength="200">
+                                @*<input class="span5" type="text" placeholder="单位" id="Units" name="Units" value="@goodsEntity.Units" maxlength="200">*@            
+                                <select tabindex="1" class="span5" id="Units" name="Units">
+                                    @*盒 杯 瓶 罐  个 包 桶 托  听 斤 吨  条  根 袋*@
+                                    @foreach (var item in unitsList)
+                                    {
+                                        <option value="@item.ValueInfo" @(item.ValueInfo == goodsEntity.Units ? "selected" : "")>@item.ValueInfo</option>
+                                    }
+                                </select>
                             </div>
                         </div>
                         <div class="control-group">

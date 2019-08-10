@@ -38,15 +38,20 @@ namespace DataRepository.DataAccess.BaseData
         /// 相同产品ID、相同批次号
         /// </summary>
         /// <param name="goodsid"></param>
+        /// <param name="storageID"></param>
         /// <param name="batchNumber"></param>
         /// <returns></returns>
-        public List<InventoryInfo> GetInventoryByRule(int goodsid, string batchNumber)
+        public List<InventoryInfo> GetInventoryByRule(int goodsid, int storageID, string batchNumber)
         {
             List<InventoryInfo> result = new List<InventoryInfo>();
             string sqlText = InventoryStatement.GetAllInventoryByRule;
             if (goodsid > 0)
             {
                 sqlText += " AND GoodsID=@GoodSID";
+            }
+            if (storageID > 0)
+            {
+                sqlText += " AND StorageID=@StorageID";
             }
             if (!string.IsNullOrEmpty(batchNumber))
             {
@@ -58,6 +63,10 @@ namespace DataRepository.DataAccess.BaseData
             if (goodsid > 0)
             {
                 command.AddInputParameter("@GoodSID", DbType.String, goodsid);
+            }
+            if (storageID > 0)
+            {
+                command.AddInputParameter("@StorageID", DbType.String, storageID);
             }
             if (!string.IsNullOrEmpty(batchNumber))
             {

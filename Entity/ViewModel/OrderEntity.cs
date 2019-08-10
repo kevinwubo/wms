@@ -331,6 +331,7 @@ namespace Entity.ViewModel
         /// </summary>
         public string OrderNo { get; set; }
 
+        public string GoodsID { get; set; }
         /// <summary>
         /// 商品编号
         /// </summary>
@@ -470,6 +471,7 @@ namespace Entity.ViewModel
         /// 送达方(门店/仓库)
         /// </summary>
         public string ReceiverName { get; set; }
+        public string GoodsID { get; set; }
         /// <summary>
         /// 商品名称
         /// </summary>

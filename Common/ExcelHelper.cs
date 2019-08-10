@@ -602,7 +602,7 @@ namespace Common
                                             //        dataRow[j] = ErrorEval.GetText(row.GetCell(j).ErrorCellValue);
                                             //        break;
                                             //    default:
-                                            //        dataRow[j] = "";
+                                            //        dataRow[j] = row.GetCell(j).DateCellValue;
                                             //        break;
                                             //}
                                             dataRow[j] = row.GetCell(j).DateCellValue;

@@ -102,9 +102,8 @@
                                             @("库存正常");
                                         }
                                      </td>
-                                    <td>
-                                        @*<a href="/Inventory/Remove?p=@Request["p"]&iid=@invent[i].InventoryID&url=@ViewBag.Url" onclick="javascript: return deleteInventory();"><i class="icon-trash"></i> 删除</a>*@
-                                        <a href="###" onclick="javascript: return deleteInventory(@invent[i].InventoryID,'@ViewBag.Url');"><i class="icon-trash"></i> 删除</a>
+                                    <td>                                        
+                                       <a href="###" onclick="javascript: return deleteInventory(@invent[i].InventoryID,'@ViewBag.Url');"><span class="label label-success"><b>删除</b></span></a>
                                     </td>
                                 </tr>
                             }

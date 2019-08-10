@@ -17,6 +17,20 @@ namespace Service
 {
     public class OrderService : BaseService
     {
+        /// <summary>
+        /// 订单号生成
+        /// </summary>
+        /// <returns></returns>
+        public static string GetOrderNo()
+        {
+            string orderNo = DateTime.Now.ToString("yyyyMMddhhfff");
+            OrderEntity entity = OrderService.GetOrderByOrderNo(orderNo);
+            if (entity != null)
+            {
+                orderNo = DateTime.Now.ToString("yyyyMMddhhfff");
+            }
+            return orderNo;
+        }
         public static OrderEntity GetOrderEntityById(long oid)
         {
             OrderEntity result = new OrderEntity();
@@ -270,7 +284,7 @@ namespace Service
                         OrderEntity oEntity = OrderService.GetOrderByOrderNo(orderInfo.OrderNo);
                         if (oEntity != null)
                         {
-                            oEntity.OrderNo = DateTime.Now.ToString("yyyyMMddhhfff");
+                            oEntity.OrderNo = GetOrderNo();
                         }
                     }
                     result = mr.CreateNew(orderInfo);
@@ -291,9 +305,19 @@ namespace Service
                             OrderDetailInfo info = new OrderDetailInfo();
                             info.ID = item.ID;
                             info.OrderID = entity.OrderID > 0 ? item.OrderID : result.ToString().ToInt(0);
-                            info.GoodsID = item.GoodsID.ToInt(0);
+                            int goodsID = item.GoodsID.ToInt(0);
+                            GoodsEntity goodsEntity = new GoodsEntity(); ;
+                            if (goodsID < 1)
+                            {
+                                goodsEntity = getGoodsModelByGoods("", item.GoodsName, item.GoodsNo, item.GoodsModel);
+                            }
+                            else
+                            {
+                                goodsEntity = GoodsService.GetGoodsEntityById(info.GoodsID);
+                            }
+                            info.GoodsID = goodsEntity.GoodsID;
 
-                            GoodsEntity goodsEntity = GoodsService.GetGoodsEntityById(info.GoodsID);
+                            
 
                             info.InventoryID = item.InventoryID.ToInt(0);
                             info.GoodsNo = goodsEntity != null ? goodsEntity.GoodsNo : item.GoodsNo;
@@ -713,6 +737,8 @@ namespace Service
                              {
                                  //品号	品名	包装规格	单位	数量	单位号	单位名称	订单编号	采购单日	应到货日 备注	订单备注
                                  ImportOrderEntity entity = new ImportOrderEntity();
+                                 GoodsEntity goodsEntity = getGoodsModelByGoods("", dt.Rows[i]["品名"].ToString(), "", dt.Rows[i]["包装规格"].ToString());
+                                 entity.GoodsID = goodsEntity == null ? "-1" : goodsEntity.GoodsID.ToString();
                                  entity.GoodsNo = dt.Rows[i]["品号"].ToString();
                                  entity.GoodsName = dt.Rows[i]["品名"].ToString();
                                  entity.GoodsModel = dt.Rows[i]["包装规格"].ToString();
@@ -751,7 +777,7 @@ namespace Service
                         {
                             if (!string.IsNullOrEmpty(dt.Rows[i]["品名"].ToString()))
                             {
-                                ImportOrderEntity entity = new ImportOrderEntity();
+                                ImportOrderEntity entity = new ImportOrderEntity();              
                                 entity.ImportType = dt.TableName;
                                 entity.OrderDate = dt.Rows[i]["日期"].ToString();
                                 entity.CustomerName = dt.Rows[i]["客户名称"].ToString();
@@ -762,10 +788,12 @@ namespace Service
                                 entity.Quantity = dt.Rows[i]["数量"].ToString();
                                 entity.Address = dt.Rows[i]["地址"].ToString();
                                 entity.BarCode = dt.Rows[i]["条码"].ToString();
-                                entity.SalesMan = dt.Rows[i]["销售人员"].ToString();
+                                //entity.SalesMan = dt.Rows[i]["销售人员"].ToString();
                                 entity.PromotionMan = dt.Rows[i]["促销人员"].ToString();
                                 entity.YyDate = dt.Rows[i]["预约时间"].ToString();
                                 entity.Remark = dt.Rows[i]["备注"].ToString();
+                                GoodsEntity goodsEntity = getGoodsModelByGoods(entity.BarCode, entity.GoodsName, entity.GoodsNo, entity.GoodsModel);
+                                entity.GoodsID = goodsEntity == null ? "-1" : goodsEntity.GoodsID.ToString();
                                 list.Add(entity);
                             }
                         }
@@ -834,7 +862,7 @@ namespace Service
                         info.SendStorageID = receiver[0].DefaultStorageID;
                         info.CarrierID = receiver[0].DefaultCarrierID;
                     }
-                    info.OrderNo = entity.OrderNo;
+                    info.OrderNo = GetOrderNo();//entity.OrderNo;
                     info.MergeNo = "";
                     info.OrderType = orderType;//商超订单、COSTA订单都为仓配订单
                     info.ReceiverStorageID = 0;
@@ -885,15 +913,23 @@ namespace Service
                     {
                         #region 订单明细信息
                         OrderDetailInfo infodetail = new OrderDetailInfo();
-                        GoodsEntity goods = new GoodsEntity();
-                        List<GoodsEntity> listGoods = GoodsService.GetGoodsByRule("", 1, entity.BarCode);
-                        if (listGoods != null && listGoods.Count > 0)
-                        {
-                            goods = listGoods[0];
-                        }
+                        GoodsEntity goods = GoodsService.GetGoodsEntityById(long.Parse(entity.GoodsID));
+                        //List<GoodsEntity> listGoods = GoodsService.GetGoodsByRule("", 1, entity.BarCode);
+                        //if (listGoods != null && listGoods.Count > 0)
+                        //{
+                        //    goods = listGoods[0];
+                        //}
                         infodetail.OrderID = orderid.ToString().ToInt(0);
                         infodetail.GoodsID = goods.GoodsID;
-                        infodetail.InventoryID = 0;
+
+                        List<InventoryEntity> listInventory = InventoryService.GetInventoryByRule(goods.GoodsID, info.SendStorageID, "");
+                        InventoryEntity entityInv = null;
+                        if (listInventory != null && listInventory.Count > 0)
+                        {
+                            entityInv = listInventory[0];
+                        }
+
+                        infodetail.InventoryID = entityInv != null ? entityInv.InventoryID : -1;//info.SendStorageID ;
                         infodetail.GoodsNo = string.IsNullOrEmpty(entity.GoodsNo) ? goods.GoodsNo : entity.GoodsNo;
                         infodetail.GoodsName = string.IsNullOrEmpty(entity.GoodsName) ? goods.GoodsName : entity.GoodsName;
                         infodetail.GoodsModel = string.IsNullOrEmpty(entity.GoodsModel) ? goods.GoodsModel : entity.GoodsModel;
@@ -901,7 +937,9 @@ namespace Service
                         infodetail.Units = string.IsNullOrEmpty(entity.Units) ? goods.Units : entity.Units;
                         infodetail.Weight = goods.Weight;
                         infodetail.TotalWeight = "";
-                        infodetail.BatchNumber = "";
+
+
+                        infodetail.BatchNumber = entityInv != null ? entityInv.BatchNumber : "";
                         infodetail.ProductDate = string.IsNullOrEmpty(entity.OrderDate) ? DefaultDateTime : DateTime.Parse(entity.OrderDate);//DefaultDateTime;
                         infodetail.ExceedDate = Datehelper.getDateTime(DateTime.Parse(entity.OrderDate), goods.exDate.ToInt(0), goods.exUnits);
                         infodetail.CreateDate = DateTime.Now;
@@ -912,12 +950,49 @@ namespace Service
                     }
 
                     //订单库存扣减处理
-                    OrderInventoryProcess(orderid.ToString().ToInt(0), "CPDD", OperatorID);
+                    OrderInventoryProcess(orderid.ToString().ToInt(0), orderType, OperatorID);
                 }
             }
 
             return idsEntity;
         }
+
+        /// <summary>
+        /// 根据商品信息 获取数据中已有商品信息
+        /// </summary>
+        /// <param name="barCode"></param>
+        /// <param name="goodsName"></param>
+        /// <param name="goodsNo"></param>
+        /// <param name="goodsModel"></param>
+        /// <returns></returns>
+        public static GoodsEntity getGoodsModelByGoods(string barCode, string goodsName, string goodsNo, string goodsModel)
+        {
+            GoodsEntity entity = null;
+
+            List<GoodsEntity> listGoods = string.IsNullOrEmpty(barCode) ? null : GoodsService.GetGoodsByRule("", 1, "", "", barCode);
+            if (listGoods != null && listGoods.Count > 0)
+            {
+                entity = listGoods[0];
+            }
+            if (entity == null)
+            {
+                List<GoodsEntity> listg = GoodsService.GetGoodsByRule("", 1, goodsName, goodsModel, "");
+                if (listg != null && listg.Count > 0)
+                {
+                    entity = listg[0];
+                }
+            }
+            if (entity == null)
+            {
+                List<GoodsEntity> listg = GoodsService.GetGoodsByRule("", 1, goodsName, "", "");
+                if (listg != null && listg.Count > 0)
+                {
+                    entity = listg[0];
+                }
+            }
+            return entity;
+        }
+
 
         /// <summary>
         /// 从Excel中读取常规订单数据
@@ -950,6 +1025,8 @@ namespace Service
                                 entity.Units = dt.Rows[i]["单位"].ToString();
                                 entity.Quantity = dt.Rows[i]["数量"].ToString();
                                 entity.Remark = dt.Rows[i]["备注"].ToString();
+                                GoodsEntity goodsEntity = getGoodsModelByGoods("", entity.GoodsName, "", "");
+                                entity.GoodsID = goodsEntity == null ? "-1" : goodsEntity.GoodsID.ToString();
                                 list.Add(entity);
                             }
                         }
@@ -1001,7 +1078,7 @@ namespace Service
                     StorageEntity receiverStorageEntity = listReceiverStorage != null && listReceiverStorage.Count > 0 ? listReceiverStorage[0] : null;
                     info.ReceiverStorageID = receiverStorageEntity != null ? receiverStorageEntity.StorageID : 0;
 
-                    info.OrderNo = DateTime.Now.ToString("yyyyMMddhhfff");
+                    info.OrderNo = GetOrderNo();
                     info.MergeNo = "";
                     info.OrderType = OrderType;
                     info.SubOrderType = SubOrderType.SHD.ToString();
@@ -1035,39 +1112,39 @@ namespace Service
                     {
                         #region 订单明细信息
                         OrderDetailInfo infodetail = new OrderDetailInfo();
-                        GoodsEntity goods = new GoodsEntity();
-                        List<GoodsEntity> listGoods = GoodsService.GetGoodsByRule("", 1, entity.GoodsName);//商品名称	数量	单位	备注
-                        if (listGoods != null && listGoods.Count > 0)
+                        GoodsEntity goods = GoodsService.GetGoodsEntityById(long.Parse(entity.GoodsID));
+                        //List<GoodsEntity> listGoods = GoodsService.GetGoodsByRule("", 1, entity.GoodsName);//商品名称	数量	单位	备注
+                        //if (listGoods != null && listGoods.Count > 0)
+                        //{
+                        //    goods = listGoods[0];
+                        //}
+                        List<InventoryEntity> listInventory = InventoryService.GetInventoryByRule(goods.GoodsID, info.SendStorageID, "");
+                        InventoryEntity inventoryEntity = null;
+                        if (listInventory != null && listInventory.Count > 0)
                         {
-                            goods = listGoods[0];
+                            inventoryEntity = listInventory[0];
                         }
                         infodetail.OrderID = orderid.ToString().ToInt(0);
                         infodetail.GoodsID = goods.GoodsID;
-                        infodetail.InventoryID = 0;
+                        infodetail.InventoryID = inventoryEntity != null ? inventoryEntity.InventoryID : -1;
                         infodetail.GoodsNo = string.IsNullOrEmpty(goods.GoodsNo) ? goods.GoodsNo : goods.GoodsNo;
                         infodetail.GoodsName = string.IsNullOrEmpty(goods.GoodsName) ? goods.GoodsName : goods.GoodsName;
                         infodetail.GoodsModel = string.IsNullOrEmpty(goods.GoodsModel) ? goods.GoodsModel : goods.GoodsModel;
                         infodetail.Quantity = entity.Quantity.ToInt(0);
                         infodetail.Units = string.IsNullOrEmpty(entity.Units) ? goods.Units : entity.Units;
                         infodetail.Weight = goods.Weight;
-                        List<InventoryEntity> listInventory = InventoryService.GetInventoryByRule(goods.GoodsID, "");
-                        InventoryEntity inventoryEntity = null;
-                        if (listInventory != null && listInventory.Count > 0)
-                        {
-                            inventoryEntity = listInventory[0];
-                        }
+                        
+            
                         infodetail.TotalWeight = "";
                         if (inventoryEntity != null)
                         {
                             infodetail.BatchNumber = inventoryEntity.BatchNumber;
                             infodetail.ProductDate = inventoryEntity.ProductDate;//DefaultDateTime;
-
                         }
                         else
                         {
                             infodetail.BatchNumber = "";
                             infodetail.ProductDate = DefaultDateTime;
-
                         }
                         infodetail.ExceedDate = Datehelper.getDateTime(inventoryEntity.ProductDate, goods.exDate.ToInt(0), goods.exUnits);
 
@@ -1177,14 +1254,14 @@ namespace Service
                 entity = List[0];
                 OrderRepository mr = new OrderRepository();
                 OrderInfo info = new OrderInfo();
-                info.OrderNo = DateTime.Now.ToString("yyyyMMddhhfff");
+                info.OrderNo = GetOrderNo();
                 info.MergeNo = "";
                 info.OrderType = OrderType.RKD.ToString();
                 info.ReceiverID = -1;
                 info.CustomerID = entity.CustomerID;
-                info.SendStorageID = -1;
+                info.SendStorageID = entity.StorageID;
                 info.ReceiverStorageID = entity.StorageID;
-                info.CarrierID = entity.CustomerID;
+                info.CarrierID = -1;
                 info.OrderDate = Convert.ToDateTime(entity.InventoryDate);
                 info.SendDate = DateTime.Now;
 

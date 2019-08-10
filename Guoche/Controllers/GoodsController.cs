@@ -52,7 +52,8 @@ namespace GuoChe.Controllers
         {
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
-            ViewBag.GoodsModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "GoodsCode" && t.Status == 1).ToList();            
+            ViewBag.GoodsModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "GoodsCode" && t.Status == 1).ToList();
+            ViewBag.UnitsList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "Units00" && t.Status == 1).ToList();  //单位      
             if (!string.IsNullOrEmpty(cid))
             {
                 GoodsEntity entity= GoodsService.GetGoodsEntityById(cid.ToLong(0));

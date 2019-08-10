@@ -68,7 +68,7 @@ namespace Service.Inventory
                             info.ChangeDate = DateTime.Now;
 
 
-                            List<InventoryInfo> listInventory = mr.GetInventoryByRule(entity.GoodsID, entity.BatchNumber);
+                            List<InventoryInfo> listInventory = mr.GetInventoryByRule(entity.GoodsID,-1, entity.BatchNumber);
                             if (listInventory != null && listInventory.Count > 0)
                             {
                                 InventoryInfo oldInfo = listInventory[0];
@@ -94,11 +94,9 @@ namespace Service.Inventory
                             CreateInventoryDetail(entity, StorageID, DateTime.Parse(inventoryDate), OperatorID);
                             #endregion
                         }
-
-                        //生成入库单
-                        OrderService.CreateOrderByInventory(listInv);
-
                     }
+                    //生成入库单
+                    OrderService.CreateOrderByInventory(listInv);
                 }
             }
             catch (Exception)
@@ -286,11 +284,11 @@ namespace Service.Inventory
 
         }
 
-        public static List<InventoryEntity> GetInventoryByRule(int goodsid, string batchNumber)
+        public static List<InventoryEntity> GetInventoryByRule(int goodsid, int storageID, string batchNumber)
         {
             List<InventoryEntity> all = new List<InventoryEntity>();
             InventoryRepository mr = new InventoryRepository();
-            List<InventoryInfo> miList = mr.GetInventoryByRule(goodsid, batchNumber);
+            List<InventoryInfo> miList = mr.GetInventoryByRule(goodsid, storageID, batchNumber);
 
             if (!miList.IsEmpty())
             {
@@ -415,7 +413,7 @@ namespace Service.Inventory
             InventoryRepository mr = new InventoryRepository();
             if(list!=null&&list.Count>0)
             {
-                
+                List<InventoryInfo> listInv = new List<InventoryInfo>();
                 foreach (ImportInventoryEntity entity in list)
                 {
                     InventoryInfo info = new InventoryInfo();
@@ -443,12 +441,12 @@ namespace Service.Inventory
                         info.CreateDate = DateTime.Now;
                         info.ChangeDate = DateTime.Now;
                         mr.CreateNew(info);
-                        List<InventoryInfo> listInv = new List<InventoryInfo>();
                         listInv.Add(info);
-                        //生成入库单
-                        OrderService.CreateOrderByInventory(listInv);
+     
                     }
                 }
+                //生成入库单
+                OrderService.CreateOrderByInventory(listInv);
             }
             return count;
 
