@@ -8,7 +8,7 @@
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;//客户
     List<ReceiverEntity> receivers = (List<ReceiverEntity>)ViewBag.Receiver;//收货人 [门店、仓库]
     OrderEntity entity = (OrderEntity)ViewBag.Order;//价格配置
-    List<BaseDataEntity> tems = (List<BaseDataEntity>)ViewBag.TemList;//温度
+    List<BaseDataEntity> temp = (List<BaseDataEntity>)ViewBag.TemList;//温度
     List<BaseDataEntity> receiverList = (List<BaseDataEntity>)ViewBag.ReceiverList;//收货方
     List<BaseDataEntity> deliverList = (List<BaseDataEntity>)ViewBag.DeliverList;//配送方式
 }
@@ -159,7 +159,7 @@
                             <td style=""><label class="control-label">配送温度</label></td>
                             <td style="">
                                 <select tabindex="1" class="" id="TempType" name="TempType">
-                                    @foreach (var item in tems)
+                                    @foreach (var item in temp)
                                     {
                                         <option value="@item.ValueInfo" @(item.ValueInfo == entity.TempType ? "selected" : "")>@item.ValueInfo</option>
                                     }

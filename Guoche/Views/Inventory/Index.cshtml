@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "商品入库";
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
+    List<BaseDataEntity> temp = (List<BaseDataEntity>)ViewBag.TemList;//温度
 }
 @section Header{
 <link href="~/source/layui/css/layui.css" rel="stylesheet" />
@@ -42,6 +43,14 @@
                                         @foreach (var item in storages)
                                         {
                                             <option value="@item.StorageID">@item.StorageName</option>
+                                        }
+                                    </select>
+                                </label>
+                                <label>
+                                    <select tabindex="1" class="" id="TempType" name="TempType">
+                                        @foreach (var item in temp)
+                                        {
+                                            <option value="@item.ValueInfo" >@item.ValueInfo</option>
                                         }
                                     </select>
                                 </label>

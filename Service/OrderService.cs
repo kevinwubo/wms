@@ -1253,7 +1253,7 @@ namespace Service
 
         #region 出入库 生成订单
 
-        public static void CreateOrderByInventory(List<InventoryInfo> List)
+        public static void CreateOrderByInventory(List<InventoryInfo> List, string tempType = "")
         {
             InventoryInfo entity = null;
             if (List != null && List.Count > 0)
@@ -1279,7 +1279,7 @@ namespace Service
                 info.configHandOutAmt = 0;
                 info.configSortCosting = 0;
 
-                info.TempType = "";
+                info.TempType = tempType;
                 info.OrderStatus = 0;
                 info.UploadStatus = 0;
                 info.Status = 0;

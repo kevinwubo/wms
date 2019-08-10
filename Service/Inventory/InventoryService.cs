@@ -27,7 +27,7 @@ namespace Service.Inventory
         /// <param name="OperatorID">操作员ID</param>
         /// <param name="type">In/Out</param>
         /// <returns></returns>
-        public static bool ModifyInventory(int StorageID, string inventoryDate, int needCount, string json, long OperatorID, OperatorType type)
+        public static bool ModifyInventory(int StorageID, string inventoryDate, int needCount, string json, long OperatorID, string tempType, OperatorType type)
         {
 
             try
@@ -96,7 +96,7 @@ namespace Service.Inventory
                         }
                     }
                     //生成入库单
-                    OrderService.CreateOrderByInventory(listInv);
+                    OrderService.CreateOrderByInventory(listInv, tempType);
                 }
             }
             catch (Exception)

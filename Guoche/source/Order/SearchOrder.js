@@ -28,11 +28,13 @@ var orderInfo = {
             }
 
             if (HandOrderids != "") {
-                location.href = "/PdfView/DownloadPdf?ids=" + HandOrderids;
+                //location.href = "/PdfView/DownloadPdf?ids=" + HandOrderids;
+                window.open("/PdfView/DownloadPdf?ids=" + HandOrderids)
             }
 
             if (ImportOrderids != "") {
-                location.href = "/PdfView/DownloadImportPdf?ids=" + ImportOrderids + "&type=SHD";
+                //location.href = "/PdfView/DownloadImportPdf?ids=" + ImportOrderids + "&type=SHD";
+                window.open("/PdfView/DownloadImportPdf?ids=" + ImportOrderids + "&type=SHD");
             }
             
         });

@@ -118,6 +118,9 @@
                                     </select>
                                 </label>
                                 <label><button class="btn btn-info" type="submit">搜索</button></label>
+                                <label>
+                                    <input type="checkbox" id="chk_all" value="-1" />全选
+                                </label>
                                 <button class="btn btn-info" type="button" id="download_SHD">导出PDF</button>
                                 <button class="btn btn-info" type="button" id="download_Excel">导出Excel</button>
                             </div>
@@ -133,7 +136,7 @@
     <div class="lcItem" dataid="@entity.OrderID" storageid="23">
         <div class="lcItem_t">
             <div class="lcCheckDiv">
-                <input type="checkbox" class="checkbox" value="@(entity.OrderID+"-"+entity.IsImport)"  />
+                <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID+"-"+entity.IsImport)" />
             </div>
             <div class="lcItem_t_l">
                 <div class="lcDivList">
@@ -337,6 +340,13 @@
         });
         laydate.render({
             elem: '#enddate' //指定元素
+        });
+    });
+
+    $("#chk_all").click(function () {
+        //全选,设置chheckbox name='all' tbody id=tb
+        $("input[name=chk_name]").each(function () {
+            $(this).prop('checked', $(this).is(':checked') ? false : true);
         });
     });
 </script>

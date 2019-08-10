@@ -28,6 +28,8 @@ namespace GuoChe.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
+            //温度
+            ViewBag.TemList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "TM00" && t.Status == 1).ToList();
             //仓库信息
             ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
             return View();
@@ -38,9 +40,9 @@ namespace GuoChe.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ContentResult SaveInInventory(int StorageID, string productDate, string json)
+        public ContentResult SaveInInventory(int StorageID, string productDate, string json, string tempType)
         {
-            bool result = InventoryService.ModifyInventory(StorageID, productDate, 0, json, CurrentUser.UserID, Common.OperatorType.IN);
+            bool result = InventoryService.ModifyInventory(StorageID, productDate, 0, json, CurrentUser.UserID, tempType, Common.OperatorType.IN);
             return Content(result ? "T" : "F");
         }
 
@@ -64,7 +66,7 @@ namespace GuoChe.Controllers
         [HttpPost]
         public ContentResult SaveLossInventory(int StorageID, string productDate, string json)
         {
-            bool result = InventoryService.ModifyInventory(StorageID, productDate, 0, json, CurrentUser.UserID, Common.OperatorType.OUT);
+            bool result = InventoryService.ModifyInventory(StorageID, productDate, 0, json, CurrentUser.UserID,"", Common.OperatorType.OUT);
             return Content(result ? "T" : "F");
         }
 
@@ -132,7 +134,7 @@ namespace GuoChe.Controllers
         [HttpPost]
         public ContentResult SaveOutInventory(int StorageID, string productDate, string json)
         {
-            bool result = InventoryService.ModifyInventory(StorageID, productDate, 0, json, CurrentUser.UserID, Common.OperatorType.OUT);
+            bool result = InventoryService.ModifyInventory(StorageID, productDate, 0, json, CurrentUser.UserID, "", Common.OperatorType.OUT);
             return Content(result ? "T" : "F");
         }
 
