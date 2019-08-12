@@ -162,7 +162,7 @@
                                                     <h5>@entity.OrderDate</h5>
                                                 </div>
                                             </div>
-                                            <div class="lcItem_t_r_btnList" style="width: 130px;">
+                                            <div class="lcItem_t_r_btnList" style="width: 270px;">
                                                 <div class="showDiv" isok="true">
                                                     订单详情
                                                 </div>
@@ -170,6 +170,25 @@
                                                 {
                                                     <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
                                                         查看回单
+                                                    </div>
+                                                }
+                                                @if (ViewBag.PageType == "verify")
+                                                {
+                                                    <div class="showDiv">
+                                                        <a href="/Order/OrderPass?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">通过</a>
+                                                    </div>
+                                                    <div class="showDiv">
+                                                        <a href="/Order/OrderBack?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">拒绝</a>
+                                                    </div>
+                                                }
+                                                else if (ViewBag.PageType == "modify")
+                                                {
+                                                    <div class="mod">
+                                                        <a href="/Order/OrderAdd?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">修改</a>
+                                                    </div>
+                                                    <div class="del">
+                                                        @*<a href="/Order/OrderDelete?orderid=@entity.OrderID"  style="color:white">删除</a>*@
+                                                        <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType')" style="color:white">删除</a>
                                                     </div>
                                                 }
                                             </div>
@@ -274,30 +293,30 @@
                                                     订单详情
                                                 </div>
                                                 @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
-                    {
-                    <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
-                        查看回单
-                    </div>
-                    }
-                                                @if (ViewBag.PageType == "verify")
-                    {
-                    <div class="showDiv">
-                        <a href="/Order/OrderPass?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">通过</a>
-                    </div>
-                    <div class="showDiv">
-                        <a href="/Order/OrderBack?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">拒绝</a>
-                    </div>
-                    }
-                    else if (ViewBag.PageType=="modify")
-                    {
-                    <div class="mod">
-                        <a href="/Order/OrderAdd?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">修改</a>
-                    </div>
-                    <div class="del">
-                        @*<a href="/Order/OrderDelete?orderid=@entity.OrderID"  style="color:white">删除</a>*@
-                        <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType')" style="color:white">删除</a>
-                    </div>
-                    }
+                                                {
+                                                <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
+                                                    查看回单
+                                                </div>
+                                                }
+                                                                            @if (ViewBag.PageType == "verify")
+                                                {
+                                                <div class="showDiv">
+                                                    <a href="/Order/OrderPass?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">通过</a>
+                                                </div>
+                                                <div class="showDiv">
+                                                    <a href="/Order/OrderBack?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">拒绝</a>
+                                                </div>
+                                                }
+                                                else if (ViewBag.PageType=="modify")
+                                                {
+                                                <div class="mod">
+                                                    <a href="/Order/OrderAdd?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">修改</a>
+                                                </div>
+                                                <div class="del">
+                                                    @*<a href="/Order/OrderDelete?orderid=@entity.OrderID"  style="color:white">删除</a>*@
+                                                    <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType')" style="color:white">删除</a>
+                                                </div>
+                                                }
                                             </div>
                                         </div>
                                     </div>

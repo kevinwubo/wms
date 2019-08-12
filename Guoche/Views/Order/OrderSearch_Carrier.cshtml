@@ -156,10 +156,17 @@
                                                     <h5>@entity.OrderDate</h5>
                                                 </div>
                                             </div>
-                                            <div class="lcItem_t_r_btnList" style="width: 130px;">
+                                            <div class="lcItem_t_r_btnList">
                                                 <div class="showDiv" isok="true">
                                                     订单详情
                                                 </div>
+                                                @if (ViewBag.PageType == "tc_confirm")
+                                                {
+                                                    @*DC订单确认*@
+                                                    <div class="upImg">上传图片<input type="file" class="upfile"></div>
+
+                                                    <div class="sure">开始配送</div>
+                                                }
                                                 @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
                                                 {
                                                     <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
@@ -264,7 +271,7 @@
                                                 </div>
                                                 <div>
                                                     <p>送达时间</p>
-                                                    <h5><label id="arrivertime@(entity.OrderID)">@entity.ArriverDate.ToString()</label></h5>
+                                                    <h5><label id="arrivertime@(entity.OrderID)">@(entity.ArriverDate>DateTime.Parse("2000-01-01")? entity.ArriverDate.ToString():"未配送")</label></h5>
                                                 </div>
                                                 <input type="hidden" id="AttachmentIDs" name="AttachmentIDs" value="@entity.AttachmentIDs">
                                             </div>
@@ -274,18 +281,18 @@
                                                 </div>
 
                                                 @if (ViewBag.PageType == "tc_confirm")
-                    {
-                    @*DC订单确认*@
-                    <div class="upImg">上传图片<input type="file" class="upfile"></div>
+                                                {
+                                                @*DC订单确认*@
+                                                <div class="upImg">上传图片<input type="file" class="upfile"></div>
 
-                    <div class="sure">开始配送</div>
-                    }
+                                                <div class="sure">开始配送</div>
+                                                }
                                                 @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
-                    {
-                    <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
-                        查看回单
-                    </div>
-                    }
+                                                {
+                                                <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
+                                                    查看回单
+                                                </div>
+                                                }
                                             </div>
                                         </div>
                                     </div>
