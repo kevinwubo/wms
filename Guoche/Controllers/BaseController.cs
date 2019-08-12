@@ -230,6 +230,90 @@ namespace GuoChe.Controllers
             return Json(outList);
         }
 
+        /// <summary>
+        /// 仓库信息模糊查询
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public JsonResult GetStorageByName(string name = "")
+        {
+            List<StorageEntity> outList = new List<StorageEntity>();
+            List<StorageEntity> list = StorageService.GetStorageByRule(name, -1);
+
+            if (list != null && list.Count > 0)
+            {
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    var v = from d in list where d.StorageName.Contains(name) select d;
+
+                    if (v != null)
+                    {
+                        foreach (var k in v)
+                        {
+                            StorageEntity model = new StorageEntity();
+                            model.StorageID = k.StorageID;
+                            model.StorageName = k.StorageName;
+                            outList.Add(model);
+
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (StorageEntity entity in list)
+                    {
+                        outList.Add(entity);
+                    }
+                }
+
+            }
+
+            return Json(outList);
+        }
+
+        /// <summary>
+        /// 承运商信息模糊查询
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public JsonResult GetCarrierByName(string name = "")
+        {
+            List<CarrierEntity> outList = new List<CarrierEntity>();
+            List<CarrierEntity> list = CarrierService.GetCarrierByRule(name, -1);
+
+            if (list != null && list.Count > 0)
+            {
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    var v = from d in list where d.CarrierName.Contains(name) select d;
+
+                    if (v != null)
+                    {
+                        foreach (var k in v)
+                        {
+                            CarrierEntity model = new CarrierEntity();
+                            model.CarrierID = k.CarrierID;
+                            model.CarrierName = k.CarrierName;
+                            outList.Add(model);
+
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (CarrierEntity entity in list)
+                    {
+                        outList.Add(entity);
+                    }
+                }
+
+            }
+
+            return Json(outList);
+        }
+
         public JsonResult GetReceiver(string type)
         {
             List<ReceiverEntity> listReceiver = new List<ReceiverEntity>();

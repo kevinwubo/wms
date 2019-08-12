@@ -89,40 +89,43 @@ namespace Service.BaseBiz
             {
                 foreach (DataRow dr in dt.Rows)
                 {
-                    ReceiverRepository mrs = new ReceiverRepository();
-                    ReceiverInfo info = new ReceiverInfo();
-                    List<CustomerEntity> listCus = CustomerService.GetCustomerByRule(dr["客户名称"].ToString(), -1);
-                    if (listCus != null && listCus.Count > 0)
-                    {
-                        info.CustomerID = listCus[0].CustomerID;
-                    }
-                    info.ReceiverName = dr["门店名称"].ToString();
-                    info.ReceiverNo = dr["门店编号"].ToString();
-                    info.Address = dr["门店地址"].ToString();
-                    Province pInfo = proList.Find(p => p.ProvinceName.Equals(dr["所属省份"].ToString().Replace("省", "").Replace("市", "")));
-                    info.ProvinceID = pInfo != null ? pInfo.ProvinceID : 0;
-                    info.ReceiverType = "门店";
-                    City cInfo = cList.Find(p => p.CityName.Equals(dr["所属市区"].ToString().Replace("市", "")));
-                    info.CityID = cInfo != null ? cInfo.CityID : 0;
-                    info.Address = dr["门店地址"].ToString();
-                    info.OperatorID = 1;
-                    info.Remark = dr["门店描述"].ToString();
-                    CarrierEntity centity = carrList.Find(p => p.CarrierShortName.Equals(dr["默认承运商简称"].ToString()));
-                    info.DefaultCarrierID = centity != null ? centity.CarrierID : 0;
-                    StorageEntity sEntity = storageList.Find(p => p.StorageName.Equals(dr["默认出库仓"]));
-                    info.DefaultStorageID = sEntity != null ? sEntity.StorageID : 0;
-                    info.Status = 1;
-                    info.CreateDate = DateTime.Now;
-                    info.ChangeDate = DateTime.Now;
-                    long id = mrs.CreateNew(info);
+                    //ReceiverRepository mrs = new ReceiverRepository();
+                    //ReceiverInfo info = new ReceiverInfo();
+                    //List<CustomerEntity> listCus = CustomerService.GetCustomerByRule(dr["客户名称"].ToString(), -1);
+                    //if (listCus != null && listCus.Count > 0)
+                    //{
+                    //    info.CustomerID = listCus[0].CustomerID;
+                    //}
+                    //info.ReceiverName = dr["门店名称"].ToString();
+                    //info.ReceiverNo = dr["门店编号"].ToString();
+                    //info.Address = dr["门店地址"].ToString();
+                    //Province pInfo = proList.Find(p => p.ProvinceName.Equals(dr["所属省份"].ToString().Replace("省", "").Replace("市", "")));
+                    //info.ProvinceID = pInfo != null ? pInfo.ProvinceID : 0;
+                    //info.ReceiverType = "门店";
+                    //City cInfo = cList.Find(p => p.CityName.Equals(dr["所属市区"].ToString().Replace("市", "")));
+                    //info.CityID = cInfo != null ? cInfo.CityID : 0;
+                    //info.Address = dr["门店地址"].ToString();
+                    //info.OperatorID = 1;
+                    //info.Remark = dr["门店描述"].ToString();
+                    //CarrierEntity centity = carrList.Find(p => p.CarrierShortName.Equals(dr["默认承运商简称"].ToString()));
+                    //info.DefaultCarrierID = centity != null ? centity.CarrierID : 0;
+                    //StorageEntity sEntity = storageList.Find(p => p.StorageName.Equals(dr["默认出库仓"]));
+                    //info.DefaultStorageID = sEntity != null ? sEntity.StorageID : 0;
+                    //info.Status = 1;
+                    //info.CreateDate = DateTime.Now;
+                    //info.ChangeDate = DateTime.Now;
+                    //long id = mrs.CreateNew(info);
+
+                    List<ReceiverEntity> list= ReceiverService.GetReceiverByRule(dr["门店名称"].ToString(), "", "", -1);
+                    long id = list != null && list.Count > 0 ? list[0].ReceiverID : 0;
 
                     ContactRepository cr = new ContactRepository();
                     ContactInfo contact = new ContactInfo();
-                    if (!string.IsNullOrEmpty(dr["联系人"].ToString()))
+                    if (!string.IsNullOrEmpty(dr["联系人"].ToString()) || !string.IsNullOrEmpty(dr["联系方式"].ToString()))
                     {
                         contact.ContactName = dr["联系人"].ToString();
-                        contact.Mobile = dr["联系人"].ToString();
-                        contact.Telephone = dr["联系人"].ToString();
+                        contact.Mobile = dr["联系方式"].ToString();
+                        contact.Telephone = dr["联系方式"].ToString();
                         contact.Email = "";
                         contact.Remark = "";
                         contact.UnionType = UnionType.Receiver.ToString();//客户
@@ -130,7 +133,7 @@ namespace Service.BaseBiz
                         contact.CreateDate = DateTime.Now;
                         contact.ChangeDate = DateTime.Now;
                         cr.CreateNew(contact);
-                    }   
+                    }
 
                 }
             }

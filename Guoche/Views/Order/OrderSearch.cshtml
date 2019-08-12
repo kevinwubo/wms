@@ -134,110 +134,201 @@
 {
 
     <div class="lcItem" dataid="@entity.OrderID" storageid="23">
-        <div class="lcItem_t">
-            <div class="lcCheckDiv">
-                <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID+"-"+entity.IsImport)" />
-            </div>
-            <div class="lcItem_t_l">
-                <div class="lcDivList">
-                    <div>
-                        <p>订单编号</p>
-                        <h5>@entity.OrderNo</h5>
-                    </div>
-                    <div>
-                        <p>下单时间</p>
-                        <h5>@entity.OrderDate</h5>
-                    </div>
-                    <div>
-                        <p>送货时间</p>
-                        <h5>@entity.SendDate.ToShortDateString()</h5>
-                    </div>
+
+        @if (entity.OrderType.Equals("RKD"))
+        {
+            <div class="lcItem_t">
+                <div class="lcCheckDiv">
+                    <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID+"-"+entity.IsImport)" />
                 </div>
+                <div class="lcItem_t_l">
+                    <div class="lcDivList">
+                        <div>
+                            <p>订单编号</p>
+                            <h5>@entity.OrderNo</h5>
+                        </div>
+                        <div>
+                            <p>入库时间</p>
+                            <h5>@entity.OrderDate</h5>
+                        </div>
+                        <div>
+                            <p>温区</p>
+                            <h5>@entity.TempType</h5>
+                        </div>
+                    </div>
 
 
-                <div class="lcDivList">
-                    <div title="@entity.contact.name">
-                        <p>收货方</p>
-                        <h5>@entity.contact.name</h5>
+                    <div class="lcDivList">
+                        <div title="@entity.contact.name">
+                            <p>收货仓库</p>
+                            <h5>@entity.contact.name</h5>
+                        </div>
+                        <div>
+                            <p>收货人</p>
+                            <h5>@entity.contact.contact</h5>
+                        </div>
+                        <div title="联系方式：@entity.contact.telephone">
+                            <p>联系方式</p>
+                            <h5>@entity.contact.telephone</h5>
+                        </div>
                     </div>
-                    <div>
-                        <p>收货人</p>
-                        <h5>@entity.contact.contact</h5>
+                    <div class="lcDivList">
+                        <div title="@entity.contact.address">
+                            <p>仓库地址</p>
+                            <h5>@entity.contact.address</h5>
+                        </div>                        
                     </div>
-                    <div title="联系方式：@entity.contact.telephone">
-                        <p>联系方式</p>
-                        <h5>@entity.contact.telephone</h5>
-                    </div>
-                </div>
-                <div class="lcDivList">
-                    <div title="@entity.contact.address">
-                        <p>配送地址</p>
-                        <h5>@entity.contact.address</h5>
-                    </div>
-                    <div title="@entity.carrier.CarrierName">
-                        <p>承运商</p>
-                        <h5>@entity.carrier.CarrierName</h5>
-                    </div>
-                </div>
 
 
-                <div class="lcDivList">
-                    <div title="@entity.Remark">
-                        <p>备注</p>
-                        <h5>@entity.Remark</h5>
-                    </div>
-                    <div>
-                        <p>温区</p>
-                        <h5>@entity.TempType</h5>
-                    </div>
-                    <div>
-                        <p>订单属性</p>
-                        <h5>@entity.OrderTypeDesc</h5>
+                    <div class="lcDivList">
+                        <div title="@entity.Remark">
+                            <p>备注</p>
+                            <h5>@entity.Remark</h5>
+                        </div>
+
+                        <div>
+                            <p>订单属性</p>
+                            <h5>@entity.OrderTypeDesc</h5>
+                        </div>
                     </div>
                 </div>
-                <div class="lcDivList">
-                    <div>
-                        <p>合并编号</p>
-                        <h5>@entity.MergeNo</h5>
+                <div class="lcItem_t_r">
+                    <div class="lcItem_t_r_l">
+                        <div>
+                            <p>订单归属</p>
+                            <h5>@(entity.customer != null ? entity.customer.CustomerName : "")</h5>
+                        </div>
+                        <div>
+                            <p>制单人</p>
+                            <h5>@(entity.user != null ? entity.user.UserName : "")</h5>
+                        </div>
+                        <div title="2019-05-15 17:31:11">
+                            <p>制单时间</p>
+                            <h5>@entity.OrderDate</h5>
+                        </div>              
                     </div>
-                    <div>
-                        <p>制单人</p>
-                        <h5>@(entity.user != null ? entity.user.UserName : "")</h5>
+                    <div class="lcItem_t_r_btnList" style="width: 130px;">
+                        <div class="showDiv" isok="true">
+                            订单详情
+                        </div>
+                        @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
+                        {
+                            <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
+                                查看回单
+                            </div>
+                        }
                     </div>
-                    <div title="2019-05-15 17:31:11">
-                        <p>制单时间</p>
-                        <h5>@entity.OrderDate</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="lcItem_t_r">
-                <div class="lcItem_t_r_l">
-                    <div>
-                        <p>订单归属</p>
-                        <h5>@(entity.customer != null ? entity.customer.CustomerName : "")</h5>
-                    </div>
-                    <div>
-                        <p>发货仓库</p>
-                        <h5>@(entity.sendstorage != null ? entity.sendstorage.StorageName : "")</h5>
-                    </div>
-                    <div>
-                        <p>订单状态</p>
-                        <h5>@(entity.OrderStatusDesc+entity.UploadStatusDesc)</h5>
-                    </div>
-                </div>
-                <div class="lcItem_t_r_btnList" style="width: 130px;">
-                    <div class="showDiv" isok="true">
-                        订单详情
-                    </div>
-                    @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
-                    { 
-                        <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
-                            查看回单
-                        </div>                                     
-                    }
                 </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="lcItem_t">
+                <div class="lcCheckDiv">
+                    <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID+"-"+entity.IsImport)" />
+                </div>
+                <div class="lcItem_t_l">
+                    <div class="lcDivList">
+                        <div>
+                            <p>订单编号</p>
+                            <h5>@entity.OrderNo</h5>
+                        </div>
+                        <div>
+                            <p>下单时间</p>
+                            <h5>@entity.OrderDate</h5>
+                        </div>
+                        <div>
+                            <p>送货时间</p>
+                            <h5>@entity.SendDate.ToShortDateString()</h5>
+                        </div>
+                    </div>
+
+
+                    <div class="lcDivList">
+                        <div title="@entity.contact.name">
+                            <p>收货方</p>
+                            <h5>@entity.contact.name</h5>
+                        </div>
+                        <div>
+                            <p>收货人</p>
+                            <h5>@entity.contact.contact</h5>
+                        </div>
+                        <div title="联系方式：@entity.contact.telephone">
+                            <p>联系方式</p>
+                            <h5>@entity.contact.telephone</h5>
+                        </div>
+                    </div>
+                    <div class="lcDivList">
+                        <div title="@entity.contact.address">
+                            <p>配送地址</p>
+                            <h5>@entity.contact.address</h5>
+                        </div>
+                        <div title="@entity.carrier.CarrierName">
+                            <p>承运商</p>
+                            <h5>@entity.carrier.CarrierName</h5>
+                        </div>
+                    </div>
+
+
+                    <div class="lcDivList">
+                        <div title="@entity.Remark">
+                            <p>备注</p>
+                            <h5>@entity.Remark</h5>
+                        </div>
+                        <div>
+                            <p>温区</p>
+                            <h5>@entity.TempType</h5>
+                        </div>
+                        <div>
+                            <p>订单属性</p>
+                            <h5>@entity.OrderTypeDesc</h5>
+                        </div>
+                    </div>
+                    <div class="lcDivList">
+                        <div>
+                            <p>合并编号</p>
+                            <h5>@entity.MergeNo</h5>
+                        </div>
+                        <div>
+                            <p>制单人</p>
+                            <h5>@(entity.user != null ? entity.user.UserName : "")</h5>
+                        </div>
+                        <div title="2019-05-15 17:31:11">
+                            <p>制单时间</p>
+                            <h5>@entity.OrderDate</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="lcItem_t_r">
+                    <div class="lcItem_t_r_l">
+                        <div>
+                            <p>订单归属</p>
+                            <h5>@(entity.customer != null ? entity.customer.CustomerName : "")</h5>
+                        </div>
+                        <div>
+                            <p>发货仓库</p>
+                            <h5>@(entity.sendstorage != null ? entity.sendstorage.StorageName : "")</h5>
+                        </div>
+                        <div>
+                            <p>订单状态</p>
+                            <h5>@(entity.OrderStatusDesc + entity.UploadStatusDesc)</h5>
+                        </div>
+                    </div>
+                    <div class="lcItem_t_r_btnList" style="width: 130px;">
+                        <div class="showDiv" isok="true">
+                            订单详情
+                        </div>
+                        @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
+                        {
+                            <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
+                                查看回单
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        
 
 
         <div class="lcItem_b">

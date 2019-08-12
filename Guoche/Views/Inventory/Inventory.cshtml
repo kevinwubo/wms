@@ -89,7 +89,7 @@
                                     <td class=" ">@invent[i].BatchNumber</td>
                                     <td class=" ">@invent[i].ProductDate.ToShortDateString()</td>
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.exDate + invent[i].goods.exUnits : "")</td>                                  
-                                    <td class=" ">@invent[i].Quantity</td>
+                                    <td class=" " style="@(invent[i].Quantity<10?"background-color:red":"")">@invent[i].Quantity</td>
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.Weight : "")</td>
                                     <td class=" ">@invent[i].InventoryDate.ToShortDateString()</td>
                                     <td>

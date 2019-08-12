@@ -14,7 +14,7 @@
 }
 .lcQueryItem .lcItem .lcItem_t .lcCheckDiv{
     width: 25px;
-    height: 100px;
+    /*height: 100px;*/
 }
 .lcQueryItem .lcItem .lcItem_t .lcCheckDiv .checkbox{
     width: 20px;
@@ -22,7 +22,7 @@
 }
 .lcQueryItem .lcItem .lcItem_t .lcItem_t_l{
     flex: 1;
-    height: 100px;
+    /*height: 100px;*/
     display: flex;
     flex-direction: column;
     border-right: 1px #337ab7 solid;
@@ -78,7 +78,7 @@
 
 .lcQueryItem .lcItem .lcItem_t .lcItem_t_r{
     width: 530px;
-    height: 100px;
+    /*height: 100px;*/
     display: flex;
     padding-left: 20px;
 }

@@ -299,6 +299,11 @@ namespace Entity.ViewModel
         public string BSDIds { get; set; }
     }
 
+    public class ImportGroup
+    {
+        public string name { get; set; }
+    }
+
     public class ImportOrderEntity
     {
         /// <summary>

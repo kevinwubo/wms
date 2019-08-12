@@ -9,7 +9,7 @@ namespace DataRepository.DataAccess.BaseData
     public class BaseDataStatement
     {
 
-        public static string TempTest = @"select * from dbo.门店$";
+        public static string TempTest = @"select * from dbo.sheet";
 
         public static string GetAllCity = @"SELECT * FROM City(NOLOCK)";
 

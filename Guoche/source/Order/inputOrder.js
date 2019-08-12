@@ -125,32 +125,6 @@ var orderInfo = {
             window.location.href = "/Order/Index/";
         });
 
-        //筛选联系人信息
-        //$("#ReceiverName").on("change", function () {
-        //    var $this = $(this);
-        //    var ID = $("#ReceiverID").val();
-        //    if (!!ID) {
-        //        $.ajax({
-        //            url: "GetReceiverByGoodsID",
-        //            type: 'POST',
-        //            async: false,
-        //            data: { rid: ID },
-        //            success: function (data) {
-        //                if (!!data) {
-        //                    $("#contactName").val(data.ContactName);
-        //                    $("#contactMobile").val(data.Mobile);
-        //                    $("#contactAddress").val(data.Address);
-        //                }
-        //            }
-        //        });
-        //    }
-        //    else {
-        //        $("#contactName").val("");
-        //        $("#contactMobile").val("");
-        //        $("#contactAddress").val("");
-        //    }
-        //});
-
         //计算价格-弹框
         $("#coumpLayer_price").click(function () {            
             var cusid = $("#CustomerID").val();
@@ -226,26 +200,6 @@ var orderInfo = {
 
             $("#tr_ContactInfo").show();
 
-            //选择客户自动带出门店信息
-            //$("#CustomerID").click(function () {
-            //    var CID = $("#CustomerID").val();
-            //    $("#ReceiverID").html("").append("<option value=''>--请选择门店--</option>");
-            //    jQuery.ajax({
-            //        url: "GetReceiverByCustomerID",
-            //        data: { customerID: CID },
-            //        type: "post",
-            //        success: function (data) {
-            //            if (data) {
-            //                if (data != "") {                                
-            //                    for (var i = 0; i < data.length; i++) {
-            //                        $("#ReceiverID").append("<option value='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</option>");
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    });
-            //});
-
             $("#CustomerID").click(function () {
                 var CID = $("#CustomerID").val();
 
@@ -275,6 +229,11 @@ var orderInfo = {
                 $('#ReceiverID').val(id);
                 $('#ReceiverName').val(name);
                 $('#div_items').hide(500);
+                showContactInfo(id);
+            });
+
+            //显示联系人信息
+            function showContactInfo(id) {
                 if (!!id) {
                     $.ajax({
                         url: "GetReceiverByGoodsID",
@@ -295,8 +254,9 @@ var orderInfo = {
                     $("#contactMobile").val("");
                     $("#contactAddress").val("");
                 }
-            });
+            }
 
+            //门店信息
             $('#ReceiverName').blur(function () {
                 $('#div_items').hide(500);
             })
@@ -343,11 +303,10 @@ var orderInfo = {
                     }
                 })
 
-            })
-
+            })            
 
             $("#ReceiverName").val($("#ReceiverName").val()).trigger("change");
-
+            //showContactInfo($('#ReceiverID').val());
         }
         else {
             //调拨订单 运输订单A显示 +仓库信息
@@ -357,10 +316,146 @@ var orderInfo = {
 
             $("#choose_Storage").show();
             $("#ReceiverStorageID").show();
-
+            $("#ReceiverStorageName").show();
             $("#tr_ContactInfo").hide();
-        }        
+
+            //仓库信息
+            $('#ReceiverStorageName').blur(function () {
+                $('#div_storage_items').hide(500);
+            })
+            $("#ReceiverStorageName").keyup(function () {
+                var Name = $("#ReceiverStorageName").val();
+                GetStorageByName(Name);
+
+            })
+            $("#ReceiverStorageName").focus(function () {
+                var Name = $("#ReceiverStorageName").val();
+                GetStorageByName(Name);
+            })
+
+            $("#div_storage_items").on("click", "li", function () {
+                var name = $(this).text();
+                var id = $(this).attr("id");
+                $('#ReceiverStorageID').val(id);
+                $('#ReceiverStorageName').val(name);
+                $('#div_storage_items').hide(500);                
+            });
+            $("#ReceiverStorageName").val($("#ReceiverStorageName").val()).trigger("change");
+
+        }
+
+
+        //发货仓库信息
+        $('#SendStorageName').blur(function () {
+            $('#div_sendstorage_items').hide(500);
+        })
+        $("#SendStorageName").keyup(function () {
+            var Name = $("#SendStorageName").val();
+            GetSendStorageByName(Name);
+
+        })
+        $("#SendStorageName").focus(function () {
+            var Name = $("#SendStorageName").val();
+            GetSendStorageByName(Name);
+        })
+
+        $("#div_sendstorage_items").on("click", "li", function () {
+            var name = $(this).text();
+            var id = $(this).attr("id");
+            $('#SendStorageID').val(id);
+            $('#SendStorageName').val(name);
+            $('#div_sendstorage_items').hide(500);
+        });
+        $("#SendStorageName").val($("#SendStorageName").val()).trigger("change");
+
+        //承运商信息
+        $('#CarrierName').blur(function () {
+            $('#div_carriere_items').hide(500);
+        })
+        $("#CarrierName").keyup(function () {
+            var Name = $("#CarrierName").val();
+            GetCarrierByName(Name);
+
+        })
+        $("#CarrierName").focus(function () {
+            var Name = $("#CarrierName").val();
+            GetCarrierByName(Name);
+        })
+
+        $("#div_carriere_items").on("click", "li", function () {
+            var name = $(this).text();
+            var id = $(this).attr("id");
+            $('#CarrierID').val(id);
+            $('#CarrierName').val(name);
+            $('#div_carriere_items').hide(500);
+        });
+        $("#CarrierName").val($("#CarrierName").val()).trigger("change");
+        
     },
+}
+
+//仓库信息模糊查询
+function GetStorageByName(Name) {
+    $.ajax({
+        type: "post",
+        url: "GetStorageByName",
+        data: {
+            name: Name,
+        },
+        success: function (data) {
+            console.log(data);
+            if (data) {
+                $("#div_storage_items").html("")
+                $("#div_storage_items").show();
+                for (var i = 0; i < data.length; i++) {
+                    $("#div_storage_items").append("<li class='div_storage_item' id='" + data[i].StorageID + "'>" + data[i].StorageName + "</li>");
+                }
+            }
+        }
+    })
+}
+
+
+//发货库仓模糊查询
+function GetSendStorageByName(Name) {
+    $.ajax({
+        type: "post",
+        url: "GetStorageByName",
+        data: {
+            name: Name,
+        },
+        success: function (data) {
+            console.log(data);
+            if (data) {
+                $("#div_sendstorage_items").html("")
+                $("#div_sendstorage_items").show();
+                for (var i = 0; i < data.length; i++) {
+                    $("#div_sendstorage_items").append("<li class='div_sendstorage_item' id='" + data[i].StorageID + "'>" + data[i].StorageName + "</li>");
+                }
+            }
+        }
+    })
+}
+
+//承运商模糊查询
+function GetCarrierByName(Name) {
+    $.ajax({
+        type: "post",
+        url: "GetCarrierByName",
+        data: {
+            name: Name,
+        },
+        success: function (data) {
+            console.log(data);
+            if (data) {
+                $("#div_carriere_items").html("")
+                $("#div_carriere_items").show();
+                for (var i = 0; i < data.length; i++) {
+                    $("#div_carriere_items").append("<li class='div_carriere_item' id='" + data[i].CarrierID + "'>" + data[i].CarrierName + "</li>");
+                }
+            }
+        }
+    })
 }
 
 /**删除一行*/

@@ -45,11 +45,11 @@ namespace GuoChe.Controllers
         public ActionResult OrderAdd(string type, int orderid = 0)
         {
             //默认承运商
-            ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
+            //ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
-            ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
+            //ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
             //门店
-            ViewBag.Goods = GoodsService.GetGoodsByRule("", 1);//只显示使用中的数据
+            //ViewBag.Goods = GoodsService.GetGoodsByRule("", 1);//只显示使用中的数据
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
             //温度
@@ -59,7 +59,7 @@ namespace GuoChe.Controllers
             //收货方
             ViewBag.DeliverList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "DeliverModel00" && t.Status == 1).ToList();
             //收货人信息
-            ViewBag.Receiver = ReceiverService.GetReceiverByRule("", "", "", 1);//只显示使用中的数据
+            //ViewBag.Receiver = ReceiverService.GetReceiverByRule("", "", "", 1);//只显示使用中的数据
 
             ViewBag.Order = new OrderEntity();
             ViewBag.ButtonName = "发布订单";

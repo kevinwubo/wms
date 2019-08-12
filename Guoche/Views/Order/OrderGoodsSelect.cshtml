@@ -125,7 +125,7 @@
                                     <td class=" "><input type="checkbox" name="checkbox" id="@iList[i].InventoryID" value="@iList[i].InventoryID" /></td>
                                     <td class=" "><input type="hidden" value="@(iList[i].goods != null ? iList[i].goods.GoodsNo:"")" />@(iList[i].goods != null ? iList[i].goods.GoodsNo:"")</td>
                                     <td class=" "><input type="hidden" value="@(iList[i].goods != null ? iList[i].goods.GoodsName:"")" />@(iList[i].goods != null ? iList[i].goods.GoodsName:"")</td>
-                                    <td class=" "><input type="hidden" value="@iList[i].Quantity" />@iList[i].Quantity</td>
+                                    <td class=" " style="@(iList[i].Quantity < 10 ? "background-color:red" : "")"><input type="hidden" value="@iList[i].Quantity" />@iList[i].Quantity</td>
                                     <td class=" "><input type="hidden" value="0" />0</td>
                                     <td class=" "><input type="hidden" value="0" />0</td>
                                     <td class=" "><input type="hidden" value="@(iList[i].goods != null ? iList[i].goods.GoodsModel:"")" />@(iList[i].goods != null ? iList[i].goods.GoodsModel:"")</td>
