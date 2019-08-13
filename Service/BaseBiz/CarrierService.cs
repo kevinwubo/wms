@@ -159,12 +159,12 @@ namespace Service.BaseBiz
         {
             List<CarrierEntity> all = new List<CarrierEntity>();
             CarrierRepository mr = new CarrierRepository();
-            List<CarrierInfo> miList = mr.GetAllCarrier();//Cache.Get<List<CarrierInfo>>("CarrierALL");
-            //if (miList.IsEmpty())
-            //{
-            //    miList = mr.GetAllCarrier();
-            //    Cache.Add("CarrierALL", miList);
-            //}
+            List<CarrierInfo> miList = Cache.Get<List<CarrierInfo>>("CarrierALL");
+            if (miList.IsEmpty())
+            {
+                miList = mr.GetAllCarrier();
+                Cache.Add("CarrierALL", miList);
+            }
             if (!miList.IsEmpty())
             {
                 foreach (CarrierInfo mInfo in miList)

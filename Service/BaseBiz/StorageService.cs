@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 using Common;
 using Infrastructure.Helper;
 using DataRepository.DataAccess.BaseData;
+
 namespace Service.BaseBiz
 {
-    public class StorageService
+    public class StorageService : BaseService
     {
         public static StorageEntity GetStorageEntityById(long cid)
         {
@@ -52,12 +53,12 @@ namespace Service.BaseBiz
         {
             List<StorageEntity> all = new List<StorageEntity>();
             StorageRepository mr = new StorageRepository();
-            List<StorageInfo> miList = mr.GetAllstorage();//Cache.Get<List<StorageInfo>>("StorageALL");
-            //if (miList.IsEmpty())
-            //{
-            //    miList = mr.GetAllStorage();
-            //    Cache.Add("StorageALL", miList);
-            //}
+            List<StorageInfo> miList = Cache.Get<List<StorageInfo>>("StorageALL");
+            if (miList.IsEmpty())
+            {
+                miList = mr.GetAllstorage();
+                Cache.Add("StorageALL", miList);
+            }
             if (!miList.IsEmpty())
             {
                 foreach (StorageInfo mInfo in miList)

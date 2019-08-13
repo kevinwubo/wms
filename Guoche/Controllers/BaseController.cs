@@ -238,7 +238,7 @@ namespace GuoChe.Controllers
         public JsonResult GetStorageByName(string name = "")
         {
             List<StorageEntity> outList = new List<StorageEntity>();
-            List<StorageEntity> list = StorageService.GetStorageByRule(name, -1);
+            List<StorageEntity> list = StorageService.GetStorageAll();
 
             if (list != null && list.Count > 0)
             {
@@ -280,7 +280,7 @@ namespace GuoChe.Controllers
         public JsonResult GetCarrierByName(string name = "")
         {
             List<CarrierEntity> outList = new List<CarrierEntity>();
-            List<CarrierEntity> list = CarrierService.GetCarrierByRule(name, -1);
+            List<CarrierEntity> list = CarrierService.GetCarrierAll();
 
             if (list != null && list.Count > 0)
             {

@@ -541,17 +541,18 @@ namespace Service
 
                             if (inventory != null)
                             {
-                                #region 库存扣减
-                                InventoryInfo inventinfo = new InventoryInfo();
-                                inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail, oldOrderDetail);//仓库库存减去订单明细中出库库存
-                                inventinfo.InventoryID = inventory.InventoryID;
-                                inventinfo.ChangeDate = DateTime.Now;
-                                mr.ModifyInventoryQuantity(inventinfo);
-                                #endregion
+                                //#region 库存扣减
+                                //InventoryInfo inventinfo = new InventoryInfo();
+                                //inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail, oldOrderDetail);//仓库库存减去订单明细中出库库存
+                                //inventinfo.InventoryID = inventory.InventoryID;
+                                //inventinfo.ChangeDate = DateTime.Now;
+                                //mr.ModifyInventoryQuantity(inventinfo);
+                                //#endregion
 
-                                #region 库存明细增加
-                                CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
-                                #endregion
+                                //#region 库存明细增加
+                                //CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
+                                //#endregion
+                                deductionInventory(detail, inventory, oldOrderDetail, orderinfo, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
                             }
                         }
                     }
@@ -619,6 +620,99 @@ namespace Service
             return true;
         }
 
+        #region 库存扣减逻辑
+
+        /// <summary>
+        /// 库存扣减 查看是否当前库存是否足够
+        /// </summary>
+        /// <param name="detail">订单商品明细</param>
+        /// <param name="inventory">订单商品对应的库存明细</param>
+        public static void deductionInventory(OrderDetailEntity detail, InventoryEntity inventory, List<OrderDetailInfo> oldOrderDetail,
+            OrderEntity orderinfo, long operatorID, string typedesc, string inventoryType)
+        {
+            if (detail != null && inventory != null)
+            {
+                int currentGoodsQuantity = detail.Quantity;
+                int goodsQuantity = detail.Quantity;// 当前商品需要出库数量
+                int inventQuantity = inventory.Quantity;//当前商品库存数量
+                int quantity = inventQuantity - goodsQuantity;//库存数量-商品出库数量
+                //库存数量足够
+                if (quantity >= 0)
+                {
+                    ExecuteInventory(detail, inventory, oldOrderDetail, orderinfo, operatorID, typedesc, inventoryType);
+                }
+                else
+                {
+                    //库存不够的情况
+                    List<GoodsEntity> goodsList = GoodsService.GetGoodsByRule("", -1, detail.GoodsName, detail.GoodsModel, "");
+                    if (goodsList != null && goodsList.Count > 0)
+                    {
+                        GoodsEntity goodsEntity = goodsList[0];
+                        List<InventoryEntity> inventList = InventoryService.GetInventoryByRule(goodsEntity.GoodsID, -1, "");////
+                        if (inventList != null && inventList.Count > 0)
+                        {
+                            foreach (InventoryEntity entity in inventList)
+                            {
+                                //库存数量-商品数量
+                                goodsQuantity = goodsQuantity - entity.Quantity;                                
+
+                                if (goodsQuantity > 0)
+                                {
+                                    detail.Quantity = entity.Quantity;//优先减去库存中已有数量
+                                }
+                                else
+                                {
+                                    if (entity.Quantity > currentGoodsQuantity)
+                                    {
+                                        detail.Quantity = currentGoodsQuantity;
+                                    }
+                                    else
+                                    {
+                                        detail.Quantity = entity.Quantity;
+                                    }                                    
+                                }
+                                currentGoodsQuantity = currentGoodsQuantity - detail.Quantity;//总商品数量 减去扣除库存数量
+                                ExecuteInventory(detail, entity, oldOrderDetail, orderinfo, operatorID, typedesc, inventoryType);
+
+                                ////如果商品数量足够扣除 小于0  退出循环
+                                if (goodsQuantity < 0)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// 执行库存处理
+        /// </summary>
+        /// <param name="detail"></param>
+        /// <param name="inventory"></param>
+        /// <param name="oldOrderDetail"></param>
+        /// <param name="orderinfo"></param>
+        /// <param name="operatorID"></param>
+        /// <param name="typedesc"></param>
+        /// <param name="inventoryType"></param>
+        public static void ExecuteInventory(OrderDetailEntity detail, InventoryEntity inventory, List<OrderDetailInfo> oldOrderDetail,
+            OrderEntity orderinfo, long operatorID, string typedesc, string inventoryType)
+        {
+            #region 库存扣减
+            InventoryRepository mr = new InventoryRepository();
+            InventoryInfo inventinfo = new InventoryInfo();
+            inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail, oldOrderDetail);//仓库库存减去订单明细中出库库存
+            inventinfo.InventoryID = inventory.InventoryID;
+            inventinfo.ChangeDate = DateTime.Now;
+            mr.ModifyInventoryQuantity(inventinfo);
+            #endregion
+
+            #region 库存明细增加
+            CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, typedesc, inventoryType);
+            #endregion
+        }
 
         /// <summary>
         /// 修改 如果修改出库数量
@@ -639,6 +733,10 @@ namespace Service
             }
             return quantity;
         }
+
+        #endregion
+
+        
 
         /// <summary>
         /// 库存更新
