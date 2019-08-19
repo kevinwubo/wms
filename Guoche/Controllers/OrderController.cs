@@ -241,11 +241,11 @@ namespace GuoChe.Controllers
         /// <param name="p"></param>
         /// <returns></returns>
         public ActionResult OrderSearch(string type = "", int carrierid = 0, int storageid = 0, int customerid = 0, int orderstatus = -1, string orderno = ""
-            , string begindate = "", string enddate = "", int operatorid = -1, string ordertype = "", string ordersource = "", int p = 1, int pageSize = 20)
+            , string begindate = "", string enddate = "", int operatorid = -1, string ordertype = "", string ordersource = "", string subOrderType = "", int p = 1, int pageSize = 20)
         {
             List<OrderEntity> mList = null;
 
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, orderstatus, -1, -1, ordertype, orderno, begindate, enddate, operatorid, ordersource);
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, orderstatus, -1, -1, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType);
 
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
@@ -253,9 +253,9 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "OrderSearch";
 
-            if (orderstatus > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || operatorid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(ordersource) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            if (orderstatus > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || operatorid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(subOrderType) || !string.IsNullOrEmpty(ordersource) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
             {
-                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, orderstatus, -1, -1, ordertype, orderno, begindate, enddate, operatorid, ordersource);
+                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, orderstatus, -1, -1, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType);
             }
             else
             {
@@ -290,6 +290,7 @@ namespace GuoChe.Controllers
             ViewBag.OrderList = mList;
             ViewBag.orderTypeList = orderTypeList;
             ViewBag.PageSize = pageSize;
+            ViewBag.SubOrderType = subOrderType;
             ViewBag.Pager = pager;
             return View();
         }

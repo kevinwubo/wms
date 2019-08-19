@@ -185,9 +185,10 @@
                         console.log(data);
                         $("#orderImportList").append("");
                         for (var i = 0; i < data.length; i++) {
+                            var css = data[i].GoodsID == 0 ? "color:red" : "";
                             var html = "";
                             html += "<tr>"
-                            html += "<td>" + data[i].CustomerName + "</td><td>" + data[i].StorageNo + "</td><td>" + data[i].StorageName + "</td><td>" + data[i].GoodsNo + "</td><td>" + data[i].GoodsName + "</td><td>" + data[i].Models + "</td><td>" + data[i].Units + "</td>";
+                            html += "<td>" + data[i].CustomerName + "</td><td>" + data[i].StorageNo + "</td><td>" + data[i].StorageName + "</td><td>" + data[i].GoodsNo + "</td><td style='" + css + "'>" + data[i].GoodsName + "=商品ID：" + data[i].GoodsID + "</td><td>" + data[i].Models + "</td><td>" + data[i].Units + "</td>";
                             html += "<td>" + data[i].BatchNumber + "</td><td>" + data[i].ProductDate + "</td><td>" + data[i].ExitDate + "</td><td>" + data[i].Quantity + "</td>";
                             html += "</tr>"
                             $("#orderImportList").append(html);

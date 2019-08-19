@@ -68,26 +68,26 @@ namespace Service.Inventory
                             info.ChangeDate = DateTime.Now;
 
 
-                            List<InventoryInfo> listInventory = mr.GetInventoryByRule(entity.GoodsID,-1, entity.BatchNumber);
-                            if (listInventory != null && listInventory.Count > 0)
-                            {
-                                InventoryInfo oldInfo = listInventory[0];
-                                if (type == OperatorType.IN)
-                                {
-                                    info.Quantity += oldInfo.Quantity;//库存数量更新
-                                }
-                                else
-                                {
-                                    info.Quantity = info.Quantity - oldInfo.Quantity;//库存数量更新
-                                }
-                                //更新库存数量
-                                mr.ModifyInventoryQuantity(info);
-                            }
-                            else
-                            {
+                            //List<InventoryInfo> listInventory = mr.GetInventoryByRule(entity.GoodsID,-1, entity.BatchNumber);
+                            //if (listInventory != null && listInventory.Count > 0)
+                            //{
+                            //    InventoryInfo oldInfo = listInventory[0];
+                            //    if (type == OperatorType.IN)
+                            //    {
+                            //        info.Quantity += oldInfo.Quantity;//库存数量更新
+                            //    }
+                            //    else
+                            //    {
+                            //        info.Quantity = info.Quantity - oldInfo.Quantity;//库存数量更新
+                            //    }
+                            //    //更新库存数量
+                            //    mr.ModifyInventoryQuantity(info);
+                            //}
+                            //else
+                            //{
                                 //插入库存
                                 mr.CreateNew(info);
-                            }
+                            //}
                             listInv.Add(info);
 
                             #region 库存明细保存                            
@@ -398,6 +398,8 @@ namespace Service.Inventory
                                 entity.ProductDate = dt.Rows[i]["生产日期"].ToString();
                                 entity.ExitDate = dt.Rows[i]["到期日期"].ToString();
                                 entity.Quantity = dt.Rows[i]["余量"].ToString();
+                                GoodsEntity goodsEntity = OrderService.getGoodsModelByGoods("", entity.GoodsName, "", entity.Models);
+                                entity.GoodsID = goodsEntity != null ? goodsEntity.GoodsID : 0;
                                 list.Add(entity);
                             }
                         }
@@ -407,7 +409,7 @@ namespace Service.Inventory
             return list;
         }
 
-        public static int insertInventory(List<ImportInventoryEntity> list)
+        public static int insertInventory(List<ImportInventoryEntity> list, long operatorID)
         {
             int count = 0;
             InventoryRepository mr = new InventoryRepository();
@@ -420,14 +422,14 @@ namespace Service.Inventory
                     if (entity != null)
                     {
                         count++;
-                        List<GoodsEntity> listGoods = GoodsService.GetGoodsByRule(entity.GoodsNo, -1);
-                        GoodsEntity entityGood = listGoods != null && listGoods.Count > 0 ? listGoods[0] : null;
+                        //List<GoodsEntity> listGoods = GoodsService.GetGoodsByRule(entity.GoodsNo, -1);
+                        //GoodsEntity entityGood = listGoods != null && listGoods.Count > 0 ? listGoods[0] : null;
                         List<StorageEntity> listStorage = StorageService.GetStorageByRule(entity.StorageName, -1);
                         StorageEntity entityStorage = listStorage != null && listStorage.Count > 0 ? listStorage[0] : null;
 
                         List<CustomerEntity> listCustomer = CustomerService.GetCustomerByRule(entity.CustomerName, -1);
                         CustomerEntity entityCustomer = listCustomer != null && listCustomer.Count > 0 ? listCustomer[0] : null;
-                        info.GoodsID = entityGood != null ? entityGood.GoodsID : 0;
+                        info.GoodsID = entity.GoodsID;
                         info.StorageID = entityStorage != null ? entityStorage.StorageID : 0;
                         info.Quantity = entity.Quantity.ToInt(0);
                         info.CustomerID = entityCustomer != null ? entityCustomer.CustomerID : 0;
@@ -435,14 +437,14 @@ namespace Service.Inventory
                         info.BatchNumber = entity.BatchNumber;
                         info.ProductDate = DateTime.Parse(entity.ProductDate);
                         info.InventoryDate = DateTime.Now;
-                        info.UnitPrice = entityGood != null ? entityGood.SalePrice : 0; ;
+                        info.UnitPrice = 0;
                         info.Remark = "";
-                        info.OperatorID = 1;
+                        info.OperatorID = operatorID;
                         info.CreateDate = DateTime.Now;
                         info.ChangeDate = DateTime.Now;
                         mr.CreateNew(info);
                         listInv.Add(info);
-     
+
                     }
                 }
                 //生成入库单

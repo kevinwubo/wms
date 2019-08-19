@@ -145,7 +145,7 @@ namespace GuoChe.Controllers
             List<GoodsEntity> list = Cache.Get<List<GoodsEntity>>(token);
             if (list != null && list.Count > 0)
             {
-                result = BaseDataService.InsertImport(list);
+                result = BaseDataService.InsertImport(list, operatorID);
             }
             return Json(result);
         }
@@ -203,7 +203,7 @@ namespace GuoChe.Controllers
             int result = 0;
             if (list != null && list.Count > 0)
             {
-                result = InventoryService.insertInventory(list);
+                result = InventoryService.insertInventory(list, operatorID);
             }
             return Json(result);
         }

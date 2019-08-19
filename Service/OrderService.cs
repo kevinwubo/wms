@@ -474,9 +474,9 @@ namespace Service
 
         #region 分页相关
         public static int GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1,
-            int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "")
+            int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType="")
         {
-            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource);
+            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType);
         }
 
         public static List<OrderEntity> GetOrderInfoPager(PagerInfo pager)
@@ -493,11 +493,11 @@ namespace Service
         }
 
         public static List<OrderEntity> GetOrderInfoByRule(PagerInfo pager, string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1,
-            int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "")
+            int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "")
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, pager);
+            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, pager);
 
             if (!miList.IsEmpty())
             {
@@ -996,13 +996,21 @@ namespace Service
                     info.ChangeDate = DateTime.Now;
                     info.IsImport = "T";
                     info.OrderSource = ordersource;
-                    if (orderEntity.ImportType.Contains(TypeDesc.送货单.ToString()))
+
+                    if (!String.IsNullOrEmpty(orderEntity.ImportType))
+                    {
+                        if (orderEntity.ImportType.Contains(TypeDesc.送货单.ToString()))
+                        {
+                            info.SubOrderType = SubOrderType.SHD.ToString();
+                        }
+                        if (orderEntity.ImportType.Contains(TypeDesc.补损单.ToString()))
+                        {
+                            info.SubOrderType = SubOrderType.BSD.ToString();
+                        }
+                    }
+                    else //Costa订单导入 只有送货单
                     {
                         info.SubOrderType = SubOrderType.SHD.ToString();
-                    }
-                    if (orderEntity.ImportType.Contains(TypeDesc.补损单.ToString()))
-                    {
-                        info.SubOrderType = SubOrderType.BSD.ToString();
                     }
                     info.SalesMan = orderEntity.SalesMan;
                     info.PromotionMan = orderEntity.PromotionMan;
@@ -1012,14 +1020,22 @@ namespace Service
                     long orderid = or.CreateNew(info);
 
                     #endregion
-                    if (orderEntity.ImportType.Contains(TypeDesc.送货单.ToString()))
+                    if (!String.IsNullOrEmpty(orderEntity.ImportType))
+                    {
+                        if (orderEntity.ImportType.Contains(TypeDesc.送货单.ToString()))
+                        {
+                            idsEntity.SHDIds += orderid + ",";
+                        }
+                        if (orderEntity.ImportType.Contains(TypeDesc.补损单.ToString()))
+                        {
+                            idsEntity.BSDIds += orderid + ",";
+                        }
+                    }
+                    else
                     {
                         idsEntity.SHDIds += orderid + ",";
                     }
-                    if (orderEntity.ImportType.Contains(TypeDesc.补损单.ToString()))
-                    {
-                        idsEntity.BSDIds += orderid + ",";
-                    }
+                    
                     ids += orderid + ",";
 
                     foreach (ImportOrderEntity entity in listNew)

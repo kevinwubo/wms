@@ -246,7 +246,7 @@ namespace DataRepository.DataAccess.Order
         /// <param name="pager"></param>
         /// <returns></returns>
         public List<OrderInfo> GetOrderInfoByRule(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
-            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, PagerInfo pager)
+            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType, PagerInfo pager)
         {
             List<OrderInfo> result = new List<OrderInfo>();
 
@@ -294,6 +294,10 @@ namespace DataRepository.DataAccess.Order
             if (!string.IsNullOrEmpty(ordersource))
             {
                 builder.Append(" AND OrderSource=@OrderSource");
+            }
+            if (!string.IsNullOrEmpty(subOrderType))
+            {
+                builder.Append(" AND SubOrderType=@SubOrderType");
             }
 
             string sqlText = OrderStatement.GetAllOrderInfoByRulePagerHeader + builder.ToString() + OrderStatement.GetAllOrderInfoByRulePagerFooter;
@@ -344,6 +348,10 @@ namespace DataRepository.DataAccess.Order
             {
                 command.AddInputParameter("@OrderSource", DbType.String, ordersource);
             }
+            if (!string.IsNullOrEmpty(subOrderType))
+            {
+                command.AddInputParameter("@SubOrderType", DbType.String, subOrderType);
+            }
             command.AddInputParameter("@PageIndex", DbType.Int32, pager.PageIndex);
             command.AddInputParameter("@PageSize", DbType.Int32, pager.PageSize);
             command.AddInputParameter("@recordCount", DbType.Int32, pager.SumCount);
@@ -353,7 +361,7 @@ namespace DataRepository.DataAccess.Order
         }
 
         public int GetOrderCount(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
-            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource)
+            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType)
         {
             StringBuilder builder = new StringBuilder();
             builder.Append(OrderStatement.GetCount);
@@ -402,6 +410,10 @@ namespace DataRepository.DataAccess.Order
             {
                 builder.Append(" AND OrderSource=@OrderSource");
             }
+            if (!string.IsNullOrEmpty(subOrderType))
+            {
+                builder.Append(" AND SubOrderType=@SubOrderType");
+            }
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(builder.ToString(), "Text"));
 
@@ -449,6 +461,10 @@ namespace DataRepository.DataAccess.Order
             if (!string.IsNullOrEmpty(ordersource))
             {
                 command.AddInputParameter("@OrderSource", DbType.String, ordersource);
+            }
+            if (!string.IsNullOrEmpty(subOrderType))
+            {
+                command.AddInputParameter("@SubOrderType", DbType.String, subOrderType);
             }
             var o = command.ExecuteScalar<object>();
             return Convert.ToInt32(o);

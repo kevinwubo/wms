@@ -405,6 +405,7 @@ namespace Entity.ViewModel
         /// </summary>
         public string StorageName { get; set; }
 
+        public int GoodsID { get; set; }
         /// <summary>
         /// 商品编号
         /// </summary>

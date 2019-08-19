@@ -92,6 +92,11 @@
                                             <option value="@item.TypeCode" @(item.TypeCode == ViewBag.OrderSource ? "selected" : "")>@item.ValueInfo</option>
                                         }
                                     </select>
+                                    <select tabindex="1" class="" style="width: 100px" id="subOrderType" name="subOrderType">
+                                        <option value="" @(ViewBag.SubOrderType == "" ? "selected" : "")>全部</option>
+                                        <option value="SHD" @(ViewBag.SubOrderType == "SHD" ? "selected" : "")>送货单</option>
+                                        <option value="BSD" @(ViewBag.SubOrderType == "BSD" ? "selected" : "")>补损单</option>
+                                    </select>
                                 </label>
                                 <label>
                                     <select tabindex="1" class="" style="width: 200px" id="operatorid" name="operatorid">
@@ -100,7 +105,7 @@
                                         {
                                             <option value="@item.UserID" @(item.UserID == ViewBag.OperatorID ? "selected" : "")>@item.UserName</option>
                                         }
-                                    </select>
+                                    </select> 
                                 </label>
                                 <label>                                    
                                     <input type="text" aria-controls="menus" class="layui-input" style="width:200px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" lay-key="1" autocomplete="off" name="begindate">
