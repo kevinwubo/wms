@@ -65,7 +65,7 @@ namespace DataRepository.DataAccess.BaseData
             }
             if (!string.IsNullOrEmpty(no))
             {
-                sqlText += " AND ReceiverNo=ReceiverNo";
+                sqlText += " AND ReceiverNo=@ReceiverNo";
             }
             if (status > -1)
             {

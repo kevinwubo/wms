@@ -856,6 +856,13 @@ namespace Service
                                  entity.OrderDate = dt.Rows[i]["采购单日"].ToString();
                                  entity.YyDate = dt.Rows[i]["应到货日"].ToString();
                                  entity.Remark = dt.Rows[i]["备注"].ToString() + dt.Rows[i]["订单备注"].ToString();
+                                 List<ReceiverEntity> receiver = new List<ReceiverEntity>();
+                                 entity.receiver = ReceiverService.GetReceiverByRule(entity.ShopName, "", "", 1);
+                                 entity.CustomerID = -1;
+                                 if (entity.receiver != null && entity.receiver.Count > 0)
+                                 {
+                                     entity.CustomerID = entity.receiver[0].CustomerID;
+                                 }
                                  list.Add(entity);
                              }
                          }
@@ -900,6 +907,14 @@ namespace Service
                                 entity.Remark = dt.Rows[i]["备注"].ToString();
                                 GoodsEntity goodsEntity = getGoodsModelByGoods(entity.BarCode, entity.GoodsName, entity.GoodsNo, entity.GoodsModel);
                                 entity.GoodsID = goodsEntity == null ? "-1" : goodsEntity.GoodsID.ToString();
+
+                                List<ReceiverEntity> receiver = new List<ReceiverEntity>();
+                                entity.receiver = ReceiverService.GetReceiverByRule(entity.CustomerName + entity.ShopName, "", "", 1);
+                                entity.CustomerID = -1;
+                                if (entity.receiver != null && entity.receiver.Count > 0)
+                                {
+                                    entity.CustomerID = entity.receiver[0].CustomerID;
+                                }                                
                                 list.Add(entity);
                             }
                         }
@@ -956,16 +971,16 @@ namespace Service
                     ImportOrderEntity orderEntity = listNew[0];
                     OrderInfo info = new OrderInfo();
                     #region 订单信息
-                    List<ReceiverEntity> receiver = new List<ReceiverEntity>();
-                    //Costa特殊处理
-                    if (ordersource.Equals(OrderSource.Costa.ToString()))
-                    {
-                        receiver = ReceiverService.GetReceiverByRule("", orderEntity.ShopNo, "", 1);
-                    }
-                    else
-                    {
-                        receiver = ReceiverService.GetReceiverByRule(orderEntity.CustomerName + orderEntity.ShopName, "", "", 1);
-                    }
+                    List<ReceiverEntity> receiver = orderEntity.receiver;
+                    ////Costa特殊处理
+                    //if (ordersource.Equals(OrderSource.Costa.ToString()))
+                    //{
+                    //    receiver = ReceiverService.GetReceiverByRule("", orderEntity.ShopNo, "", 1);
+                    //}
+                    //else
+                    //{
+                    //    receiver = ReceiverService.GetReceiverByRule(orderEntity.CustomerName + orderEntity.ShopName, "", "", 1);
+                    //}
 
                     if (receiver != null && receiver.Count > 0)
                     {

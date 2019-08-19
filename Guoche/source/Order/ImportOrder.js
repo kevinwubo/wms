@@ -72,10 +72,11 @@ var orderInfo = {
                         $("#orderImportList").append("");
                         for (var i = 0; i < data.length; i++) {
                             var html = "";
-                            var css = data[i].GoodsID == 0 ? "color:red" : "";
+                            var css = data[i].GoodsID < 1 ? "color:red" : "";
                             if (orderSource == "Costa") {
+                                var ccss = data[i].CustomerID < 1 ? "color:red" : "";
                                 html += "<tr>"
-                                html += "<td>" + data[i].GoodsNo + "</td><td style='" + css + "'>" + data[i].GoodsName + ":" + data[i].GoodsID + "</td><td>" + data[i].GoodsModel + "</td><td>" + data[i].Units + "</td><td>" + data[i].Quantity + "</td><td>" + data[i].ShopNo + "</td><td>" + data[i].ShopName + "</td>";
+                                html += "<td>" + data[i].GoodsNo + "</td><td style='" + css + "'>" + data[i].GoodsName + ":" + data[i].GoodsID + "</td><td>" + data[i].GoodsModel + "</td><td>" + data[i].Units + "</td><td>" + data[i].Quantity + "</td><td>" + data[i].ShopNo + "</td><td style='" + ccss + "'>" + data[i].ShopName + "==" + data[i].CustomerID + "</td>";
                                 html += "<td>" + data[i].OrderNo + "</td><td>" + data[i].OrderDate + "</td><td>" + data[i].YyDate + "</td><td>" + data[i].Remark + "</td>";
                                 html += "</tr>"
                             }
@@ -86,8 +87,9 @@ var orderInfo = {
                                 html += "</tr>"
                             }
                             else {
+                                var ccss = data[i].CustomerID < 1 ? "color:red" : "";
                                 html += "<tr>"
-                                html += "<td>" + data[i].ImportType + "</td><td>" + data[i].OrderDate + data[i].YyDate + "</td><td>" + data[i].CustomerName + "</td><td>" + data[i].ShopName + "</td><td>" + data[i].OrderNo + "</td><td style='" + css + "'>" + data[i].GoodsName + ":" + data[i].GoodsID + "</td><td>" + data[i].Units + "</td>";
+                                html += "<td>" + data[i].ImportType + "</td><td>" + data[i].OrderDate + data[i].YyDate + "</td><td>" + data[i].CustomerName + "</td><td  style='" + ccss + "'>" + data[i].ShopName + "==" + data[i].CustomerID + "</td><td>" + data[i].OrderNo + "</td><td style='" + css + "'>" + data[i].GoodsName + ":" + data[i].GoodsID + "</td><td>" + data[i].Units + "</td>";
                                 html += "<td>" + data[i].Quantity + "</td><td>" + data[i].Address + "</td><td>" + data[i].BarCode + "</td><td>" + data[i].SalesMan + "</td><td>" + data[i].PromotionMan + "</td><td>" + data[i].Remark + "</td>";
                                 html += "</tr>"
                             }

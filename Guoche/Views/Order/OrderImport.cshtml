@@ -142,7 +142,7 @@
 @section Footer{
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
-    <script type="text/javascript" src="~/source/Order/ImportOrder.js"></script>
+    <script type="text/javascript" src="~/source/Order/ImportOrder.js?@DateTime.Now.ToString()"></script>
     <script>
         $(document).ready(function () {
             orderInfo.init();

@@ -315,6 +315,8 @@ namespace Entity.ViewModel
         /// 日期
         /// </summary>
         public string OrderDate { get; set; }
+
+        public int CustomerID { get; set; }
         ///// <summary>
         ///// 到货日期
         ///// </summary>
@@ -385,6 +387,8 @@ namespace Entity.ViewModel
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+
+        public List<ReceiverEntity> receiver { get; set; }
     }
 
 
