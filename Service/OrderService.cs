@@ -570,16 +570,17 @@ namespace Service
 
                             if (inventory != null)
                             {
-                                #region 发货仓库库存扣减
-                                InventoryInfo inventinfo = new InventoryInfo();
-                                inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail,oldOrderDetail);//仓库库存减去订单明细中出库库存
-                                inventinfo.InventoryID = inventory.InventoryID;
-                                inventinfo.ChangeDate = DateTime.Now;
-                                mr.ModifyInventoryQuantity(inventinfo);
+                                //#region 发货仓库库存扣减
+                                //InventoryInfo inventinfo = new InventoryInfo();
+                                //inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail,oldOrderDetail);//仓库库存减去订单明细中出库库存
+                                //inventinfo.InventoryID = inventory.InventoryID;
+                                //inventinfo.ChangeDate = DateTime.Now;
+                                //mr.ModifyInventoryQuantity(inventinfo);
 
-                                //库存明细增加
-                                CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, OrderType.DBDD.ToString(), Common.InventoryType.出库.ToString());
-                                #endregion
+                                ////库存明细增加
+                                //CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, OrderType.DBDD.ToString(), Common.InventoryType.出库.ToString());
+                                //#endregion
+                                deductionInventory(detail, inventory, oldOrderDetail, orderinfo, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
 
                                 #region 收货仓库库存增加
                                 //库存增加
@@ -989,9 +990,9 @@ namespace Service
                         info.SendStorageID = receiver[0].DefaultStorageID;
                         info.CarrierID = receiver[0].DefaultCarrierID;
                     }
-                    info.OrderNo = GetOrderNo();//entity.OrderNo;
+                    info.OrderNo = orderEntity.OrderNo;//GetOrderNo();
                     info.MergeNo = "";
-                    info.OrderType = orderType;//商超订单、COSTA订单都为仓配订单
+                    info.OrderType = orderType;
                     info.ReceiverStorageID = 0;
                     info.OrderDate = string.IsNullOrEmpty(orderEntity.OrderDate) ? DefaultDateTime : DateTime.Parse(orderEntity.OrderDate);
                     info.SendDate = string.IsNullOrEmpty(orderEntity.YyDate) ? DefaultDateTime : DateTime.Parse(orderEntity.YyDate);
@@ -1085,7 +1086,7 @@ namespace Service
                             infodetail.TotalWeight = "";
 
 
-                            infodetail.BatchNumber = entityInv != null ? entityInv.BatchNumber : "";
+                            infodetail.BatchNumber = entityInv != null ? entityInv.BatchNumber : DateTime.Now.ToString("yyyyMMdd");
                             infodetail.ProductDate = string.IsNullOrEmpty(entity.OrderDate) ? DefaultDateTime : DateTime.Parse(entity.OrderDate);//DefaultDateTime;
                             infodetail.ExceedDate = Datehelper.getDateTime(DateTime.Parse(entity.OrderDate), goods.exDate.ToInt(0), goods.exUnits);
                             infodetail.CreateDate = DateTime.Now;
