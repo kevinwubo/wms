@@ -90,7 +90,7 @@ var orderInfo = {
                                 var ccss = data[i].CustomerID < 1 ? "color:red" : "";
                                 html += "<tr>"
                                 html += "<td>" + data[i].ImportType + "</td><td>" + data[i].OrderDate + data[i].YyDate + "</td><td>" + data[i].CustomerName + "</td><td  style='" + ccss + "'>" + data[i].ShopName + "==" + data[i].CustomerID + "</td><td>" + data[i].OrderNo + "</td><td style='" + css + "'>" + data[i].GoodsName + ":" + data[i].GoodsID + "</td><td>" + data[i].Units + "</td>";
-                                html += "<td>" + data[i].Quantity + "</td><td>" + data[i].Address + "</td><td>" + data[i].BarCode + "</td><td>" + data[i].SalesMan + "</td><td>" + data[i].PromotionMan + "</td><td>" + data[i].Remark + "</td>";
+                                html += "<td>" + data[i].Quantity + "</td><td>" + data[i].Address + "</td><td>" + data[i].BarCode + "</td><td>" + data[i].PromotionMan + "</td><td>" + data[i].Remark + "</td>";
                                 html += "</tr>"
                             }
                             $("#orderImportList").append(html);
