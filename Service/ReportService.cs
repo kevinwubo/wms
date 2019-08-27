@@ -67,7 +67,7 @@ namespace Service
                     rEntity.ID = i++;
                     rEntity.OrderNo = entity.OrderNo;
                     rEntity.OrderType = entity.OrderTypeDesc;
-                    rEntity.OrderOwner = "";
+                    rEntity.OrderOwner = entity.customer != null ? entity.customer.CustomerName : "";
                     rEntity.SendStorageName = entity.sendstorage != null ? entity.sendstorage.StorageName : "";                    
                     rEntity.CarrierName = entity.carrier != null ? entity.carrier.CarrierName : "";
                     rEntity.OrderDate = DateTime.Parse(entity.OrderDate);

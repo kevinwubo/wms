@@ -59,7 +59,7 @@
                 <td></td>
                 <td></td>
                 <td>生成日期:</td>
-                <td align="left">@DateTime.Now.ToShortDateString()</td>
+                <td align="left">@entity.OrderDate</td>
             </tr>
             <tr>
                 <td class="tdcss3">联系电话:</td>
@@ -67,7 +67,7 @@
                 <td class="tdcss3">联系人:</td>
                 <td class="tdcss3">@entity.contact.contact</td>
                 <td class="tdcss3">到货日期:</td>
-                <td class="tdcss3">@DateTime.Now.ToShortDateString()</td>
+                <td class="tdcss3">@entity.SendDate.ToShortDateString()</td>
             </tr>
             <tr>
                 <td>提货地址:</td>

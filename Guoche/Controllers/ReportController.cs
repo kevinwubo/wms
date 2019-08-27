@@ -71,11 +71,107 @@ namespace GuoChe.Controllers
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
 
             ViewBag.reportList = ReportService.CreateReportList(mList);
+
+            ViewBag.customerid = customerid;
+            ViewBag.storageid = storageid;
+            ViewBag.carrierid = carrierid;
+            ViewBag.OrderType = ordertype;
+            ViewBag.ReceiverName = receivername;
+
             ViewBag.GUID = System.Guid.NewGuid().ToString();
             //存入缓存
             Cache.Add(ViewBag.GUID, ViewBag.reportList);
             ViewBag.Pager = pager;
             return View();
+        }
+
+        
+
+        public FileResult CustomServiceToExcel(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
+            string ordertype = "", string orderno = "", string begindate = "", string enddate = "")
+        {
+            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            PagerInfo pager = new PagerInfo();
+            pager.PageIndex = 1;
+            pager.PageSize = count;
+            pager.SumCount = count;
+            pager.URL = "CustomServiceReport";
+            List<OrderEntity> list = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1); 
+            //创建Excel文件的对象
+            HSSFWorkbook book = new HSSFWorkbook();
+            //添加一个sheet
+            ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题 
+            //订单归属	订单类型	订单编号	发货仓库	承运商	下单日期	要求送达时间	实际送货时间	收货方	收货所属省	收货所属市	
+            //收货地址	货品明细	批次	生产日期	到期日期	配送数量	货物重量	是否回单	备注
+
+            int K = 0;
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("订单归属");
+            row1.CreateCell(1).SetCellValue("订单类型");
+            row1.CreateCell(2).SetCellValue("订单编号");
+            row1.CreateCell(3).SetCellValue("发货仓库");
+            row1.CreateCell(4).SetCellValue("承运商");
+            row1.CreateCell(5).SetCellValue("下单日期");
+            row1.CreateCell(6).SetCellValue("要求送达时间");
+            row1.CreateCell(7).SetCellValue("实际送货时间");
+            row1.CreateCell(8).SetCellValue("收货方");
+            row1.CreateCell(9).SetCellValue("收货所属省");
+            row1.CreateCell(10).SetCellValue("收货所属市");
+            row1.CreateCell(11).SetCellValue("收货地址");
+
+            row1.CreateCell(12).SetCellValue("货品明细");
+            row1.CreateCell(13).SetCellValue("批次");
+            row1.CreateCell(14).SetCellValue("生产日期");
+            row1.CreateCell(15).SetCellValue("到期日期");
+            row1.CreateCell(16).SetCellValue("配送数量");
+            row1.CreateCell(17).SetCellValue("货物重量");
+            row1.CreateCell(18).SetCellValue("是否回单");
+            row1.CreateCell(19).SetCellValue("备注");           
+            //将数据逐步写入sheet1各个行
+            string remark = "";
+            string sfhd="";
+            int row = 1;
+            for (int i = 0; i < list.Count; i++)
+            {
+                sfhd = !string.IsNullOrEmpty(list[i].AttachmentIDs) ? "是" : "否";
+                remark = list[i].Remark;
+                List<OrderDetailEntity> listDetail = OrderDetailService.GetOrderDetailByOrderID(list[i].OrderID);
+                if(listDetail!=null&&listDetail.Count>0)
+                {
+                    for (int j = 0; j < listDetail.Count; j++)
+                    {
+                        NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(row++);
+                        rowtemp.CreateCell(0).SetCellValue(list[i].customer != null ? list[i].customer.CustomerName : "");
+                        rowtemp.CreateCell(1).SetCellValue(list[i].OrderType);
+                        rowtemp.CreateCell(2).SetCellValue(list[i].OrderNo);
+                        rowtemp.CreateCell(3).SetCellValue(list[i].sendstorage != null ? list[i].sendstorage.StorageName : "");
+                        rowtemp.CreateCell(4).SetCellValue(list[i].carrier != null ? list[i].carrier.CarrierName : "");
+                        rowtemp.CreateCell(5).SetCellValue(list[i].OrderDate);
+                        rowtemp.CreateCell(6).SetCellValue(list[i].SendDate.ToShortDateString());
+                        rowtemp.CreateCell(7).SetCellValue("");
+                        rowtemp.CreateCell(8).SetCellValue(list[i].receiver!=null?list[i].receiver.ReceiverName:"");
+                        rowtemp.CreateCell(9).SetCellValue(list[i].receiver != null ? (list[i].receiver.province != null ? list[i].receiver.province.ProvinceName : "") : "");
+                        rowtemp.CreateCell(10).SetCellValue(list[i].receiver != null ? (list[i].receiver.city != null ? list[i].receiver.city.CityName : "") : "");
+                        rowtemp.CreateCell(11).SetCellValue(list[i].receiver != null ? list[i].receiver.Address : "");
+
+                        rowtemp.CreateCell(12).SetCellValue(listDetail[j].GoodsName);
+                        rowtemp.CreateCell(13).SetCellValue(listDetail[j].BatchNumber);
+                        rowtemp.CreateCell(14).SetCellValue(listDetail[j].ProductDate.ToShortDateString());
+                        rowtemp.CreateCell(15).SetCellValue(listDetail[j].ExceedDate.ToShortDateString());
+                        rowtemp.CreateCell(16).SetCellValue(listDetail[j].Quantity);
+                        rowtemp.CreateCell(17).SetCellValue(listDetail[j].goods != null ? listDetail[j].goods.Weight : "");
+                        rowtemp.CreateCell(18).SetCellValue(sfhd);
+                        rowtemp.CreateCell(19).SetCellValue(remark);
+                    }
+                }
+
+            }
+            // 写入到客户端 
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMdd") + "客服日常报表.xls");
         }
 
         /// <summary>
