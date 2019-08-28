@@ -6,9 +6,11 @@
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
+    List<BaseDataEntity> orderTypeList = ((List<BaseDataEntity>)ViewBag.orderTypeList) ?? new List<BaseDataEntity>();
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
 <link href="~/source/assets/css/setprice.css" rel="stylesheet" />
+<link href="~/source/layui/css/layui.css" rel="stylesheet" />
 <div class="row-fluid">
     <h2 class="heading" style="margin-top:20px">客服日常报表</h2>
 </div>
@@ -54,11 +56,17 @@
                                 <label>
                                     <select class="span3" style="width: 200px" id="ordertype" name="ordertype">
                                         <option value="" @(ViewBag.OrderType == "" ? "selected" : "")>--订单类型--</option>
-                                        <option value="CPDD" @(ViewBag.OrderType == "CPDD" ? "selected" : "")>仓配订单</option>
-                                        <option value="DBDD" @(ViewBag.OrderType == "DBDD" ? "selected" : "")>调拨订单</option>
-                                        <option value="YSDDA" @(ViewBag.OrderType == "YSDDA" ? "selected" : "")>运输订单A</option>
-                                        <option value="YSDDB" @(ViewBag.OrderType == "YSDDB" ? "selected" : "")>运输订单B</option>
+                                        @foreach (var item in orderTypeList)
+                                        {
+                                            <option value="@item.TypeCode" @(item.TypeCode == ViewBag.OrderType ? "selected" : "")>@item.ValueInfo</option>
+                                        }
                                     </select>
+                                </label>
+                                <label>
+                                    <input type="text" aria-controls="menus" class="layui-input" style="width:200px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" lay-key="1" autocomplete="off" name="begindate">
+                                </label>
+                                <label>
+                                    <input type="text" aria-controls="menus" class="layui-input" style="width:200px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
                                 </label>
                                 <label>
                                     <input type="text" id="orderno" name="orderno" style="width:200px" value="@ViewBag.ReceiverName" placeholder="请输入收货方" />
@@ -100,8 +108,8 @@
                                     <td class=" ">@entity.SendStorageName</td>
                                     <td class=" ">@entity.CarrierName</td>
                                     <td class=" ">@entity.OrderDate.ToShortDateString()</td>
-                                    <td class=" ">@entity.ReceiverName</td>
-                                    <td class=" ">@entity.ReceiverAddress</td>
+                                    <td title="@entity.ReceiverName">@(string.IsNullOrEmpty(entity.ReceiverName) ? "" : entity.ReceiverName.Length > 5 ? entity.ReceiverName.Substring(0, 4) + "..." : entity.ReceiverName)</td>
+                                    <td title="@entity.ReceiverAddress">@(string.IsNullOrEmpty(entity.ReceiverAddress) ? "" : entity.ReceiverAddress.Length > 5 ? entity.ReceiverAddress.Substring(0, 4) + "..." : entity.ReceiverAddress)</td>
                                     <td class=" ">@entity.Weight</td>
                                     <td class=" ">@entity.Quantity</td>
                                 </tr>
@@ -120,4 +128,19 @@
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
 <script type="text/javascript" src="~/source/Report.js?@DateTime.Now.ToShortDateString()"></script>
+<script src="~/source/layui/layui.js"></script>
+<script>
+    layui.use('laydate', function () {
+
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#begindate' //指定元素
+        });
+        laydate.render({
+            elem: '#enddate' //指定元素
+        });
+    });
+
+</script>
+
 }

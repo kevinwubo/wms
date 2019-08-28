@@ -12,5 +12,7 @@ function ReportToExcel() {
     var customerID = $("#customerid").val();
     var orderNo = $("#orderno").val();
     var orderType = $("#ordertype").val();
-    location.href = "CustomServiceToExcel?carrierid=" + carrierID + "&storageid=" + storageID + "&customerid=" + customerID + "&orderno=" + orderNo + "&ordertype=" + orderType;
+    var beginDate = $("#begindate").val();
+    var endDate = $("#enddate").val();
+    location.href = "CustomServiceToExcel?carrierid=" + carrierID + "&storageid=" + storageID + "&customerid=" + customerID + "&orderno=" + orderNo + "&ordertype=" + orderType + "&begindate=" + beginDate + "&enddate=" + endDate;
 }

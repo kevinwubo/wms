@@ -188,7 +188,7 @@
                             </td>
                             <td style=""><label class="control-label">下单时间</label></td>
                             <td style="">
-                                <input type="text" aria-controls="menus" placeholder="下单时间" style="width:220px" id="OrderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="1" name="OrderDate">
+                                <input type="text" aria-controls="menus" placeholder="下单时间" style="width:220px" id="OrderDate" value="@(string.IsNullOrEmpty(entity.OrderDate) ? DateTime.Now.ToString("yyyy-MM-dd") : Convert.ToDateTime(entity.OrderDate).ToString("yyyy-MM-dd"))" class="layui-input" lay-key="1" name="OrderDate">
                             </td>
                         </tr>
                         <tr id="tr_ContactInfo" style="display:none">
@@ -235,7 +235,7 @@
                             </td>
                             <td style=""><label class="control-label">配送时间</label></td>
                             <td style="">
-                                <input type="text" style="width:220px" aria-controls="menus" placeholder="配送时间" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="layui-input" lay-key="2" id="SendDate" name="SendDate">
+                                <input type="text" style="width:220px" aria-controls="menus" placeholder="配送时间" value="@(entity.SendDate != null && entity.SendDate > Convert.ToDateTime("2001-01-01") ? entity.SendDate.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))" class="layui-input" lay-key="2" id="SendDate" name="SendDate">
                             </td>
                         </tr>
                         <tr>

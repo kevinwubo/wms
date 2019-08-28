@@ -80,11 +80,11 @@
                             {
                                 <tr class=@(i%2==0?"odd":"even")>
                                     <td class=" sorting_1"></td>
-                                    <td class=" ">@(invent[i].customer != null ? invent[i].customer.CustomerName : "")</td>
+                                    <td title="@(invent[i].customer != null?invent[i].customer.CustomerName:" ")">@(invent[i].customer != null ? (string.IsNullOrEmpty(invent[i].customer.CustomerName) ? "" : invent[i].customer.CustomerName.Length > 5 ? invent[i].customer.CustomerName.Substring(0, 4) + "..." : invent[i].customer.CustomerName) : "")</td>
                                     <td class=" ">@(invent[i].storages != null ? invent[i].storages.StorageName : "")</td>
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.GoodsNo : "")</td>
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.GoodsName : "")</td>
-                                    <td class=" ">@(invent[i].goods != null ? invent[i].goods.GoodsModel : "")</td>
+                                    <td title="@(invent[i].goods != null ? invent[i].goods.GoodsModel : "")">@(invent[i].goods != null ? string.IsNullOrEmpty(invent[i].goods.GoodsModel) ? "" : (invent[i].goods.GoodsModel.Length > 13 ? invent[i].goods.GoodsModel.Substring(0, 12) + "..." : invent[i].goods.GoodsModel) : "")</td>
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.Units : "")</td>
                                     <td class=" ">@invent[i].BatchNumber</td>
                                     <td class=" ">@invent[i].ProductDate.ToShortDateString()</td>

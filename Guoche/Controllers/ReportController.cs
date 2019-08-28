@@ -72,12 +72,17 @@ namespace GuoChe.Controllers
 
             ViewBag.reportList = ReportService.CreateReportList(mList);
 
+            //订单类型
+            List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
+
             ViewBag.customerid = customerid;
             ViewBag.storageid = storageid;
             ViewBag.carrierid = carrierid;
             ViewBag.OrderType = ordertype;
             ViewBag.ReceiverName = receivername;
-
+            ViewBag.BeginDate = begindate;
+            ViewBag.EndDate = enddate;
+            ViewBag.orderTypeList = orderTypeList;
             ViewBag.GUID = System.Guid.NewGuid().ToString();
             //存入缓存
             Cache.Add(ViewBag.GUID, ViewBag.reportList);
@@ -143,7 +148,7 @@ namespace GuoChe.Controllers
                     {
                         NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(row++);
                         rowtemp.CreateCell(0).SetCellValue(list[i].customer != null ? list[i].customer.CustomerName : "");
-                        rowtemp.CreateCell(1).SetCellValue(list[i].OrderType);
+                        rowtemp.CreateCell(1).SetCellValue(list[i].OrderTypeDesc);
                         rowtemp.CreateCell(2).SetCellValue(list[i].OrderNo);
                         rowtemp.CreateCell(3).SetCellValue(list[i].sendstorage != null ? list[i].sendstorage.StorageName : "");
                         rowtemp.CreateCell(4).SetCellValue(list[i].carrier != null ? list[i].carrier.CarrierName : "");
