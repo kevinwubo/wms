@@ -587,7 +587,7 @@ namespace Service
                                 CreateInventory(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.DBDD.ToString());
 
                                 //库存明细增加
-                                CreateInventoryDetail(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.DBDD.ToString(), Common.InventoryType.入库.ToString());
+                                CreateInventoryDetail(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.DBDD.ToString(), Common.InventoryType.入库.ToString(), orderinfo.OrderID);
                                 #endregion
                             }
                         }
@@ -607,7 +607,7 @@ namespace Service
                             //库存增加
                             CreateInventory(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.YSDDA.ToString());
                             //库存明细增加
-                            CreateInventoryDetail(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.YSDDA.ToString(), Common.InventoryType.入库.ToString());
+                            CreateInventoryDetail(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.YSDDA.ToString(), Common.InventoryType.入库.ToString(), orderinfo.OrderID);
                             #endregion
                         }
                     }
@@ -711,7 +711,7 @@ namespace Service
             #endregion
 
             #region 库存明细增加
-            CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, typedesc, inventoryType);
+            CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, typedesc, inventoryType, orderinfo.OrderID);
             #endregion
         }
 
@@ -784,10 +784,12 @@ namespace Service
         /// <param name="OperatorID"></param>
         /// <param name="typedesc"></param>
         /// <param name="inventoryType"></param>
-        private static void CreateInventoryDetail(OrderDetailEntity detail, int StorageID, long OperatorID,string typedesc,string inventoryType)
+        private static void CreateInventoryDetail(OrderDetailEntity detail, int StorageID, long OperatorID,string typedesc,string inventoryType,long orderID)
         {
             InventoryDetailRepository mrDetail = new InventoryDetailRepository();
             InventoryDetailInfo infoDetail = new InventoryDetailInfo();
+            infoDetail.OrderID = orderID;
+            infoDetail.OrderType = typedesc;//订单类型
             infoDetail.GoodsID = detail.GoodsID;
             infoDetail.StorageID = StorageID;
             infoDetail.Quantity = detail.Quantity;

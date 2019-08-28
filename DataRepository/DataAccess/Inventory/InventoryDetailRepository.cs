@@ -58,6 +58,7 @@ namespace DataRepository.DataAccess.BaseData
             command.AddInputParameter("@Remark", DbType.String, InventoryDetail.Remark);
             command.AddInputParameter("@OrderType", DbType.String, InventoryDetail.OrderType);
             command.AddInputParameter("@OrderNo", DbType.String, InventoryDetail.OrderNo);
+            command.AddInputParameter("@OrderID", DbType.Int64, InventoryDetail.OrderID);
             command.AddInputParameter("@OperatorID", DbType.String, InventoryDetail.OperatorID);
             command.AddInputParameter("@CreateDate", DbType.DateTime, InventoryDetail.CreateDate);
             command.AddInputParameter("@ChangeDate", DbType.DateTime, InventoryDetail.ChangeDate);

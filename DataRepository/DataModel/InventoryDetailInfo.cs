@@ -95,6 +95,12 @@ namespace DataRepository.DataModel
         public string OrderNo { get; set; }
 
         /// <summary>
+        /// OrderID
+        /// </summary>
+        [DataMapping("OrderID", DbType.Int64)]
+        public long OrderID { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         [DataMapping("CreateDate", DbType.DateTime)]

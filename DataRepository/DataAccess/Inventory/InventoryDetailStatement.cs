@@ -66,9 +66,9 @@ namespace DataRepository.DataAccess.BaseData
 
         public static string CreateNewInventoryDetail = @"INSERT INTO [wms_InventoryDetailInfo]
                                                 ([GoodsID],[StorageID],[Quantity],[CustomerID],[InventoryType],[BatchNumber],[ProductDate]
-                                                ,[InventoryDate],[UnitPrice],[Remark],[OperatorID],[OrderType],OrderNo,[CreateDate],[ChangeDate])
+                                                ,[InventoryDate],[UnitPrice],[Remark],[OperatorID],[OrderType],OrderNo,OrderID,[CreateDate],[ChangeDate])
                                                      VALUES(@GoodsID,@StorageID,@Quantity,@CustomerID,@InventoryType,@BatchNumber,@ProductDate
-                                                ,@InventoryDate,@UnitPrice,@Remark,@OperatorID,@OrderType,@OrderNo,@CreateDate,@ChangeDate) select @@IDENTITY";
+                                                ,@InventoryDate,@UnitPrice,@Remark,@OperatorID,@OrderType,@OrderNo,@OrderID,@CreateDate,@ChangeDate) select @@IDENTITY";
 
     }
 }
