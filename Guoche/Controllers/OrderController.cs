@@ -604,7 +604,7 @@ namespace GuoChe.Controllers
             pager.PageIndex = p;
             pager.PageSize = pageSize;
             pager.SumCount = count;
-            pager.URL = "OrderSearch";
+            pager.URL = "OrderSearch_Modify";
 
             int orderstatus = 0;
             int uploadstatus = 0;

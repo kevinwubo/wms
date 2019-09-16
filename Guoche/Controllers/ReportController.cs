@@ -202,14 +202,16 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "CustomerReport";
 
-            if ( storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
-            {
+            //if ( storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            //{
                 mList = ReportService.GetOrderInfoByRule(pager, "", -1, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
-            }
-            else
-            {
-                mList = ReportService.GetOrderInfoPager(pager);
-            }
+            //}
+            //else
+            //{
+            //    mList = ReportService.GetOrderInfoPager(pager);
+            //}
+            //订单类型
+            List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
@@ -220,7 +222,14 @@ namespace GuoChe.Controllers
             ViewBag.Pager = pager;
 
             ViewBag.reportList = ReportService.CreateReportList(mList);
-            ViewBag.GUID = System.Guid.NewGuid().ToString();
+            ViewBag.GUID = System.Guid.NewGuid().ToString();            
+            ViewBag.storageid = storageid;
+            ViewBag.customerid = customerid;
+            ViewBag.OrderType = ordertype;
+            ViewBag.BeginDate = begindate;
+            ViewBag.EndDate = enddate;
+            ViewBag.orderTypeList = orderTypeList;
+            ViewBag.ReceiverName = receivername;
             //存入缓存
             Cache.Add(ViewBag.GUID, ViewBag.reportList);
             return View();
@@ -237,32 +246,45 @@ namespace GuoChe.Controllers
         /// <param name="begindate">订单开始时间</param>
         /// <param name="enddate">订单结束时间</param>
         /// <returns></returns>
-        public ActionResult CarrierReport(int storageid = 0, int carrierid = 0, string receivername = "",
+        public ActionResult CarrierReport(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
             List<OrderEntity> mList = null;
-            int count = ReportService.GetOrderCount("", carrierid, storageid, -1, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
             pager.URL = "CarrierReport";
 
-            if (storageid > 0 || carrierid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
-            {
-                mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, -1, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
-            }
-            else
-            {
-                mList = ReportService.GetOrderInfoPager(pager);
-            }
+            //if (storageid > 0 || carrierid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            //{
+                mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid,customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            //}
+            //else
+            //{
+            //    mList = ReportService.GetOrderInfoPager(pager);
+            //}
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
             ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
 
-            ViewBag.Pager = pager;
+            //客户信息
+            ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
 
+            //订单类型
+            List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
+
+            ViewBag.Pager = pager;
+            ViewBag.carrierid = carrierid;
+            ViewBag.storageid = storageid;
+            ViewBag.customerid = customerid;
+            ViewBag.OrderType = ordertype;
+            ViewBag.BeginDate = begindate;
+            ViewBag.EndDate = enddate;
+            ViewBag.orderTypeList = orderTypeList;
+            ViewBag.ReceiverName = receivername;
             ViewBag.reportList = ReportService.CreateReportList(mList);
             ViewBag.GUID = System.Guid.NewGuid().ToString();
             //存入缓存
@@ -309,9 +331,19 @@ namespace GuoChe.Controllers
             ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
+            //订单类型
+            List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
 
             ViewBag.reportList = ReportService.CreateReportList(mList);
             ViewBag.GUID = System.Guid.NewGuid().ToString();
+            ViewBag.carrierid = carrierid;
+            ViewBag.storageid = storageid;
+            ViewBag.customerid = customerid;
+            ViewBag.OrderType = ordertype;
+            ViewBag.BeginDate = begindate;
+            ViewBag.EndDate = enddate;
+            ViewBag.orderTypeList = orderTypeList;
+            ViewBag.ReceiverName = receivername;
             //存入缓存
             Cache.Add(ViewBag.GUID, ViewBag.reportList);
             ViewBag.Pager = pager;
@@ -383,7 +415,7 @@ namespace GuoChe.Controllers
                 {
                     rowtemp.CreateCell(KK++).SetCellValue(list[i].CarrierName);
                 }
-                rowtemp.CreateCell(KK++).SetCellValue(list[i].OrderDate);
+                rowtemp.CreateCell(KK++).SetCellValue(list[i].OrderDate.ToShortDateString());
                 rowtemp.CreateCell(KK++).SetCellValue(list[i].ReceiverName);
                 rowtemp.CreateCell(KK++).SetCellValue(list[i].ReceiverAddress);
                 rowtemp.CreateCell(KK++).SetCellValue(list[i].Weight);

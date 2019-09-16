@@ -32,6 +32,7 @@
                         <form action="/Order/OrderSearch_Modify" method="get">
                             <div class="dataTables_length" id="menus_filter">
                                 <label>
+                                    <input type="hidden" id="type" name="type" value="@ViewBag.PageType" />
                                     <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
                                         <option value="">--请选择出库仓--</option>
                                         @foreach (var item in storages)
