@@ -594,11 +594,12 @@ namespace GuoChe.Controllers
         /// <param name="status"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public ActionResult OrderSearch_Modify(string type = "", int carrierid = 0, int storageid = 0, int customerid = 0, int status = -1, int p = 1, int pageSize = 20)
+        public ActionResult OrderSearch_Modify(string type = "", int carrierid = 0, int storageid = 0, int customerid = 0, int status = -1, string orderno="",
+            string begindate = "", string enddate = "", int p = 1, int pageSize = 20)
         {
             List<OrderEntity> mList = null;
 
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status);
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno,begindate,enddate);
 
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
@@ -620,9 +621,9 @@ namespace GuoChe.Controllers
                 uploadstatus = 1;//已接单
             }
 
-            if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0)
+            if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
             {
-                mList = OrderService.GetOrderInfoByRule(pager,"", carrierid, storageid, customerid, status);
+                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate);
             }
             else
             {
@@ -645,6 +646,9 @@ namespace GuoChe.Controllers
             ViewBag.storageid = storageid;
             ViewBag.OrderList = mList;
             ViewBag.PageSize = pageSize;
+            ViewBag.BeginDate = begindate;
+            ViewBag.OrderNo = orderno;
+            ViewBag.EndDate = enddate;
             ViewBag.Pager = pager;
             return View();
         }

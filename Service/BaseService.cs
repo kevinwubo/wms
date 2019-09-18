@@ -1,4 +1,5 @@
-﻿using Infrastructure.Cache;
+﻿using Entity.ViewModel;
+using Infrastructure.Cache;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

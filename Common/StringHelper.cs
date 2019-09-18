@@ -179,5 +179,18 @@ namespace Common
             }
             return typename;
         }
+
+        public static string GetBlackTypeDesc(string type)
+        {
+            string desc = "";
+            if (!string.IsNullOrEmpty(type))
+            {
+                if (type.Equals("Carrier"))
+                    desc = "承运商黑名单";
+                else if (type.Equals("Carrier"))
+                    desc = "承运商黑名单";                
+            }
+            return desc;
+        }
     }
 }

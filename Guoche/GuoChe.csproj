@@ -704,6 +704,7 @@
     <Content Include="source\BaseData\Carrier.js" />
     <Content Include="source\BaseData\Customer.js" />
     <Content Include="source\BaseData\Goods.js" />
+    <Content Include="source\BaseData\Black.js" />
     <Content Include="source\BaseData\Line.js" />
     <Content Include="source\BaseData\PriceSet.js" />
     <Content Include="source\BaseData\Receiver.js" />
@@ -1019,6 +1020,7 @@
     <Content Include="Views\BaseData\Import.cshtml" />
     <Content Include="source\Template\GoodsBaseData.xls" />
     <Content Include="source\Template\Inventory_Template.xls" />
+    <Content Include="Views\BaseData\BlackList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

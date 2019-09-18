@@ -277,10 +277,10 @@ namespace GuoChe.Controllers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public JsonResult GetCarrierByName(string name = "")
+        public JsonResult GetCarrierByName(string name = "", bool contactBlackCarrier = true)
         {
             List<CarrierEntity> outList = new List<CarrierEntity>();
-            List<CarrierEntity> list = CarrierService.GetCarrierAll();
+            List<CarrierEntity> list = CarrierService.GetCarrierAll(contactBlackCarrier);
 
             if (list != null && list.Count > 0)
             {

@@ -155,11 +155,18 @@ namespace Service.BaseBiz
             return result;
         }
 
-        public static List<CarrierEntity> GetCarrierAll()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contactBlackCarrier">是否包含黑名单 </param>
+        /// <returns></returns>
+        public static List<CarrierEntity> GetCarrierAll(bool contactBlackCarrier = true)
         {
             List<CarrierEntity> all = new List<CarrierEntity>();
             CarrierRepository mr = new CarrierRepository();
             List<CarrierInfo> miList = Cache.Get<List<CarrierInfo>>("CarrierALL");
+            //供应商黑名单
+            List<BlackListEntity> blackList = BlackListService.GetBlackListAll();
             if (miList.IsEmpty())
             {
                 miList = mr.GetAllCarrier();
@@ -169,8 +176,16 @@ namespace Service.BaseBiz
             {
                 foreach (CarrierInfo mInfo in miList)
                 {
-                    CarrierEntity CarrierEntity = TranslateCarrierEntity(mInfo);
-                    all.Add(CarrierEntity);
+                    if (!contactBlackCarrier && blackList != null && blackList.Count > 0 && blackList.Find(p => p.BlackType.Equals("Carrier") && p.UnionID == mInfo.CarrierID) != null)
+                    {
+
+                    }
+                    else
+                    {
+                        CarrierEntity CarrierEntity = TranslateCarrierEntity(mInfo);
+                        all.Add(CarrierEntity);
+                    }
+                    
                 }
             }
 

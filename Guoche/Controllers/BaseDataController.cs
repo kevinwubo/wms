@@ -17,7 +17,7 @@ namespace GuoChe.Controllers
 {
     public class BaseDataController : BaseController
     {
-
+        public int PAGESIZE = 20;
         public ActionResult InsertData()
         {
             return View();
@@ -209,5 +209,47 @@ namespace GuoChe.Controllers
         }
         #endregion
 
+
+        #region 黑名单功能
+        public ActionResult BlackList(int p = -1)
+        {
+            List<BlackListEntity> mList = null;
+            int count = BlackListService.GetBlackListCount(-1);
+            PagerInfo pager = new PagerInfo();
+            pager.PageIndex = p;
+            pager.PageSize = PAGESIZE;
+            pager.SumCount = count;
+            pager.URL = "/BlackList";
+
+            mList = BlackListService.GetBlackListInfoByRule(-1, pager);
+
+            ViewBag.BlackList = mList;
+            ViewBag.Pager = pager;
+            return View();
+        }
+
+        public void ModifyBlack(int blackid,string type, int unionid, string unionname, string Remark)//Type,UnionID,UnionName,Remark,OperatorID,Status
+        {
+            BlackListEntity entity = new BlackListEntity();
+            entity.BlackID = blackid;
+            entity.BlackType = type;
+            entity.UnionID = unionid;
+            entity.UnionName = unionname;
+            entity.Remark = Remark;
+            entity.Status = 1;
+            if (entity != null)
+            {
+                entity.OperatorID = CurrentUser.UserID.ToString().ToInt(0);
+            }
+            BlackListService.ModifyBlackList(entity);
+        }
+
+        public void Delete(int id)
+        {
+            LineService.Delete(id);
+            Response.Redirect("/BaseData/BlackList");
+        }
+
+        #endregion
     }
 }

@@ -15,7 +15,7 @@
 <link href="~/source/assets/css/comfirm.css" rel="stylesheet" />
 <link href="~/source/assets/css/viewer.min.css" rel="stylesheet" />
 <link href="~/source/assets/css/img.css" rel="stylesheet" />
-
+<link href="~/source/layui/css/layui.css" rel="stylesheet" />
 <div class="row-fluid">
     <h2 class="heading" style="margin-top:20px">@ViewBag.TitleName</h2>
 </div>
@@ -31,6 +31,9 @@
                     <div class="">
                         <form action="/Order/OrderSearch_Modify" method="get">
                             <div class="dataTables_length" id="menus_filter">
+                                <label>
+                                    <input type="text" id="orderno" name="orderno" style="width:200px" value="@ViewBag.OrderNo" placeholder="订单号,收货方查询" />
+                                </label>
                                 <label>
                                     <input type="hidden" id="type" name="type" value="@ViewBag.PageType" />
                                     <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
@@ -74,6 +77,12 @@
                                         <option value="40" @(ViewBag.PageSize == 40 ? "selected" : "")>40条</option>
                                         <option value="50" @(ViewBag.PageSize == 50 ? "selected" : "")>50条</option>
                                     </select>
+                                </label>
+                                <label>
+                                    <input type="text" aria-controls="menus" class="layui-input" style="width:150px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" lay-key="1" autocomplete="off" name="begindate">
+                                </label>
+                                <label>
+                                    <input type="text" aria-controls="menus" class="layui-input" style="width:150px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
                                 </label>
                                 <button class="btn btn-info" type="submit">搜索</button>
                                 <label>
@@ -411,6 +420,7 @@
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
     <script type="text/javascript" src="~/source/Order/SearchOrder.js?@(DateTime.Now.ToShortDateString())"></script>
     <script type="text/javascript" src="~/source/assets/js/viewer-jquery.min.js"></script>
+<script src="~/source/layui/layui.js"></script>
     <script>
         $(document).ready(function () {
             orderInfo.init();
@@ -424,6 +434,16 @@
             //全选,设置chheckbox name='all' tbody id=tb
             $("input[name=chk_name]").each(function () {
                 $(this).prop('checked', $(this).is(':checked') ? false : true);
+            });
+        });
+        layui.use('laydate', function () {
+
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#begindate' //指定元素
+            });
+            laydate.render({
+                elem: '#enddate' //指定元素
             });
         });
     </script>

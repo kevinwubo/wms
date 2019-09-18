@@ -444,6 +444,7 @@ function GetCarrierByName(Name) {
         url: "GetCarrierByName",
         data: {
             name: Name,
+            contactBlackCarrier: false
         },
         success: function (data) {
             console.log(data);

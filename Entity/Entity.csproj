@@ -44,6 +44,7 @@
     <Compile Include="ViewModel\ApiUserEntity.cs" />
     <Compile Include="ViewModel\AttachmentEntity.cs" />
     <Compile Include="ViewModel\BaseDataEntity.cs" />
+    <Compile Include="ViewModel\BlackListEntity.cs" />
     <Compile Include="ViewModel\BrandEntity.cs" />
     <Compile Include="ViewModel\CarEntity.cs" />
     <Compile Include="ViewModel\CarrierEntity.cs" />
