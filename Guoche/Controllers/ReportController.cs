@@ -70,7 +70,8 @@ namespace GuoChe.Controllers
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
 
-            ViewBag.reportList = ReportService.CreateReportList(mList);
+            ReEntity report = ReportService.CreateReportList(mList);
+            ViewBag.Report = report;
 
             //订单类型
             List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
@@ -85,7 +86,7 @@ namespace GuoChe.Controllers
             ViewBag.orderTypeList = orderTypeList;
             ViewBag.GUID = System.Guid.NewGuid().ToString();
             //存入缓存
-            Cache.Add(ViewBag.GUID, ViewBag.reportList);
+            Cache.Add(ViewBag.GUID, report.reportList);
             ViewBag.Pager = pager;
             return View();
         }
@@ -220,8 +221,9 @@ namespace GuoChe.Controllers
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
 
             ViewBag.Pager = pager;
+            ReEntity report = ReportService.CreateReportList(mList);
+            ViewBag.Report = report;
 
-            ViewBag.reportList = ReportService.CreateReportList(mList);
             ViewBag.GUID = System.Guid.NewGuid().ToString();            
             ViewBag.storageid = storageid;
             ViewBag.customerid = customerid;
@@ -231,7 +233,7 @@ namespace GuoChe.Controllers
             ViewBag.orderTypeList = orderTypeList;
             ViewBag.ReceiverName = receivername;
             //存入缓存
-            Cache.Add(ViewBag.GUID, ViewBag.reportList);
+            Cache.Add(ViewBag.GUID, report.reportList);
             return View();
         }
 
@@ -285,10 +287,13 @@ namespace GuoChe.Controllers
             ViewBag.EndDate = enddate;
             ViewBag.orderTypeList = orderTypeList;
             ViewBag.ReceiverName = receivername;
-            ViewBag.reportList = ReportService.CreateReportList(mList);
+
+            ReEntity report = ReportService.CreateReportList(mList);
+            ViewBag.Report = report;
+
             ViewBag.GUID = System.Guid.NewGuid().ToString();
             //存入缓存
-            Cache.Add(ViewBag.GUID, ViewBag.reportList);
+            Cache.Add(ViewBag.GUID, report.reportList);
             return View();
         }
 
@@ -333,8 +338,10 @@ namespace GuoChe.Controllers
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
             //订单类型
             List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
+            
+            ReEntity report = ReportService.CreateReportList(mList);
+            ViewBag.Report = report;
 
-            ViewBag.reportList = ReportService.CreateReportList(mList);
             ViewBag.GUID = System.Guid.NewGuid().ToString();
             ViewBag.carrierid = carrierid;
             ViewBag.storageid = storageid;
@@ -345,7 +352,7 @@ namespace GuoChe.Controllers
             ViewBag.orderTypeList = orderTypeList;
             ViewBag.ReceiverName = receivername;
             //存入缓存
-            Cache.Add(ViewBag.GUID, ViewBag.reportList);
+            Cache.Add(ViewBag.GUID, report.reportList);
             ViewBag.Pager = pager;
             return View();
         }
@@ -389,10 +396,16 @@ namespace GuoChe.Controllers
             row1.CreateCell(K++).SetCellValue("配送数量");
             if ("KHR".Equals(type) || "LRR".Equals(type))
             {
+                row1.CreateCell(K++).SetCellValue("运输应收");
+                row1.CreateCell(K++).SetCellValue("装卸应收");
+                row1.CreateCell(K++).SetCellValue("分拣应收");
                 row1.CreateCell(K++).SetCellValue("应收总额");
             }
             if ("GYSR".Equals(type) || "LRR".Equals(type))
             {
+                row1.CreateCell(K++).SetCellValue("运输应付");
+                row1.CreateCell(K++).SetCellValue("装卸应付");
+                row1.CreateCell(K++).SetCellValue("分拣应付");
                 row1.CreateCell(K++).SetCellValue("应付总额");
             }
 
@@ -400,6 +413,7 @@ namespace GuoChe.Controllers
             {
                 row1.CreateCell(K++).SetCellValue("利润");
             }
+            row1.CreateCell(K++).SetCellValue("备注");
 
             //将数据逐步写入sheet1各个行
             for (int i = 0; i < list.Count; i++)
@@ -422,10 +436,18 @@ namespace GuoChe.Controllers
                 rowtemp.CreateCell(KK++).SetCellValue(list[i].Quantity);
                 if ("KHR".Equals(type) || "LRR".Equals(type))
                 {
+                    //运输应收、装卸应收、分拣应收
+                    rowtemp.CreateCell(KK++).SetCellValue(list[i].configPrice.ToString());
+                    rowtemp.CreateCell(KK++).SetCellValue(list[i].configHandInAmt.ToString());
+                    rowtemp.CreateCell(KK++).SetCellValue(list[i].configSortPrice.ToString());
                     rowtemp.CreateCell(KK++).SetCellValue(list[i].TotalReceiverFee.ToString());
                 }
                 if ("GYSR".Equals(type) || "LRR".Equals(type))
                 {
+                    //运输应付、装卸应付、分拣应付
+                    rowtemp.CreateCell(KK++).SetCellValue(list[i].configCosting.ToString());
+                    rowtemp.CreateCell(KK++).SetCellValue(list[i].configHandOutAmt.ToString());
+                    rowtemp.CreateCell(KK++).SetCellValue(list[i].configSortCosting.ToString());
                     rowtemp.CreateCell(KK++).SetCellValue(list[i].TotalPayFee.ToString());
                 }
 
@@ -433,6 +455,7 @@ namespace GuoChe.Controllers
                 {
                     rowtemp.CreateCell(KK++).SetCellValue(list[i].Profit.ToString());
                 }
+                rowtemp.CreateCell(KK++).SetCellValue(list[i].Remark);
             }
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();

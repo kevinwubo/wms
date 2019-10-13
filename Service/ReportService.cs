@@ -54,11 +54,12 @@ namespace Service
         #endregion
 
 
-        public static List<ReportEntity> CreateReportList(List<OrderEntity> list)
+        public static ReEntity CreateReportList(List<OrderEntity> list)
         {
-            List<ReportEntity> reportList = new List<ReportEntity>();
+            ReEntity reEntity = new ReEntity();
             if (list != null && list.Count > 0)
             {
+                List<ReportEntity> reportList = new List<ReportEntity>();
                 int i=1;
                 foreach (OrderEntity entity in list)
                 {
@@ -75,13 +76,30 @@ namespace Service
                     rEntity.ReceiverAddress = entity.contact != null ? entity.contact.address : "";
                     rEntity.Weight = TotalWeight(entity.orderDetailList);
                     rEntity.Quantity = TotalQuantity(entity.orderDetailList);
+
+                    //应收
                     rEntity.TotalReceiverFee = entity.configPrice + entity.configHandInAmt + entity.configSortPrice;
+                    rEntity.configPrice = entity.configPrice;
+                    rEntity.configHandInAmt = entity.configHandInAmt;
+                    rEntity.configSortPrice = entity.configSortPrice;
+
+                    //应付
                     rEntity.TotalPayFee = entity.configCosting + entity.configHandOutAmt + entity.configSortCosting;
+                    rEntity.configCosting = entity.configCosting;
+                    rEntity.configHandOutAmt = entity.configHandOutAmt;
+                    rEntity.configSortCosting = entity.configSortCosting;
+
                     rEntity.Profit = rEntity.TotalReceiverFee - rEntity.TotalPayFee;
+                    
                     reportList.Add(rEntity);
+
+                    //金额汇总
+                    reEntity.TotalAllPayAmount += rEntity.TotalPayFee;//总应付金额
+                    reEntity.TotalllReceiverAmount += rEntity.TotalReceiverFee;//总应收金额
                 }
+                reEntity.reportList = reportList;
             }
-            return reportList;
+            return reEntity;
         }
 
         private static int TotalWeight(List<OrderDetailEntity> list)
@@ -91,7 +109,7 @@ namespace Service
             {
                 foreach (OrderDetailEntity entity in list)
                 {
-                    result += entity.Weight.ToInt(0);
+                    result += entity.Weight.ToInt(0) * entity.Quantity;
                 }
             }
             return result;

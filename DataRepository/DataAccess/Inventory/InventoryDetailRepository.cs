@@ -108,6 +108,7 @@ namespace DataRepository.DataAccess.BaseData
                 builder.Append(" AND orderType=@orderType");
             }
 
+            builder.Append(" AND Quantity>0 ");//库存数量必须大于0
             string sqlText = InventoryDetailStatement.GetAllInventoryDetailInfoByRulePagerHeader + builder.ToString() + InventoryDetailStatement.GetAllInventoryDetailInfoByRulePagerFooter;
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
@@ -167,6 +168,8 @@ namespace DataRepository.DataAccess.BaseData
             {
                 builder.Append(" AND orderType=@orderType");
             }
+
+            builder.Append(" AND Quantity>0 ");//库存数量必须大于0
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(builder.ToString(), "Text"));
 

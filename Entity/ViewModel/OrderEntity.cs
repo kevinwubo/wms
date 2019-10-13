@@ -486,6 +486,11 @@ namespace Entity.ViewModel
         /// 商品名称
         /// </summary>
         public string GoodsName { get; set; }
+
+        /// <summary>
+        /// 批次号
+        /// </summary>
+        public string BatchNumber { get; set; }
         /// <summary>
         /// 单位
         /// </summary>
@@ -494,6 +499,38 @@ namespace Entity.ViewModel
         /// 数量
         /// </summary>
         public string Quantity { get; set; }
+
+        //运输应收	装卸应收	分拣应收	运输应付	装卸应付	分拣应付
+        /// <summary>
+        /// 运输应收
+        /// </summary>
+        public decimal configPrice { get; set; }
+
+        /// <summary>
+        /// 装卸应收
+        /// </summary>
+        public decimal configHandInAmt { get; set; }
+
+        /// <summary>
+        /// 分拣应收
+        /// </summary>
+        public decimal configSortPrice { get; set; }
+
+        /// <summary>
+        /// 运输应付
+        /// </summary>
+        public decimal configCosting { get; set; }
+
+        /// <summary>
+        /// 装卸应付
+        /// </summary>
+        public decimal configHandOutAmt { get; set; }
+
+        /// <summary>
+        /// 分拣应付
+        /// </summary>
+        public decimal configSortCosting { get; set; }
+
         /// <summary>
         /// 备注
         /// </summary>

@@ -2,7 +2,9 @@
 @using Common;
 @{
     ViewBag.Title = "客户对账单";
-    List<ReportEntity> reportList = (List<ReportEntity>)ViewBag.reportList;    
+    ReEntity report = (ReEntity)ViewBag.Report;
+    List<ReportEntity> reportList = report != null ? report.reportList : null;
+    
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
     List<BaseDataEntity> orderTypeList = ((List<BaseDataEntity>)ViewBag.orderTypeList) ?? new List<BaseDataEntity>();
@@ -63,6 +65,7 @@
                                 </label>
                                 <button class="btn btn-info" type="submit">查询</button>
                                 <button class="btn btn-info" type="button" onclick="DownloadReport('KHR', '@ViewBag.GUID')">应收导出</button>
+                                <label><b>应收总金额：@report.TotalllReceiverAmount</b></label>
                             </div>
                         </form>
                     </div>

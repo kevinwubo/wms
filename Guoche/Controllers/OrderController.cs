@@ -521,7 +521,7 @@ namespace GuoChe.Controllers
                     //存入缓存
                     Cache.Add(token, list);
                 }
-                else if (importSource.Equals(OrderSource.Regular.ToString()))//
+                else if (importSource.Equals(OrderSource.Regular.ToString()))//常规导入
                 {
                     ds = ExcelHelper.ImportBaseExceltoDt(path);
                     listRegular = OrderService.GetRegularImportList(ds);
@@ -658,10 +658,18 @@ namespace GuoChe.Controllers
         /// </summary>
         /// <param name="orderid"></param>
         /// <returns></returns>
-        public void OrderDelete(int orderid,string type)
+        public void OrderDelete(int orderid, string type)
         {
-            OrderService.Delete(orderid);
-            Response.Redirect("/Order/OrderSearch_Modify?type=" + type);
+            OrderEntity entity = OrderService.GetOrderByOrderID(orderid);
+            if (entity != null && CurrentUser != null && entity.OperatorID == CurrentUser.UserID)
+            {
+                OrderService.Delete(orderid);
+                Response.Redirect("/Order/OrderSearch_Modify?type=" + type);
+            }
+            else
+            {
+
+            }
         }
         #endregion
 

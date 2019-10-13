@@ -203,6 +203,9 @@ namespace DataRepository.DataAccess.BaseData
             {
                 builder.Append(" AND customerID=@customerID");
             }
+
+            builder.Append(" AND Quantity>0 ");//库存数量必须大于0
+
             string sqlText = InventoryStatement.GetAllInventoryInfoByRulePagerHeader + builder.ToString() + InventoryStatement.GetAllInventoryInfoByRulePagerFooter;
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
@@ -246,6 +249,8 @@ namespace DataRepository.DataAccess.BaseData
             {
                 builder.Append(" AND customerID=@customerID");
             }
+
+            builder.Append(" AND Quantity>0 ");//库存数量必须大于0
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(builder.ToString(), "Text"));
 

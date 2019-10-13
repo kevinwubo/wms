@@ -2,7 +2,9 @@
 @using Common;
 @{
     ViewBag.Title = "利润分析表";
-    List<ReportEntity> reportList = (List<ReportEntity>)ViewBag.reportList;
+    ReEntity report = (ReEntity)ViewBag.Report;
+    List<ReportEntity> reportList = report != null ? report.reportList : null;
+    
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;

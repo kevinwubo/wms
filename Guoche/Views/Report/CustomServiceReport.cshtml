@@ -2,12 +2,15 @@
 @using Common;
 @{
     ViewBag.Title = "客服日常报表";
-    List<ReportEntity> reportList = (List<ReportEntity>)ViewBag.reportList;    
+    ReEntity report = (ReEntity)ViewBag.Report;
+    List<ReportEntity> reportList = report != null ? report.reportList : null;
+    
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
     List<BaseDataEntity> orderTypeList = ((List<BaseDataEntity>)ViewBag.orderTypeList) ?? new List<BaseDataEntity>();
     PagerInfo p = (PagerInfo)ViewBag.Pager;
+    
 }
 <link href="~/source/assets/css/setprice.css" rel="stylesheet" />
 <link href="~/source/layui/css/layui.css" rel="stylesheet" />

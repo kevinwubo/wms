@@ -2,7 +2,9 @@
 @using Common;
 @{
     ViewBag.Title = "供应商对账单";
-    List<ReportEntity> reportList = (List<ReportEntity>)ViewBag.reportList;    
+    ReEntity report = (ReEntity)ViewBag.Report;
+    List<ReportEntity> reportList = report != null ? report.reportList : null;
+    
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
@@ -73,6 +75,7 @@
                                 </label>
                                 <button class="btn btn-info" type="submit">查询</button>
                                 <button class="btn btn-info" type="button" onclick="DownloadReport('GYSR', '@ViewBag.GUID')">应付导出</button>
+                                <label><b>应收总金额：@report.TotalAllPayAmount</b></label>
                             </div>
                         </form>
                     </div>

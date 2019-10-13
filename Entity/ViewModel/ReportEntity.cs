@@ -8,10 +8,6 @@ namespace Entity.ViewModel
 {
     public class ReportEntity
     {
-        //序号	订单编号	订单属性	订单归属	发货仓库	供应商	下单日期	收货方	收货地址	货物重量	配送数量
-        //序号	订单编号	订单属性	订单归属	发货仓库	下单日期	收货方	收货地址	货物重量	配送数量	应收总额
-        //序号	订单编号	订单属性	订单归属	发货仓库	供应商	下单日期	收货方	收货地址	货物重量	配送数量	应付总额
-        //序号	订单编号	订单属性	订单归属	发货仓库	供应商	下单日期	收货方	收货地址	货物重量	配送数量	应收总额	应付总额	利润
         /// <summary>
         /// 序号
         /// </summary>
@@ -48,6 +44,8 @@ namespace Entity.ViewModel
         /// 收货地址
         /// </summary>
         public string ReceiverAddress { get; set; }
+        
+
         /// <summary>
         /// 货物重量
         /// </summary>
@@ -60,13 +58,71 @@ namespace Entity.ViewModel
         /// 应收总额
         /// </summary>
         public decimal TotalReceiverFee { get; set; }
+
+        /// <summary>
+        /// 运输应收
+        /// </summary>
+        public decimal configPrice { get; set; }
+
+        /// <summary>
+        /// 装卸应收
+        /// </summary>
+        public decimal configHandInAmt { get; set; }
+
+        /// <summary>
+        /// 分拣应收
+        /// </summary>
+        public decimal configSortPrice { get; set; }
+
+
         /// <summary>
         /// 应付总额
         /// </summary>
         public decimal TotalPayFee { get; set; }
+
+        /// <summary>
+        /// 运输应付
+        /// </summary>
+        public decimal configCosting { get; set; }
+
+        /// <summary>
+        /// 装卸应付
+        /// </summary>
+        public decimal configHandOutAmt { get; set; }
+
+        /// <summary>
+        /// 分拣应付
+        /// </summary>
+        public decimal configSortCosting { get; set; }
         /// <summary>
         /// 利润
         /// </summary>
         public decimal Profit { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Remark { get; set; }
+    }
+
+    /// <summary>
+    /// 报表
+    /// </summary>
+    public class ReEntity
+    {
+        /// <summary>
+        /// 所有应付总额
+        /// </summary>
+        public decimal TotalAllPayAmount { get; set; }
+
+        /// <summary>
+        /// 所有应收总额
+        /// </summary>
+        public decimal TotalllReceiverAmount { get; set; }
+
+        /// <summary>
+        /// 报表明细
+        /// </summary>
+        public List<ReportEntity> reportList { get; set; }
     }
 }
