@@ -39,6 +39,7 @@ namespace Service.Inventory
 
                 entity.OrderNo = info.OrderNo;
                 entity.OrderType = info.OrderType;
+                entity.OrderTypeDesc = StringHelper.getOrderType(info.OrderType);
                 entity.OperatorID = info.OperatorID;
                 entity.CreateDate = info.CreateDate;
                 entity.ChangeDate = info.ChangeDate;

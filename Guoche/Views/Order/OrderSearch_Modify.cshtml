@@ -22,6 +22,7 @@
 <div class="row-fluid">
     <div class="widget widget-padding span12">
         <div class="widget-header">
+            <input type="hidden" id="HidUserID" name="HidUserID" value="@ViewBag.UserID" />
             <i class="icon-laptop"></i>
             <h5>@ViewBag.TitleName</h5>
         </div>
@@ -198,7 +199,7 @@
                                                     </div>
                                                     <div class="del">
                                                         @*<a href="/Order/OrderDelete?orderid=@entity.OrderID"  style="color:white">删除</a>*@
-                                                        <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType')" style="color:white">删除</a>
+                                                        <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType',@entity.OperatorID)" style="color:white">删除</a>
                                                     </div>
                                                 }
                                             </div>
@@ -324,7 +325,7 @@
                                                 </div>
                                                 <div class="del">
                                                     @*<a href="/Order/OrderDelete?orderid=@entity.OrderID"  style="color:white">删除</a>*@
-                                                    <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType')" style="color:white">删除</a>
+                                                    <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType',@entity.OperatorID)" style="color:white">删除</a>
                                                 </div>
                                                 }
                                             </div>
@@ -425,9 +426,15 @@
         $(document).ready(function () {
             orderInfo.init();
         });
-        function delOrder(id, type) {
-            if (confirm("确定删除订单?")) {
-                window.location.href = "/Order/OrderDelete?orderid=" + id + "&type=" + type;
+        function delOrder(id, type, operaterid) {
+            var userid = $("#HidUserID").val();
+            if (operaterid == userid) {
+                if (confirm("确定删除订单?")) {
+                    window.location.href = "/Order/OrderDelete?orderid=" + id + "&type=" + type;
+                }
+            }
+            else {
+                alert("仅允许修改或删除自己录制的订单");
             }
         }
         $("#chk_all").click(function () {

@@ -67,30 +67,11 @@ namespace Service.Inventory
                             info.CreateDate = DateTime.Now;
                             info.ChangeDate = DateTime.Now;
 
-
-                            //List<InventoryInfo> listInventory = mr.GetInventoryByRule(entity.GoodsID,-1, entity.BatchNumber);
-                            //if (listInventory != null && listInventory.Count > 0)
-                            //{
-                            //    InventoryInfo oldInfo = listInventory[0];
-                            //    if (type == OperatorType.IN)
-                            //    {
-                            //        info.Quantity += oldInfo.Quantity;//库存数量更新
-                            //    }
-                            //    else
-                            //    {
-                            //        info.Quantity = info.Quantity - oldInfo.Quantity;//库存数量更新
-                            //    }
-                            //    //更新库存数量
-                            //    mr.ModifyInventoryQuantity(info);
-                            //}
-                            //else
-                            //{
-                                //插入库存
-                                mr.CreateNew(info);
-                            //}
+                            //插入库存
+                            mr.CreateNew(info);
                             listInv.Add(info);
 
-                            #region 库存明细保存                            
+                            #region 库存明细保存
                             CreateInventoryDetail(entity, StorageID, DateTime.Parse(inventoryDate), OperatorID);
                             #endregion
                         }
@@ -119,6 +100,9 @@ namespace Service.Inventory
             InventoryDetailInfo infoDetail = new InventoryDetailInfo();
             if (entity != null)
             {
+                infoDetail.OrderType = OrderType.RKD.ToString();
+                infoDetail.OrderNo = "";
+                infoDetail.OrderID = 0;
                 infoDetail.GoodsID = entity.GoodsID;
                 infoDetail.StorageID = StorageID;
                 infoDetail.Quantity = entity.Quantity;
@@ -453,6 +437,70 @@ namespace Service.Inventory
             return count;
 
         }
+
+
+        #region 订单删除库存回位
+        public static void updateInventoryByOrder(OrderEntity order)
+        {
+            if (order != null)
+            {
+                List<OrderDetailEntity> orderDetailList = order.orderDetailList;
+                if (orderDetailList != null && orderDetailList.Count > 0)
+                {
+                    foreach (OrderDetailEntity orderDetail in orderDetailList)
+                    {
+                        //批次号+商品ID 确认唯一库存信息
+                        List<InventoryEntity> inventoryList = GetInventoryByRule(orderDetail.GoodsID, order.SendStorageID, orderDetail.BatchNumber);
+
+                        if (inventoryList != null && inventoryList.Count > 0)
+                        {
+                            foreach (InventoryEntity inventory in inventoryList)
+                            {
+                                InventoryRepository mr = new InventoryRepository();
+                                InventoryInfo inventinfo = new InventoryInfo();
+                                inventinfo.Quantity = inventory.Quantity + orderDetail.Quantity;//当前库存添加 订单中库存
+                                inventinfo.InventoryID = inventory.InventoryID;
+                                inventinfo.ChangeDate = DateTime.Now;
+                                mr.ModifyInventoryQuantity(inventinfo);
+
+
+                                #region 库存明细增加
+                                CreateInventoryDetail(order, orderDetail);
+                                #endregion
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        public static void CreateInventoryDetail(OrderEntity order, OrderDetailEntity orderDetail)
+        {
+            InventoryDetailRepository mrDetail = new InventoryDetailRepository();
+            InventoryDetailInfo infoDetail = new InventoryDetailInfo();
+            if (order != null)
+            {
+                infoDetail.OrderID = order.OrderID;
+                infoDetail.OrderNo = order.OrderNo;
+                infoDetail.OrderType = order.OrderType;
+                infoDetail.GoodsID = orderDetail.GoodsID;
+                infoDetail.StorageID = order.SendStorageID;
+                infoDetail.Quantity = orderDetail.Quantity;
+                infoDetail.CustomerID = order.CustomerID;
+                infoDetail.InventoryType = Common.InventoryType.入库.ToString();
+                infoDetail.BatchNumber = orderDetail.BatchNumber;
+                infoDetail.ProductDate = orderDetail.ProductDate;
+                infoDetail.InventoryDate = DateTime.Now;
+                infoDetail.UnitPrice = 0;
+                infoDetail.Remark = "订单删除-库存回位";
+                infoDetail.OperatorID = order.OperatorID;
+                infoDetail.CreateDate = DateTime.Now;
+                infoDetail.ChangeDate = DateTime.Now;
+                mrDetail.CreateNew(infoDetail);
+            }
+        }
+        #endregion
 
     }
 }

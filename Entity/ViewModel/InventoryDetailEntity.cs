@@ -76,6 +76,8 @@ namespace Entity.ViewModel
         /// </summary>
         public string OrderType { get; set; }
 
+        public string OrderTypeDesc { get; set; }
+
         /// <summary>
         /// 订单号
         /// </summary>

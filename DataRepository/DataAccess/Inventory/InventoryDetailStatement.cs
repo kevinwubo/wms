@@ -29,7 +29,7 @@ namespace DataRepository.DataAccess.BaseData
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH invent AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY InventoryDetailID ) AS RowNumber FROM (SELECT * FROM wms_InventoryDetailInfo WHERE 1=1 )as T ) 
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY InventoryDetailID Desc) AS RowNumber FROM (SELECT * FROM wms_InventoryDetailInfo WHERE 1=1 )as T ) 
 		                                                  SELECT *  FROM invent 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize
 	                                                  END";
@@ -49,7 +49,7 @@ namespace DataRepository.DataAccess.BaseData
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH invent AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY InventoryDetailID ) AS RowNumber FROM (SELECT * FROM wms_InventoryDetailInfo WHERE 1=1 ";
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY InventoryDetailID Desc) AS RowNumber FROM (SELECT * FROM wms_InventoryDetailInfo WHERE 1=1 ";
         public static string GetAllInventoryDetailInfoByRulePagerFooter = @")as T ) 
 		                                                  SELECT *  FROM invent 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize

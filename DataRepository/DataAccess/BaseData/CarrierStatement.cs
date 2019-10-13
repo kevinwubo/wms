@@ -29,7 +29,7 @@ namespace DataRepository.DataAccess.BaseData
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH goods AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY Status DESC) AS RowNumber FROM (SELECT * FROM wms_CarrierInfo WHERE 1=1 )as T ) 
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY CreateDate DESC) AS RowNumber FROM (SELECT * FROM wms_CarrierInfo WHERE 1=1 )as T ) 
 		                                                  SELECT *  FROM goods 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize
 	                                                  END";
@@ -49,7 +49,7 @@ namespace DataRepository.DataAccess.BaseData
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH goods AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY Status DESC) AS RowNumber FROM (SELECT * FROM wms_CarrierInfo WHERE 1=1 ";
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY CreateDate DESC) AS RowNumber FROM (SELECT * FROM wms_CarrierInfo WHERE 1=1 ";
         public static string GetAllCarrierInfoByRulePagerFooter = @")as T ) 
 		                                                  SELECT *  FROM goods 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize

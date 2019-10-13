@@ -63,7 +63,7 @@
                         <thead>
                             <tr role="row">
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">类型</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">操作</th>
+                                @*<th role="columnheader" tabindex="0" rowspan="1" colspan="1">操作</th>*@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单属性</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单编号</th>
 
@@ -88,9 +88,9 @@
                             {
                                 <tr class=@(i%2==0?"odd":"even")>
                                     <td class=" sorting_1">@invent[i].InventoryType</td>
-                                    <td class=" "></td>
-                                    <td class=" "></td>
-                                    <td class=" "></td>
+                                    @*<td class=" "></td>*@
+                                    <td class=" ">@invent[i].OrderTypeDesc</td>
+                                    <td class=" ">@invent[i].OrderNo</td>
                                     <td class=" ">@(invent[i].customer!=null?invent[i].customer.CustomerName:"")</td>                                    
                                     <td class=" ">@(invent[i].storages != null ? invent[i].storages.StorageName : "")</td>
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.GoodsNo : "")</td>

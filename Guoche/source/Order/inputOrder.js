@@ -116,6 +116,12 @@ var orderInfo = {
             });
             $("#orderDetailJson").val(JSON.stringify(params));
 
+            var sendStorageName = $("#SendStorageName").val();
+            if (sendStorageName == "") {
+                alert("请输入发货仓库。");
+                return false;
+            }
+
             if (valid.validate()) {
                 $("#OrderForm").submit();
             }
