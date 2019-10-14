@@ -49,7 +49,6 @@ namespace Service.Inventory
                 {
                     foreach (InvGoodsDetailEntity entity in jsonInfo.listGoods)
                     {
-                        InventoryRepository mr = new InventoryRepository();
                         InventoryInfo info = new InventoryInfo();
                         if (entity != null)
                         {
@@ -65,19 +64,29 @@ namespace Service.Inventory
                             info.Remark = entity.Remark;
                             info.OperatorID = OperatorID;
                             info.CreateDate = DateTime.Now;
-                            info.ChangeDate = DateTime.Now;
-
-                            //插入库存
-                            mr.CreateNew(info);
-                            listInv.Add(info);
-
-                            #region 库存明细保存
-                            CreateInventoryDetail(entity, StorageID, DateTime.Parse(inventoryDate), OperatorID);
-                            #endregion
+                            info.ChangeDate = DateTime.Now;           
+                            listInv.Add(info);                            
                         }
                     }
+
                     //生成入库单
-                    OrderService.CreateOrderByInventory(listInv, tempType);
+                    InventoryExecOrder orderExec= OrderService.CreateOrderByInventory(listInv, tempType);
+
+                    if (listInv != null && listInv.Count > 0)
+                    {
+                        foreach (InventoryInfo info in listInv)
+                        {
+                            InventoryRepository mr = new InventoryRepository();
+                            //插入库存
+                            mr.CreateNew(info);
+
+                            //库存明细保存
+                            CreateInventoryDetail(info,orderExec, StorageID, DateTime.Parse(inventoryDate), OperatorID);
+                            
+                        }
+                    }
+
+   
                 }
             }
             catch (Exception)
@@ -94,22 +103,22 @@ namespace Service.Inventory
         /// <param name="StorageID"></param>
         /// <param name="inventoryDate"></param>
         /// <param name="OperatorID"></param>
-        public static void CreateInventoryDetail(InvGoodsDetailEntity entity, int StorageID, DateTime inventoryDate, long OperatorID)
+        public static void CreateInventoryDetail(InventoryInfo entity, InventoryExecOrder orderExec, int StorageID, DateTime inventoryDate, long OperatorID)
         {
             InventoryDetailRepository mrDetail = new InventoryDetailRepository();
             InventoryDetailInfo infoDetail = new InventoryDetailInfo();
             if (entity != null)
             {
                 infoDetail.OrderType = OrderType.RKD.ToString();
-                infoDetail.OrderNo = "";
-                infoDetail.OrderID = 0;
+                infoDetail.OrderNo = orderExec.OrderNo;
+                infoDetail.OrderID = orderExec.OrderID;
                 infoDetail.GoodsID = entity.GoodsID;
                 infoDetail.StorageID = StorageID;
                 infoDetail.Quantity = entity.Quantity;
                 infoDetail.CustomerID = entity.CustomerID;
                 infoDetail.InventoryType = Common.InventoryType.入库.ToString();
                 infoDetail.BatchNumber = entity.BatchNumber;
-                infoDetail.ProductDate = DateTime.Parse(entity.ProductDate);
+                infoDetail.ProductDate = entity.ProductDate;
                 infoDetail.InventoryDate = inventoryDate;
                 infoDetail.UnitPrice = entity.UnitPrice;
                 infoDetail.Remark = entity.Remark;
@@ -422,17 +431,29 @@ namespace Service.Inventory
                         info.ProductDate = DateTime.Parse(entity.ProductDate);
                         info.InventoryDate = DateTime.Now;
                         info.UnitPrice = 0;
-                        info.Remark = "";
+                        info.Remark = "库存导入";
                         info.OperatorID = operatorID;
                         info.CreateDate = DateTime.Now;
                         info.ChangeDate = DateTime.Now;
-                        mr.CreateNew(info);
                         listInv.Add(info);
 
                     }
                 }
                 //生成入库单
-                OrderService.CreateOrderByInventory(listInv);
+                InventoryExecOrder orderExec = OrderService.CreateOrderByInventory(listInv);
+
+                if (listInv != null && listInv.Count > 0)
+                {
+                    foreach (InventoryInfo info in listInv)
+                    {
+                        //插入库存
+                        mr.CreateNew(info);
+                        //库存明细保存
+                        CreateInventoryDetail(info, orderExec, info.StorageID, info.InventoryDate, operatorID);
+
+                    }
+                }
+
             }
             return count;
 

@@ -195,7 +195,7 @@ namespace GuoChe.Controllers
         /// <param name="inventoryDate">出入库时间</param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public ActionResult Inventory(string name, string batchNumber, int StorageID = -1, int customerID = -1, int p = 1)
+        public ActionResult Inventory(string pagetype,string name, string batchNumber, int StorageID = -1, int customerID = -1, int p = 1)
         {
             PagerInfo pager = new PagerInfo();
             int count = InventoryService.GetInventoryCount(name, batchNumber, StorageID, customerID);
@@ -225,6 +225,7 @@ namespace GuoChe.Controllers
             ViewBag.customerID = customerID;
             ViewBag.Url = UrlPar;
             ViewBag.Pager = pager;
+            ViewBag.PageType = pagetype;
             return View();
         }
 

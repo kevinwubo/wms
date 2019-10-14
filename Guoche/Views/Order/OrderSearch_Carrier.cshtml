@@ -271,7 +271,7 @@
                                                 </div>
                                                 <div>
                                                     <p>送达时间</p>
-                                                    <h5><label id="arrivertime@(entity.OrderID)">@(entity.ArriverDate>DateTime.Parse("2000-01-01")? entity.ArriverDate.ToString():"未配送")</label></h5>
+                                                    <h5><label id="arrivertime@(entity.OrderID)">@(entity.ArriverDate > DateTime.Parse("2000-01-01") ? entity.ArriverDate.ToString() : "未配送")</label></h5>
                                                 </div>
                                                 <input type="hidden" id="AttachmentIDs" name="AttachmentIDs" value="@entity.AttachmentIDs">
                                             </div>
@@ -282,16 +282,16 @@
 
                                                 @if (ViewBag.PageType == "tc_confirm")
                                                 {
-                                                @*DC订单确认*@
-                                                <div class="upImg">上传图片<input type="file" class="upfile"></div>
+                                                    @*DC订单确认*@
+                                                    <div class="upImg">上传图片<input type="file" class="upfile"></div>
 
-                                                <div class="sure">开始配送</div>
+                                                    <div class="sure">开始配送</div>
                                                 }
                                                 @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
                                                 {
-                                                <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
-                                                    查看回单
-                                                </div>
+                                                    <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
+                                                        查看回单
+                                                    </div>
                                                 }
                                             </div>
                                         </div>
@@ -316,25 +316,25 @@
                                         </thead>
                                         <tbody>
                                             @if (entity.orderDetailList != null && entity.orderDetailList.Count > 0)
-                    {
-                        List<OrderDetailEntity> list = entity.orderDetailList;
-                        int j=1;
-                        for (int i = 0; i < list.Count; i++)
-                        {
-                    <tr>
-                        <td>@(j++)</td>
-                        <td>@list[i].GoodsNo</td>
-                        <td>@list[i].GoodsName</td>
-                        <td>@list[i].GoodsModel</td>
-                        <td>@list[i].Quantity</td>
-                        <td>@list[i].Units</td>
-                        <td>@list[i].TotalWeight</td>
-                        <td>@list[i].BatchNumber</td>
-                        <td>@list[i].ProductDate.ToShortDateString()</td>
-                        <td>@list[i].ExceedDate.ToShortDateString()</td>
-                    </tr>
-                        }
-                    }
+                                            {
+                                                List<OrderDetailEntity> list = entity.orderDetailList;
+                                                int j = 1;
+                                                for (int i = 0; i < list.Count; i++)
+                                                {
+                                                    <tr>
+                                                        <td>@(j++)</td>
+                                                        <td>@list[i].GoodsNo</td>
+                                                        <td>@list[i].GoodsName</td>
+                                                        <td>@list[i].GoodsModel</td>
+                                                        <td>@list[i].Quantity</td>
+                                                        <td>@list[i].Units</td>
+                                                        <td>@list[i].Weight</td>
+                                                        <td>@list[i].BatchNumber</td>
+                                                        <td>@list[i].ProductDate.ToShortDateString()</td>
+                                                        <td>@list[i].ExceedDate.ToShortDateString()</td>
+                                                    </tr>
+                                                }
+                                            }
                                         </tbody>
                                     </table>
                                     <div class="lcItem_b_b">

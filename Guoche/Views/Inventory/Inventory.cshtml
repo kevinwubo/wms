@@ -27,7 +27,7 @@
                             <div class="dataTables_length" id="menus_filter">
                                 <label><input type="text" placeholder="商品信息" aria-controls="menus" id="name" name="name" value="@ViewBag.Name"></label>
                                 <label><input type="text" placeholder="批次号" aria-controls="menus" id="batchNumber" name="batchNumber" value="@ViewBag.batchNumber"></label>
-                                <label>
+                                <label><input type="hidden" id="pagetype" name="pagetype" value="@ViewBag.PageType" />
                                     <select tabindex="1" class="" style="width:150px" id="StorageID" name="StorageID">
                                         <option value="">--仓库名称--</option>
                                         @foreach (var item in storages)
@@ -102,8 +102,11 @@
                                             @("库存正常");
                                         }
                                      </td>
-                                    <td>                                        
-                                       <a href="###" onclick="javascript: return deleteInventory(@invent[i].InventoryID,'@ViewBag.Url');"><span class="label label-success"><b>删除</b></span></a>
+                                    <td> 
+                                        @if (ViewBag.PageType == "Delete")
+                                        {
+                                            <a href="###" onclick="javascript: return deleteInventory(@invent[i].InventoryID,'@ViewBag.Url');"><span class="label label-success"><b>删除</b></span></a>
+                                        }
                                     </td>
                                 </tr>
                             }

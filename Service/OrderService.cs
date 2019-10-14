@@ -468,8 +468,10 @@ namespace Service
             OrderRepository mr = new OrderRepository();
             //库存回位
             OrderEntity orderinfo = GetOrderByOrderID(oid);
-            InventoryService.updateInventoryByOrder(orderinfo);
-
+            if (orderinfo != null && orderinfo.OrderType.Equals(OrderType.CPDD))
+            {
+                InventoryService.updateInventoryByOrder(orderinfo);
+            }
             //执行删除订单
             int i = mr.Delete(oid);
 
@@ -1204,8 +1206,10 @@ namespace Service
                                 entity.CustomerName = dt.Rows[i]["客户名称"].ToString();
                                 entity.ReceiverName = dt.Rows[i]["送达方(门店/仓库)"].ToString();
                                 entity.GoodsName = dt.Rows[i]["商品名称"].ToString();
-                                entity.Units = dt.Rows[i]["单位"].ToString();
+                                entity.BatchNumber = dt.Rows[i]["批次号"].ToString();
                                 entity.Quantity = dt.Rows[i]["数量"].ToString();
+                                entity.Units = dt.Rows[i]["单位"].ToString();
+                                
                                 //运输应收	装卸应收	分拣应收	运输应付	装卸应付	分拣应付
                                 entity.configPrice = dt.Rows[i]["运输应收"].ToString().ToDecimal(0);
                                 entity.configHandInAmt = dt.Rows[i]["装卸应收"].ToString().ToDecimal(0);
@@ -1213,7 +1217,7 @@ namespace Service
                                 entity.configCosting = dt.Rows[i]["运输应付"].ToString().ToDecimal(0);
                                 entity.configHandOutAmt = dt.Rows[i]["装卸应付"].ToString().ToDecimal(0);
                                 entity.configSortCosting = dt.Rows[i]["分拣应付"].ToString().ToDecimal(0);
-
+                                
                                 entity.Remark = dt.Rows[i]["备注"].ToString();
                                 GoodsEntity goodsEntity = getGoodsModelByGoods("", entity.GoodsName, "", "");
                                 entity.GoodsID = goodsEntity == null ? "-1" : goodsEntity.GoodsID.ToString();
@@ -1342,13 +1346,15 @@ namespace Service
                             {
                                 infodetail.BatchNumber = inventoryEntity.BatchNumber;
                                 infodetail.ProductDate = inventoryEntity.ProductDate;//DefaultDateTime;
+                                infodetail.ExceedDate = Datehelper.getDateTime(inventoryEntity.ProductDate, goods.exDate.ToInt(0), goods.exUnits);
                             }
                             else
                             {
-                                infodetail.BatchNumber = "";
+                                infodetail.BatchNumber = detail.BatchNumber;
                                 infodetail.ProductDate = DefaultDateTime;
+                                infodetail.ExceedDate = DefaultDateTime;
                             }
-                            infodetail.ExceedDate = Datehelper.getDateTime(inventoryEntity.ProductDate, goods.exDate.ToInt(0), goods.exUnits);
+                            
 
                             infodetail.CreateDate = DateTime.Now;
                             infodetail.ChangeDate = DateTime.Now;
@@ -1480,8 +1486,9 @@ namespace Service
 
         #region 出入库 生成订单
 
-        public static void CreateOrderByInventory(List<InventoryInfo> List, string tempType = "")
+        public static InventoryExecOrder CreateOrderByInventory(List<InventoryInfo> List, string tempType = "")
         {
+            InventoryExecOrder orderExec = new InventoryExecOrder();
             InventoryInfo entity = null;
             if (List != null && List.Count > 0)
             {
@@ -1520,6 +1527,10 @@ namespace Service
                 info.ChangeDate = entity.ChangeDate;
                 long orderid = mr.CreateNew(info);
 
+                // 返回参数
+                orderExec.OrderID = orderid;
+                orderExec.OrderNo = info.OrderNo;
+
                 foreach (InventoryInfo item in List)
                 {
                     OrderDetailInfo dInfo = new OrderDetailInfo();
@@ -1543,7 +1554,7 @@ namespace Service
                     mrd.CreateNew(dInfo);
                 }
             }
-            
+            return orderExec;
         }
         #endregion
     }

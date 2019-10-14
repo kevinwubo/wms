@@ -74,16 +74,17 @@
                         <thead>
                             <tr role="row">
                                 <th></th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">商品编号</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">商品名称</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">商品所属</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">数量</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">批次号</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">生产日期</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">单价</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">备注</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">保质期</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">移除</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:8%">商品编号</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:16%">商品名称</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:15%">商品所属</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:10%">数量</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:8%">批次号</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:8%">生产日期</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:8%">单价</th>                                
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:10%">备注</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:6%">单位</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:6%">保质期</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width:6%">移除</th>
                             </tr>
                         </thead>
 
@@ -114,5 +115,12 @@
             elem: '#ProductDate' //指定元素
         });
     });
+    function changeProductDate(id) {
+        var batchNo = $("#txtBatch_" + id).val();
+        if (batchNo != "" && batchNo.length == 8) {
+            var date = batchNo.substring(0, 4) + "-" + batchNo.substring(4, 6) + "-" + batchNo.substring(6, 8);
+            $("#txtProductDate_" + id).val(date);
+        }
+    }
 </script>
 }

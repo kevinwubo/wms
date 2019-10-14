@@ -169,4 +169,13 @@ namespace Entity.ViewModel
         public string Remark { get; set; }
 
     }
+
+    /// <summary>
+    /// 入库单 生成订单信息返回参数
+    /// </summary>
+    public class InventoryExecOrder
+    {
+        public long OrderID { get; set; }
+        public string OrderNo { get; set; }
+    }
 }

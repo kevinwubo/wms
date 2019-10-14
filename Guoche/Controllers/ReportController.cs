@@ -107,6 +107,26 @@ namespace GuoChe.Controllers
             HSSFWorkbook book = new HSSFWorkbook();
             //添加一个sheet
             ISheet sheet1 = book.CreateSheet("Sheet1");
+            sheet1.SetColumnWidth(0, 15 * 256);
+            sheet1.SetColumnWidth(1, 15 * 256);
+            sheet1.SetColumnWidth(2, 15 * 256);
+            sheet1.SetColumnWidth(3, 15 * 256);
+            sheet1.SetColumnWidth(4, 15 * 256);
+            sheet1.SetColumnWidth(5, 15 * 256);
+            sheet1.SetColumnWidth(6, 15 * 256);
+            sheet1.SetColumnWidth(7, 15 * 256);
+            sheet1.SetColumnWidth(8, 15 * 256);
+            sheet1.SetColumnWidth(9, 20 * 256);
+            sheet1.SetColumnWidth(10, 15 * 256);
+            sheet1.SetColumnWidth(11, 15 * 256);
+            sheet1.SetColumnWidth(12, 15 * 256);
+            sheet1.SetColumnWidth(13, 15 * 256);
+            sheet1.SetColumnWidth(14, 15 * 256);
+            sheet1.SetColumnWidth(15, 15 * 256);
+            sheet1.SetColumnWidth(16, 15 * 256);
+            sheet1.SetColumnWidth(17, 15 * 256);
+            sheet1.SetColumnWidth(18, 15 * 256);
+            sheet1.SetColumnWidth(19, 15 * 256);
             //给sheet1添加第一行的头部标题 
             //订单归属	订单类型	订单编号	发货仓库	承运商	下单日期	要求送达时间	实际送货时间	收货方	收货所属省	收货所属市	
             //收货地址	货品明细	批次	生产日期	到期日期	配送数量	货物重量	是否回单	备注
@@ -315,6 +335,7 @@ namespace GuoChe.Controllers
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
             List<OrderEntity> mList = null;
+
             int count = ReportService.GetOrderCount("", carrierid, storageid,customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
@@ -330,6 +351,9 @@ namespace GuoChe.Controllers
             {
                 mList = ReportService.GetOrderInfoPager(pager);
             }
+
+
+
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
@@ -377,7 +401,26 @@ namespace GuoChe.Controllers
             //序号	订单编号	订单属性	订单归属	发货仓库	        下单日期	收货方	收货地址	货物重量	配送数量	应收总额              //客户对账单 
             //序号	订单编号	订单属性	订单归属	发货仓库	供应商	下单日期	收货方	收货地址	货物重量	配送数量	应付总额              //供应商对账单
             //序号	订单编号	订单属性	订单归属	发货仓库	供应商	下单日期	收货方	收货地址	货物重量	配送数量	应收总额	应付总额	利润  //利润分析表
-
+            sheet1.SetColumnWidth(0, 15 * 256);
+            sheet1.SetColumnWidth(1, 15 * 256);
+            sheet1.SetColumnWidth(2, 15 * 256);
+            sheet1.SetColumnWidth(3, 15 * 256);
+            sheet1.SetColumnWidth(4, 15 * 256);
+            sheet1.SetColumnWidth(5, 15 * 256);
+            sheet1.SetColumnWidth(6, 15 * 256);
+            sheet1.SetColumnWidth(7, 15 * 256);
+            sheet1.SetColumnWidth(8, 15 * 256);
+            sheet1.SetColumnWidth(9, 20 * 256);
+            sheet1.SetColumnWidth(10, 15 * 256);
+            sheet1.SetColumnWidth(11, 15 * 256);
+            sheet1.SetColumnWidth(12, 15 * 256);
+            sheet1.SetColumnWidth(13, 15 * 256);
+            sheet1.SetColumnWidth(14, 15 * 256);
+            sheet1.SetColumnWidth(15, 15 * 256);
+            sheet1.SetColumnWidth(16, 15 * 256);
+            sheet1.SetColumnWidth(17, 15 * 256);
+            sheet1.SetColumnWidth(18, 15 * 256);
+            sheet1.SetColumnWidth(19, 15 * 256);
             int K = 0;
             NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
             row1.CreateCell(K).SetCellValue("序号");

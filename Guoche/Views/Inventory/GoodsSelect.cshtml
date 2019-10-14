@@ -129,16 +129,20 @@
             listContact: []
         };
         var html = "";
+        var i = 0;
         $("#tbody").find("tr").each(function () {
             var tdArr = $(this).children();
-            if (tdArr.eq(0).find('[name="checkbox"]').prop("checked")) {
+            var chk= tdArr.eq(0).find('[name="checkbox"]').prop("checked")
+            if (chk) {
+                var id = tdArr.eq(0).find('[name="checkbox"]').attr("id") + i;
+                i++;
                 var goodsid = tdArr.eq(0).find('input').val();//商品ID
                 var goodsno = tdArr.eq(1).find('input').val();//商品编号
                 var goodsname = tdArr.eq(2).find('input').val();//商品名称
 
                 var customerid = tdArr.eq(3).find('input').eq(0).val();//所属客户ID
                 var customername = tdArr.eq(3).find('input').eq(1).val();//所属客户
-                
+                var units = tdArr.eq(6).find('input').val();//单位
                 var exunits = tdArr.eq(8).find('input').val();//保质期                
 
                 html += '<tr>\n' +
@@ -148,11 +152,11 @@
                         '    <td><input type="hidden" value="' + customerid + '" class="form-control "><input type="hidden" value="' + customername + '" class="form-control ">' + customername + '</td>\n' +
 
                         '    <td><input type="text" style="width:120px"  value="1" class="form-control "></td>\n' +
+                        '    <td><input type="text" style="width:120px" id="txtBatch_' + id + '" onblur="changeProductDate(' + id + ')" value="@DateTime.Now.ToString("yyyyMMdd")" class="form-control "></td>\n' +
+                        '    <td><input type="text" id="txtProductDate_' + id + '" value="@DateTime.Now.ToString("yyyy-MM-dd")" style="width:120px" onclick="WdatePicker({dateFmt:\'yyyy-MM-dd\'})" class="form-control "></td>\n' +
                         '    <td><input type="text" style="width:120px" value="1" class="form-control "></td>\n' +
-                        '    <td><input type="text" value="@DateTime.Now.ToString("yyyy-MM-dd")" style="width:120px" onclick="WdatePicker({dateFmt:\'yyyy-MM-dd\'})" class="form-control "></td>\n' +
                         '    <td><input type="text" style="width:120px" value="1" class="form-control "></td>\n' +
-                        '    <td><input type="text" style="width:120px" value="1" class="form-control "></td>\n' +
-
+                        '    <td><input type="hidden" value="' + units + '" class="form-control ">' + units + '</td>\n' +
                         '    <td><input type="hidden" value="' + exunits + '" class="form-control ">' + exunits + '</td>\n' +
                         '    <td><span style="cursor:pointer" onclick="delTr(this)">移除</span></td>\n' +
                         '</tr>';
