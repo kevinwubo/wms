@@ -6,7 +6,7 @@
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
 <div class="row-fluid">
-    <h2 class="heading" style="margin-top:20px">黑名单管理</h2>
+    <h2 class="heading" style="margin-top:20px">黑名单</h2>
 </div>
 <style>
     #div_items {
@@ -47,7 +47,7 @@
     <div class="widget widget-padding span12">
         <div class="widget-header">
             <i class="icon-laptop"></i>
-            <h5>线路管理</h5>
+            <h5 style="color:red">凡在此名单内的公司，车队，驾驶员均杜绝派发任何业务</h5>
             @*<div class="widget-buttons">
                 <a href="/Carrier/Edit"><i class="icon-laptop"></i> 新增</a>
             </div>*@
@@ -68,18 +68,18 @@
                     <div class="">
                         <div class="dataTables_length" id="menus_filter">
                             <input type="hidden" id="hid_BlackID" value="-1" />
-                            <label>黑名单类型: 
+                            <label>类别: 
                                 <select class="span3" style="width: 200px" id="Type" name="Type">
                                     <option value="Carrier" @(ViewBag.BlackType == -1 ? "selected" : "")>承运商黑名单</option>
                                 </select>
                             </label>
                             <label>
                                 <input type="hidden" id="hid_UnionID" value="-1" />
-                                黑名单名称: <input type="text" aria-controls="menus" autocomplete="off" id="UnionName" name="UnionName">
+                                公司名称/姓名: <input type="text" aria-controls="menus" autocomplete="off" id="UnionName" name="UnionName">
                                     <div id="div_items" style="display:none">                                   
                                     </div>                                
                             </label>
-                            <label>黑名单备注：</label>
+                            <label>拉黑缘由：</label>
                                 @*<input type="text" id="Remark" name="Remark">*@
                             <textarea rows="30" cols="10" style="margin: 0px; height: 75px; width: 355px;" id="Remark" name="Remark"></textarea>
                         

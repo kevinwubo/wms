@@ -223,14 +223,8 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "CustomerReport";
 
-            //if ( storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
-            //{
-                mList = ReportService.GetOrderInfoByRule(pager, "", -1, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
-            //}
-            //else
-            //{
-            //    mList = ReportService.GetOrderInfoPager(pager);
-            //}
+            mList = ReportService.GetOrderInfoByRule(pager, "", -1, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+
             //订单类型
             List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
             //默认承运商
@@ -279,14 +273,8 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "CarrierReport";
 
-            //if (storageid > 0 || carrierid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
-            //{
-                mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid,customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
-            //}
-            //else
-            //{
-            //    mList = ReportService.GetOrderInfoPager(pager);
-            //}
+            mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid,customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
@@ -343,16 +331,7 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "ProfitReport";
 
-            if (storageid > 0 || carrierid > 0 || customerid>0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
-            {
-                mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
-            }
-            else
-            {
-                mList = ReportService.GetOrderInfoPager(pager);
-            }
-
-
+            mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);          
 
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
@@ -382,16 +361,31 @@ namespace GuoChe.Controllers
         }
 
         #region 导出excel
+
+        public FileResult ReportToExcel(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
+        string ordertype = "", string orderno = "", string begindate = "", string enddate = "",string type="")
+        {
+
+            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            PagerInfo pager = new PagerInfo();
+            pager.PageIndex = 1;
+            pager.PageSize = count;
+            pager.SumCount = count;
+            pager.URL = "CustomServiceReport";
+            List<OrderEntity> list = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            ReEntity report = ReportService.CreateReportList(list);
+            return ReportExportExcel(type, report.reportList);
+        }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="type">利润分析表:LRR /客服日常报表:KFR /客户对账单:KHR 供应商对账单:GYSR</param>
         /// <returns></returns>
-        public FileResult ReportExportExcel(string type,string guid)
+        public FileResult ReportExportExcel(string type, List<ReportEntity> list)
         {
-            //获取list数据         
+            //获取list数据        
 
-            List<ReportEntity> list = Cache.Get<List<ReportEntity>>(guid);
+            //List<ReportEntity> list = Cache.Get<List<ReportEntity>>(guid);
             //创建Excel文件的对象
             HSSFWorkbook book = new HSSFWorkbook();
             //添加一个sheet

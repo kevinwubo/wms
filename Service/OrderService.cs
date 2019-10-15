@@ -260,7 +260,7 @@ namespace Service
                     try
                     {
                         jsonlist = (OrderJsonEntity)JsonHelper.FromJson(entity.orderDetailJson, typeof(OrderJsonEntity));
-
+                        LogHelper.WriteTextLog("订单添加更新", entity.orderDetailJson);
                     }
                     catch (Exception ex)
                     {
@@ -470,6 +470,7 @@ namespace Service
             OrderEntity orderinfo = GetOrderByOrderID(oid);
             if (orderinfo != null && orderinfo.OrderType.Equals(OrderType.CPDD))
             {
+                LogHelper.WriteTextLog("订单删除", "订单号：" + oid);
                 InventoryService.updateInventoryByOrder(orderinfo);
             }
             //执行删除订单
@@ -710,11 +711,14 @@ namespace Service
         {
             #region 库存扣减
             InventoryRepository mr = new InventoryRepository();
-            InventoryInfo inventinfo = new InventoryInfo();
-            inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail, oldOrderDetail);//仓库库存减去订单明细中出库库存
+            InventoryInfo inventinfo = new InventoryInfo();            
+            int InQuantity = UpdateQuantity(detail, oldOrderDetail);
+            LogHelper.WriteTextLog("库存扣减", "库存编号：" + inventory.InventoryID + "当前库存数量：" + inventory.Quantity + "出库数量：" + InQuantity);
+            inventinfo.Quantity = inventory.Quantity - InQuantity;//仓库库存减去订单明细中出库库存
             inventinfo.InventoryID = inventory.InventoryID;
             inventinfo.ChangeDate = DateTime.Now;
             mr.ModifyInventoryQuantity(inventinfo);
+            LogHelper.WriteTextLog("库存扣减", "执行成功："+JsonHelper.ToJson(inventinfo));
             #endregion
 
             #region 库存明细增加

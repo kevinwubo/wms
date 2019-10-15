@@ -471,20 +471,29 @@ namespace Service.Inventory
                     foreach (OrderDetailEntity orderDetail in orderDetailList)
                     {
                         //批次号+商品ID 确认唯一库存信息
-                        List<InventoryEntity> inventoryList = GetInventoryByRule(orderDetail.GoodsID, order.SendStorageID, orderDetail.BatchNumber);
+                        List<InventoryEntity> inventoryList =null;
+                        if(orderDetail.InventoryID>0)//
+                        {
+                            GetInventoryById(orderDetail.InventoryID);
+                        }
+
+                        //if (inventoryList == null || inventoryList.Count == 0)
+                        //{
+                        //    inventoryList = GetInventoryByRule(orderDetail.GoodsID, order.SendStorageID, orderDetail.BatchNumber);
+                        //}
 
                         if (inventoryList != null && inventoryList.Count > 0)
                         {
                             foreach (InventoryEntity inventory in inventoryList)
                             {
+                                LogHelper.WriteTextLog("订单删除", "库存编号：" + inventory.InventoryID + "当前库存数量：" + inventory.Quantity + "库存回位数量：" + orderDetail.Quantity);
                                 InventoryRepository mr = new InventoryRepository();
                                 InventoryInfo inventinfo = new InventoryInfo();
                                 inventinfo.Quantity = inventory.Quantity + orderDetail.Quantity;//当前库存添加 订单中库存
                                 inventinfo.InventoryID = inventory.InventoryID;
                                 inventinfo.ChangeDate = DateTime.Now;
                                 mr.ModifyInventoryQuantity(inventinfo);
-
-
+                                LogHelper.WriteTextLog("订单删除", "库存编号：" + inventory.InventoryID + "更新后库存数量：" + inventinfo.Quantity);
                                 #region 库存明细增加
                                 CreateInventoryDetail(order, orderDetail);
                                 #endregion
