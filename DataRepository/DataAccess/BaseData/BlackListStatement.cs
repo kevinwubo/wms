@@ -20,11 +20,13 @@ namespace DataRepository.DataAccess.BaseData
 
         public static string Delete = @"Delete FROM wms_BlackListInfo WHERE BlackID=@BlackID";
 
-        public static string CreateNewBlackList = @"INSERT INTO dbo.wms_BlackListInfo(BlackType,UnionID,UnionName,Remark,OperatorID,Status,CreateDate,ChangeDate)
-                                                    VALUES(@BlackType,@UnionID,@UnionName,@Remark,@OperatorID,@Status,@CreateDate,@ChangeDate) select @@IDENTITY";
+        public static string CreateNewBlackList = @"INSERT INTO wms_BlackListInfo(BlackType,UnionID,UnionName,Status,SubStatus,CardCode,Remark
+                                                    ,OperatorID,CreateDate,ChangeDate)
+                                                    VALUES(@BlackType,@UnionID,@UnionName,@Status,@SubStatus,@CardCode,@Remark,@OperatorID,@CreateDate,@ChangeDate) select @@IDENTITY";
 
-        public static string ModifyBlackList = @"UPDATE dbo.wms_BlackListInfo SET BlackType = @BlackType,UnionID = @UnionID,UnionName = @UnionName,Remark = @Remark,OperatorID = @OperatorID
-                                                ,Status = @Status,ChangeDate = @ChangeDate WHERE BlackID=@BlackID";
+        public static string ModifyBlackList = @"UPDATE wms_BlackListInfo   SET BlackType = @BlackType,UnionID = @UnionID,UnionName = @UnionName,Status = @Status
+                                                ,SubStatus = @SubStatus,CardCode = @CardCode,Remark = @Remark,OperatorID = @OperatorID,ChangeDate = @ChangeDate
+                                                 WHERE BlackID=@BlackID";
         #region 分页相关
          public static string GetCount = @"SELECT COUNT(1) AS C FROM wms_BlackListInfo(NOLOCK) WHERE 1=1 ";
 

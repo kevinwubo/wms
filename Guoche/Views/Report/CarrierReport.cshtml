@@ -89,10 +89,10 @@
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单属性</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单归属</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">发货仓库</th>
-                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">供应商</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">承运商</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">下单日期</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货方</th>
-                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货地址</th>
+                            @*<th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货地址</th>*@
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">货物重量</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">配送数量</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">应付总额</th>
@@ -113,7 +113,7 @@
                                     <td class=" ">@entity.CarrierName</td>                                    
                                     <td class=" ">@entity.OrderDate.ToShortDateString()</td>
                                     <td class=" ">@entity.ReceiverName</td>
-                                    <td class=" ">@entity.ReceiverAddress</td>
+                                    @*<td class=" ">@entity.ReceiverAddress</td>*@
                                     <td class=" ">@entity.Weight</td>
                                     <td class=" ">@entity.Quantity</td>
                                     <td class=" ">@entity.TotalPayFee</td>

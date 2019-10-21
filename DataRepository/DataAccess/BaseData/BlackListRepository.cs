@@ -38,7 +38,9 @@ namespace DataRepository.DataAccess.BaseData
             command.AddInputParameter("@UnionName", DbType.String, BlackList.UnionName);
             command.AddInputParameter("@Remark", DbType.String, BlackList.Remark);
             command.AddInputParameter("@OperatorID", DbType.String, BlackList.OperatorID);
+            command.AddInputParameter("@CardCode", DbType.String, BlackList.CardCode);
             command.AddInputParameter("@Status", DbType.Int32, BlackList.Status);
+            command.AddInputParameter("@SubStatus", DbType.Int32, BlackList.SubStatus);
             command.AddInputParameter("@CreateDate", DbType.DateTime, BlackList.CreateDate);
             command.AddInputParameter("@ChangeDate", DbType.DateTime, BlackList.ChangeDate);
             var o = command.ExecuteScalar<object>();
@@ -53,16 +55,18 @@ namespace DataRepository.DataAccess.BaseData
             command.AddInputParameter("@UnionName", DbType.String, BlackList.UnionName);
             command.AddInputParameter("@Remark", DbType.String, BlackList.Remark);
             command.AddInputParameter("@OperatorID", DbType.String, BlackList.OperatorID);
-            command.AddInputParameter("@Status", DbType.Int32, BlackList.Status);            
+            command.AddInputParameter("@CardCode", DbType.String, BlackList.CardCode);
+            command.AddInputParameter("@Status", DbType.Int32, BlackList.Status);
+            command.AddInputParameter("@SubStatus", DbType.Int32, BlackList.SubStatus);
             command.AddInputParameter("@ChangeDate", DbType.DateTime, BlackList.ChangeDate);
             command.AddInputParameter("@BlackID", DbType.Int32, BlackList.BlackID);
             return command.ExecuteNonQuery();            
         }
 
-        public int Delete(long ID)
+        public int DeleteBlack(long BlackID)
         {
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(BlackListStatement.Delete, "Text"));
-            command.AddInputParameter("@ID", DbType.Int64, ID);
+            command.AddInputParameter("@BlackID", DbType.Int64, BlackID);
             int result = command.ExecuteNonQuery();
             return result;
         }

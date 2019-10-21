@@ -60,7 +60,11 @@ var LineInfo = {
             var type = $("#Type").val();
             var unionid = $("#hid_UnionID").val();
             var unionname = $("#UnionName").val();
+            var status = $("#Status").prop("checked") ? 1 : 0;//$("#Status").val();
+            var subStatus = $("#SubStatus").prop("checked") ? 1 : 0;//$("#SubStatus").val();
+            var cardCode = $("#CardCode").val();
             var remark = $("#Remark").val();
+
             $.ajax({
                 type: "post",
                 url: "ModifyBlack",
@@ -69,6 +73,9 @@ var LineInfo = {
                     type: type,
                     unionid: unionid,
                     unionname: unionname,
+                    status: status,
+                    subStatus: subStatus,
+                    cardCode: cardCode,
                     remark: remark
                 },
                 success: function (msg) {
@@ -81,10 +88,51 @@ var LineInfo = {
     },    
 }
 
-function ModifyBlack(blackid, type, unionid, unionname, Remark) {
+function ModifyBlack(blackid, type, unionid, unionname,status,substatus,cardCode, Remark) {
     $("#hid_BlackID").val(blackid);
     $("#Type").val(type);
     $("#hid_UnionID").val(unionid);
     $("#UnionName").val(unionname);
+
+    if (substatus == "1") {
+        $("#SubStatus").attr("checked", true);//勾选
+    }
+    else {
+        $("#SubStatus").attr("checked", false);//勾选
+    }
+
+    if (status == "1") {
+        $("#Status").attr("checked", true);//勾选
+    }
+    else {
+        $("#Status").attr("checked", false);//勾选
+    }
+    
+    
+    $("#CardCode").val(cardCode);
     $("#Remark").val(Remark);
+}
+
+
+function DeleteBlack(id) {
+    var msg = "您确定要删除吗?\n请确认！";
+    if (confirm(msg) == true) {
+        $.ajax({
+            type: "post",
+            url: "/BaseData/DeleteBlack",
+            data: {
+                bid: id,
+            },
+            success: function (data) {
+                console.log(data);
+                if (data) {
+                    alert("黑名单删除成功!");
+                    window.location.href = "/BaseData/BlackList";
+
+                }
+            }
+        })
+    } else {
+        return false;
+    }
 }

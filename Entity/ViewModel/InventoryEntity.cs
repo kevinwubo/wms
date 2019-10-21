@@ -68,6 +68,10 @@ namespace Entity.ViewModel
         public string InventoryStatus { get; set; }
 
         /// <summary>
+        /// 过期时间
+        /// </summary>
+        public DateTime ExpDate { get; set; }
+        /// <summary>
         /// 操作人ID
         /// </summary>
         public long OperatorID { get; set; }

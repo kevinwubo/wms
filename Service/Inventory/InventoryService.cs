@@ -211,8 +211,12 @@ namespace Service.Inventory
                 entity.InventoryID = info.InventoryID;
                 entity.IsLock = info.IsLock;
                 entity.InventoryStatus = info.InventoryStatus;
-
+                //过期日期                
                 entity.goods = GoodsService.GetGoodsEntityById(info.GoodsID);
+                if (entity.goods!=null)
+                {
+                    entity.ExpDate = Datehelper.getDateTime(entity.ProductDate, entity.goods.exDate.ToInt(0), entity.goods.exUnits);
+                }                
                 entity.customer = CustomerService.GetCustomerEntityById(info.CustomerID);
                 entity.storages = StorageService.GetStorageEntityById(info.StorageID);
             }

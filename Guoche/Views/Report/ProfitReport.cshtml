@@ -4,7 +4,7 @@
     ViewBag.Title = "利润分析表";
     ReEntity report = (ReEntity)ViewBag.Report;
     List<ReportEntity> reportList = report != null ? report.reportList : null;
-    
+
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
@@ -75,11 +75,12 @@
                                 </label>
                                 <button class="btn btn-info" type="submit">查询</button>
                                 <button class="btn btn-info" type="button" onclick="ReportOOOToExcel('LRR')">应收应付导出</button>
-                                <label><b>应收总金额：@report.TotalllReceiverAmount</b><b>应付总金额：@report.TotalAllPayAmount</b></label>
+                                <br />
+                                <label style="font-size:larger"><b>应收总金额：@report.TotalllReceiverAmount.ToString("N")</b>&nbsp&nbsp&nbsp&nbsp<b>应付总金额：@report.TotalAllPayAmount.ToString("N")</b>&nbsp&nbsp&nbsp&nbsp<b>利润总额：@((report.TotalllReceiverAmount - report.TotalAllPayAmount).ToString("N"))</b></label>
                             </div>
                         </form>
                     </div>
-                </div>              
+                </div>
                 @*//序号	订单编号	订单属性	订单归属	发货仓库	供应商	下单日期	收货方	收货地址	货物重量	配送数量	应收总额	应付总额	利润*@
                 <table id="users" class="table table-striped table-bordered dataTable" aria-describedby="users_info">
                     <thead>
@@ -89,10 +90,10 @@
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单属性</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单归属</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">发货仓库</th>
-                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">供应商</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">承运商</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">下单日期</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货方</th>
-                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货地址</th>
+                            @*<th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货地址</th>*@
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">货物重量</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">配送数量</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">应收总额</th>
@@ -111,11 +112,11 @@
                                     <td class=" ">@entity.OrderNo</td>
                                     <td class=" ">@entity.OrderType</td>
                                     <td class=" ">@entity.OrderOwner</td>
-                                    <td class=" ">@entity.SendStorageName</td>  
-                                    <td class=" ">@entity.CarrierName</td>                                    
+                                    <td class=" ">@entity.SendStorageName</td>
+                                    <td class=" ">@entity.CarrierName</td>
                                     <td class=" ">@entity.OrderDate.ToShortDateString()</td>
                                     <td class=" ">@entity.ReceiverName</td>
-                                    <td class=" ">@entity.ReceiverAddress</td>
+                                    @*<td class=" ">@entity.ReceiverAddress</td>*@
                                     <td class=" ">@entity.Weight</td>
                                     <td class=" ">@entity.Quantity</td>
                                     <td class=" ">@entity.TotalReceiverFee</td>
@@ -127,7 +128,7 @@
                         </tbody>
                     }
                 </table>
-                
+
                 @{ Html.RenderPartial("../Pager", p); }
             </div>
         </div> <!-- /widget-body -->
@@ -137,18 +138,18 @@
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
     <script type="text/javascript" src="~/source/Report.js"></script>
-<script src="~/source/layui/layui.js"></script>
-<script>
-    layui.use('laydate', function () {
+    <script src="~/source/layui/layui.js"></script>
+    <script>
+        layui.use('laydate', function () {
 
-        var laydate = layui.laydate;
-        laydate.render({
-            elem: '#begindate' //指定元素
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#begindate' //指定元素
+            });
+            laydate.render({
+                elem: '#enddate' //指定元素
+            });
         });
-        laydate.render({
-            elem: '#enddate' //指定元素
-        });
-    });
 
-</script>
+    </script>
 }

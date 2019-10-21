@@ -67,7 +67,7 @@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">规格型号</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">单位</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">托</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">保质期</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">保质期</th>                                
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">重量</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">尺寸</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">状态</th>
@@ -87,7 +87,7 @@
                                     <td class=" ">@goods[i].GoodsModel</td>
                                     <td class=" ">@goods[i].Units</td>
                                     <td class=" ">@goods[i].Torr</td>
-                                    <td class=" ">@goods[i].exDate+@goods[i].exUnits </td>
+                                    <td class=" ">@(goods[i].exDate+goods[i].exUnits) </td>                                    
                                     <td class=" ">@goods[i].Weight</td>
                                     <td class=" ">@goods[i].Size</td>                                    
                                     <td class=" ">

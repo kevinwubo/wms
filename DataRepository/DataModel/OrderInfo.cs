@@ -206,4 +206,25 @@ namespace DataRepository.DataModel
         [DataMapping("ChangeDate", DbType.DateTime)]
         public DateTime ChangeDate { get; set; }
     }
+
+    public class OrderFeeInfo
+    {
+        /// <summary>
+        /// 数量
+        /// </summary>
+        [DataMapping("C", DbType.Int32)]
+        public int count { get; set; }
+
+        /// <summary>
+        /// 应收总额
+        /// </summary>
+        [DataMapping("TotalllReceiverAmount", DbType.Decimal)]
+        public decimal TotalllReceiverAmount { get; set; }
+
+        /// <summary>
+        /// 应付总额
+        /// </summary>
+        [DataMapping("TotalAllPayAmount", DbType.Decimal)]
+        public decimal TotalAllPayAmount { get; set; }
+    }
 }

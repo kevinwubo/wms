@@ -34,23 +34,36 @@ namespace DataRepository.DataModel
         [DataMapping("UnionName", DbType.String)]
         public string UnionName { get; set; }
 
-        /// <summary>
-        /// 操作人
-        /// </summary>
-        [DataMapping("OperatorID", DbType.Int32)]
-        public int OperatorID { get; set; }
 
         /// <summary>
-        /// 备注
+        /// 原因
         /// </summary>
         [DataMapping("Remark", DbType.String)]
         public string Remark { get; set; }
 
         /// <summary>
-        /// 状态  (1:使用中 0：已删除)
+        /// 企业统一信用编号/身份证
+        /// </summary>
+        [DataMapping("CardCode", DbType.String)]
+        public string CardCode { get; set; }
+
+        /// <summary>
+        /// 合作状态  (1:使用中 0：已删除) 禁止合作状态，系统无法对该承运商建单
         /// </summary>
         [DataMapping("Status", DbType.Int32)]
         public int Status { get; set; }
+
+        /// <summary>
+        /// 甄别状态  (1:使用中 0：已删除) 系统建单需提示该订单承运商为黑名单甄别状态，谨慎合作
+        /// </summary>
+        [DataMapping("SubStatus", DbType.Int32)]
+        public int SubStatus { get; set; }
+
+        /// <summary>
+        /// 操作人
+        /// </summary>
+        [DataMapping("OperatorID", DbType.Int32)]
+        public int OperatorID { get; set; }
         /// <summary>
         /// 创建日期
         /// </summary>

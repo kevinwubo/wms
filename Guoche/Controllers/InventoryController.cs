@@ -226,6 +226,11 @@ namespace GuoChe.Controllers
             ViewBag.Url = UrlPar;
             ViewBag.Pager = pager;
             ViewBag.PageType = pagetype;
+
+            ViewBag.GUID = System.Guid.NewGuid().ToString();
+            //存入缓存
+            Cache.Add(ViewBag.GUID, mList);
+
             return View();
         }
 
@@ -421,10 +426,10 @@ namespace GuoChe.Controllers
         #endregion
 
         #region 导出excel
-        public FileResult ExportExcel()
+        public FileResult ExportExcel(string guid)
         {
             //获取list数据
-            List<InventoryEntity> list = InventoryService.GetInventoryAll();
+            List<InventoryEntity> list = Cache.Get<List<InventoryEntity>>(guid); //InventoryService.GetInventoryAll();
 
             //创建Excel文件的对象
             HSSFWorkbook book = new HSSFWorkbook();

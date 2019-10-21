@@ -56,10 +56,10 @@ namespace DataRepository.DataAccess.BaseData
             return command.ExecuteNonQuery();            
         }
 
-        public int Delete(long ID)
+        public int Delete(long BlackID)
         {
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(LineStatement.Delete, "Text"));
-            command.AddInputParameter("@ID", DbType.Int64, ID);
+            command.AddInputParameter("@BlackID", DbType.Int64, BlackID);
             int result = command.ExecuteNonQuery();
             return result;
         }

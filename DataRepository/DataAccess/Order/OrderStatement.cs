@@ -9,7 +9,7 @@ namespace DataRepository.DataAccess.Order
     public class OrderStatement
     {
 
-        public static string GetCount = @"SELECT COUNT(1) AS C FROM wms_OrderInfo(NOLOCK) WHERE 1=1 ";
+        public static string GetCount = @"SELECT COUNT(1) AS C,SUM(configPrice+configHandInAmt+configSortPrice) as TotalllReceiverAmount,SUM(configCosting+configHandOutAmt+configSortCosting) as TotalAllPayAmount FROM wms_OrderInfo(NOLOCK) WHERE 1=1 ";
 
         public static string GetAllOrderInfoPager = @" DECLARE @UP INT
         
@@ -27,7 +27,7 @@ namespace DataRepository.DataAccess.Order
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH ordera AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY CreateDate DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 )as T ) 
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY CreateDate {0}) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 )as T ) 
 		                                                  SELECT *  FROM ordera 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize
 	                                                  END";
@@ -47,7 +47,7 @@ namespace DataRepository.DataAccess.Order
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH ordera AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY CreateDate DESC) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 ";
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY CreateDate {0}) AS RowNumber FROM (SELECT * FROM wms_OrderInfo WHERE 1=1 ";
         public static string GetAllOrderInfoByRulePagerFooter = @")as T ) 
 		                                                  SELECT *  FROM ordera 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize

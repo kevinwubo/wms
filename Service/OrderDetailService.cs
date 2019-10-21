@@ -67,7 +67,7 @@ namespace Service
                 entity.Quantity = info.Quantity;
                 entity.Units = info.Units;
                 entity.Weight = info.Weight;
-                entity.TotalWeight = info.TotalWeight;
+                entity.TotalWeight = string.IsNullOrEmpty(info.Weight) ? "0" : (info.Weight.ToInt(0) * info.Quantity).ToString();
                 entity.BatchNumber = info.BatchNumber;
                 entity.ProductDate = info.ProductDate;
                 entity.ExceedDate = info.ExceedDate;

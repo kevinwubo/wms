@@ -117,8 +117,14 @@ var orderInfo = {
             $("#orderDetailJson").val(JSON.stringify(params));
 
             var sendStorageName = $("#SendStorageName").val();
+            var carrierName = $("#CarrierName").val();
+
             if (sendStorageName == "") {
                 alert("请输入发货仓库。");
+                return false;
+            }
+            if (carrierName == "") {
+                alert("请输入承运商。");
                 return false;
             }
 

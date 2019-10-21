@@ -246,7 +246,7 @@ namespace DataRepository.DataAccess.Order
         /// <param name="pager"></param>
         /// <returns></returns>
         public List<OrderInfo> GetOrderInfoByRule(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
-            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType, PagerInfo pager)
+            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType,string desc, PagerInfo pager)
         {
             List<OrderInfo> result = new List<OrderInfo>();
 
@@ -302,7 +302,7 @@ namespace DataRepository.DataAccess.Order
 
             string sqlText = OrderStatement.GetAllOrderInfoByRulePagerHeader + builder.ToString() + OrderStatement.GetAllOrderInfoByRulePagerFooter;
 
-            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(string.Format(sqlText, desc), "Text"));
             if (carrierid > 0)
             {
                 command.AddInputParameter("@Carrierid", DbType.Int32, carrierid);
@@ -360,9 +360,10 @@ namespace DataRepository.DataAccess.Order
             return result;
         }
 
-        public int GetOrderCount(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
+        public OrderFeeInfo GetOrderCount(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
             int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType)
         {
+            OrderFeeInfo feeInfo = new OrderFeeInfo();
             StringBuilder builder = new StringBuilder();
             builder.Append(OrderStatement.GetCount);
             if (carrierid > 0)
@@ -466,8 +467,10 @@ namespace DataRepository.DataAccess.Order
             {
                 command.AddInputParameter("@SubOrderType", DbType.String, subOrderType);
             }
-            var o = command.ExecuteScalar<object>();
-            return Convert.ToInt32(o);
+            feeInfo = command.ExecuteEntity<OrderFeeInfo>();
+            return feeInfo;
+            //var o = command.ExecuteScalar<object>();
+            //return Convert.ToInt32(o);
         }
 
         #endregion

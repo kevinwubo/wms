@@ -34,10 +34,10 @@ namespace Service.BaseBiz
                 info.BlackType = entity.BlackType;
                 info.UnionID = entity.UnionID;
                 info.UnionName = entity.UnionName;
-                info.Remark = entity.Remark;
-                info.OperatorID = entity.OperatorID;
                 info.Status = entity.Status;
-
+                info.SubStatus = entity.SubStatus;
+                info.CardCode = entity.CardCode;
+                info.Remark = entity.Remark;                
                 info.OperatorID = entity.OperatorID;
                 info.CreateDate = entity.CreateDate;
                 info.ChangeDate = entity.ChangeDate;
@@ -56,10 +56,12 @@ namespace Service.BaseBiz
                 entity.BlackType = info.BlackType;
                 entity.BlackTypeDesc = StringHelper.GetBlackTypeDesc(info.BlackType);
                 entity.UnionID = info.UnionID;
-                entity.UnionName = info.UnionName;                
-                entity.Remark = info.Remark;
-                entity.OperatorID = info.OperatorID;
+                entity.UnionName = info.UnionName;
                 entity.Status = info.Status;
+                entity.SubStatus = info.SubStatus;
+                entity.CardCode = info.CardCode;
+                entity.Remark = info.Remark;
+                entity.OperatorID = info.OperatorID;                
                 entity.CreateDate = info.CreateDate;
                 entity.ChangeDate = info.ChangeDate;
             }
@@ -113,10 +115,10 @@ namespace Service.BaseBiz
 
         }
 
-        public static int Delete(long ID)
+        public static int DeleteBlack(long ID)
         {
             BlackListRepository mr = new BlackListRepository();
-            int i = mr.Delete(ID);
+            int i = mr.DeleteBlack(ID);
             return i;
         }
 

@@ -243,6 +243,14 @@ namespace GuoChe.Controllers
         public ActionResult OrderSearch(string type = "", int carrierid = 0, int storageid = 0, int customerid = 0, int orderstatus = -1, string orderno = ""
             , string begindate = "", string enddate = "", int operatorid = -1, string ordertype = "", string ordersource = "", string subOrderType = "", int p = 1, int pageSize = 20)
         {
+            // 默认当月
+            if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
+            {
+                DateTime dt = DateTime.Now;
+                begindate = dt.Year + "-" + dt.Month + "-" + "01";
+                enddate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
             List<OrderEntity> mList = null;
 
             int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, orderstatus, -1, -1, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType);

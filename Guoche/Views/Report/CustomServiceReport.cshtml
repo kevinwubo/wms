@@ -89,10 +89,10 @@
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单属性</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单归属</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">发货仓库</th>
-                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">供应商</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">承运商</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">下单日期</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货方</th>
-                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货地址</th>
+                            @*<th role="columnheader" tabindex="0" rowspan="1" colspan="1">收货地址</th>*@
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">货物重量</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">配送数量</th>
                         </tr>
@@ -112,7 +112,7 @@
                                     <td class=" ">@entity.CarrierName</td>
                                     <td class=" ">@entity.OrderDate.ToShortDateString()</td>
                                     <td title="@entity.ReceiverName">@(string.IsNullOrEmpty(entity.ReceiverName) ? "" : entity.ReceiverName.Length > 5 ? entity.ReceiverName.Substring(0, 4) + "..." : entity.ReceiverName)</td>
-                                    <td title="@entity.ReceiverAddress">@(string.IsNullOrEmpty(entity.ReceiverAddress) ? "" : entity.ReceiverAddress.Length > 5 ? entity.ReceiverAddress.Substring(0, 4) + "..." : entity.ReceiverAddress)</td>
+                                    @*<td title="@entity.ReceiverAddress">@(string.IsNullOrEmpty(entity.ReceiverAddress) ? "" : entity.ReceiverAddress.Length > 5 ? entity.ReceiverAddress.Substring(0, 4) + "..." : entity.ReceiverAddress)</td>*@
                                     <td class=" ">@entity.Weight</td>
                                     <td class=" ">@entity.Quantity</td>
                                 </tr>

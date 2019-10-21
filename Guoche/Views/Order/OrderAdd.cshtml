@@ -201,7 +201,7 @@
                                 <input type="text" style="width:220px" readonly="readonly" id="contactMobile" aria-controls="menus" value="@(entity.contact!=null?entity.contact.telephone:"")" />
                             </td>
                             <td style=""><label class="control-label">联系地址</label></td>
-                            <td style="">
+                            <td style="" title="@(entity.contact != null ? entity.contact.address : "")">
                                 <input type="text" style="width:220px" readonly="readonly" id="contactAddress" aria-controls="menus" title="@(entity.contact != null ? entity.contact.address : "")" value="@(entity.contact != null ? entity.contact.address : "")" />
                             </td>
                         </tr>
@@ -448,7 +448,7 @@
 @section Footer{
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
 <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
-<script type="text/javascript" src="~/source/Order/inputOrder.js"></script>
+<script type="text/javascript" src="~/source/Order/inputOrder.js?@DateTime.Now.ToShortDateString()"></script>
 <script src="~/source/layui/layui.js"></script>
 
 

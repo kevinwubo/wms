@@ -182,13 +182,13 @@ namespace Common
 
         public static string GetBlackTypeDesc(string type)
         {
-            string desc = "";
+            string desc = type;
             if (!string.IsNullOrEmpty(type))
             {
-                if (type.Equals("Carrier"))
-                    desc = "承运商黑名单";
-                else if (type.Equals("Carrier"))
-                    desc = "承运商黑名单";                
+                if (type.Equals("GYS"))
+                    desc = "供应商";
+                else if (type.Equals("FWS"))
+                    desc = "服务商";                
             }
             return desc;
         }

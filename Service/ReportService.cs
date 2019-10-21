@@ -14,7 +14,7 @@ namespace Service
     public class ReportService : BaseService
     {
         #region 分页相关
-        public static int GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1,
+        public static OrderFeeInfo GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1,
             int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "")
         {
             return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType);
@@ -38,7 +38,7 @@ namespace Service
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, pager);
+            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "ASC", pager);
 
             if (!miList.IsEmpty())
             {
@@ -92,10 +92,6 @@ namespace Service
                     rEntity.Profit = rEntity.TotalReceiverFee - rEntity.TotalPayFee;
                     
                     reportList.Add(rEntity);
-
-                    //金额汇总
-                    reEntity.TotalAllPayAmount += rEntity.TotalPayFee;//总应付金额
-                    reEntity.TotalllReceiverAmount += rEntity.TotalReceiverFee;//总应收金额
                 }
                 reEntity.reportList = reportList;
             }

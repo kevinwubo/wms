@@ -1,4 +1,5 @@
 ﻿using Common;
+using DataRepository.DataModel;
 using Entity.ViewModel;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
@@ -44,10 +45,17 @@ namespace GuoChe.Controllers
         public ActionResult CustomServiceReport(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
+            // 默认当月
+            if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
+            {
+                DateTime dt = DateTime.Now;
+                begindate = dt.Year + "-" + dt.Month + "-" + "01";
+                enddate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
 
             List<OrderEntity> mList = null;
 
-            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1).count;
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
@@ -96,7 +104,7 @@ namespace GuoChe.Controllers
         public FileResult CustomServiceToExcel(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "")
         {
-            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1).count;
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = 1;
             pager.PageSize = count;
@@ -186,7 +194,7 @@ namespace GuoChe.Controllers
                         rowtemp.CreateCell(14).SetCellValue(listDetail[j].ProductDate.ToShortDateString());
                         rowtemp.CreateCell(15).SetCellValue(listDetail[j].ExceedDate.ToShortDateString());
                         rowtemp.CreateCell(16).SetCellValue(listDetail[j].Quantity);
-                        rowtemp.CreateCell(17).SetCellValue(listDetail[j].goods != null ? listDetail[j].goods.Weight : "");
+                        rowtemp.CreateCell(17).SetCellValue(listDetail[j].TotalWeight);//.goods != null ? listDetail[j].goods.Weight : ""
                         rowtemp.CreateCell(18).SetCellValue(sfhd);
                         rowtemp.CreateCell(19).SetCellValue(remark);
                     }
@@ -214,9 +222,17 @@ namespace GuoChe.Controllers
         public ActionResult CustomerReport(int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
+            // 默认当月
+            if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
+            {
+                DateTime dt = DateTime.Now;
+                begindate = dt.Year + "-" + dt.Month + "-" + "01";
+                enddate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
             List<OrderEntity> mList = null;
 
-            int count = ReportService.GetOrderCount("", -1, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            int count = ReportService.GetOrderCount("", -1, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1).count;
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
@@ -265,8 +281,16 @@ namespace GuoChe.Controllers
         public ActionResult CarrierReport(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
+            // 默认当月
+            if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
+            {
+                DateTime dt = DateTime.Now;
+                begindate = dt.Year + "-" + dt.Month + "-" + "01";
+                enddate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
             List<OrderEntity> mList = null;
-            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1).count;
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
@@ -322,9 +346,17 @@ namespace GuoChe.Controllers
         public ActionResult ProfitReport(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
         {
-            List<OrderEntity> mList = null;
+            // 默认当月
+            if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
+            {
+                DateTime dt = DateTime.Now;
+                begindate = dt.Year + "-" + dt.Month + "-" + "01";
+                enddate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
 
-            int count = ReportService.GetOrderCount("", carrierid, storageid,customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            List<OrderEntity> mList = null;
+            OrderFeeInfo feeinfo= ReportService.GetOrderCount("", carrierid, storageid,customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            int count = feeinfo.count;
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
@@ -343,7 +375,12 @@ namespace GuoChe.Controllers
             List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
             
             ReEntity report = ReportService.CreateReportList(mList);
+            report.TotalAllPayAmount = feeinfo.TotalAllPayAmount;
+            report.TotalllReceiverAmount = feeinfo.TotalllReceiverAmount;
             ViewBag.Report = report;
+
+
+
 
             ViewBag.GUID = System.Guid.NewGuid().ToString();
             ViewBag.carrierid = carrierid;
@@ -366,7 +403,7 @@ namespace GuoChe.Controllers
         string ordertype = "", string orderno = "", string begindate = "", string enddate = "",string type="")
         {
 
-            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1).count;
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = 1;
             pager.PageSize = count;

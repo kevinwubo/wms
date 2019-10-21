@@ -222,21 +222,23 @@ namespace GuoChe.Controllers
             pager.URL = "/BlackList";
 
             mList = BlackListService.GetBlackListInfoByRule(-1, pager);
-
+            ViewBag.CarrierModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "Carrier00" && t.Status == 1).ToList();
             ViewBag.BlackList = mList;
             ViewBag.Pager = pager;
             return View();
         }
 
-        public void ModifyBlack(int blackid,string type, int unionid, string unionname, string Remark)//Type,UnionID,UnionName,Remark,OperatorID,Status
+        public void ModifyBlack(int blackid, string type, int unionid, string unionname, int status, int subStatus, string cardCode, string Remark)//Type,UnionID,UnionName,Remark,OperatorID,Status
         {
             BlackListEntity entity = new BlackListEntity();
             entity.BlackID = blackid;
             entity.BlackType = type;
             entity.UnionID = unionid;
             entity.UnionName = unionname;
+            entity.SubStatus = subStatus;
+            entity.Status = status;
+            entity.CardCode = cardCode;
             entity.Remark = Remark;
-            entity.Status = 1;
             if (entity != null)
             {
                 entity.OperatorID = CurrentUser.UserID.ToString().ToInt(0);
@@ -244,9 +246,9 @@ namespace GuoChe.Controllers
             BlackListService.ModifyBlackList(entity);
         }
 
-        public void Delete(int id)
+        public void DeleteBlack(int bid)
         {
-            LineService.Delete(id);
+            BlackListService.DeleteBlack(bid);
             Response.Redirect("/BaseData/BlackList");
         }
 
