@@ -27,7 +27,8 @@
                             <div class="dataTables_length" id="menus_filter">
                                 <label><input type="text" placeholder="商品信息" aria-controls="menus" id="name" name="name" value="@ViewBag.Name"></label>
                                 <label><input type="text" placeholder="批次号" aria-controls="menus" id="batchNumber" name="batchNumber" value="@ViewBag.batchNumber"></label>
-                                <label><input type="hidden" id="pagetype" name="pagetype" value="@ViewBag.PageType" />
+                                <label>
+                                    <input type="hidden" id="pagetype" name="pagetype" value="@ViewBag.PageType" />
                                     <input type="hidden" id="HidGuid" name="HidGuid" value="@ViewBag.GUID" />
                                     <select tabindex="1" class="" style="width:150px" id="StorageID" name="StorageID">
                                         <option value="">--仓库名称--</option>
@@ -90,22 +91,22 @@
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.Units : "")</td>
                                     <td class=" ">@invent[i].BatchNumber</td>
                                     <td class=" ">@invent[i].ProductDate.ToShortDateString()</td>
-                                    <td class=" ">@(invent[i].goods != null ? invent[i].goods.exDate + invent[i].goods.exUnits : "")</td>    
-                                    <td>@invent[i].ExpDate.ToShortDateString()</td>                              
+                                    <td class=" ">@(invent[i].goods != null ? invent[i].goods.exDate + invent[i].goods.exUnits : "")</td>
+                                    <td>@invent[i].ExpDate.ToShortDateString()</td>
                                     <td class=" " style="@(invent[i].Quantity<10?"background-color:red":"")">@invent[i].Quantity</td>
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.Weight : "")</td>
                                     <td class=" ">@invent[i].InventoryDate.ToShortDateString()</td>
                                     <td>
                                         @if (!string.IsNullOrEmpty(invent[i].IsLock))
                                         {
-                                            @(invent[i].IsLock.Equals("T")?"盘点中":"库存正常")
+                                            @(invent[i].IsLock.Equals("T") ? "盘点中" : "库存正常")
                                         }
                                         else
                                         {
                                             @("库存正常");
                                         }
-                                     </td>
-                                    <td> 
+                                    </td>
+                                    <td>
                                         @if (ViewBag.PageType == "Delete")
                                         {
                                             <a href="###" onclick="javascript: return deleteInventory(@invent[i].InventoryID,'@ViewBag.Url');"><span class="label label-success"><b>删除</b></span></a>
@@ -126,13 +127,19 @@
 <script src="~/source/layui/layui.js"></script>
 <script type="text/javascript">
     jQuery("#export").click(function () {
-        window.location.href = "/Inventory/ExportExcel?guid="+$("#HidGuid").val();
+        var pagetype = $("#pagetype").val();
+        var name = $("#name").val();
+        var batchNumber = $("#batchNumber").val();
+        var StorageID = $("#StorageID").val();
+        var customerID = $("#customerID").val();
+
+        window.location.href = "/Inventory/ExportExcel?pagetype=" + pagetype + "&name=" + name + "&batchNumber=" + batchNumber + "&StorageID=" + StorageID + "&customerID=" + customerID;
     });
     //layui.use('laydate', function () {
 
     //    var laydate = layui.laydate;
     //    laydate.render({
-    //        elem: '#begindate' //指定元素lay-key="1" 
+    //        elem: '#begindate' //指定元素lay-key="1"
     //    });
     //});
     function deleteInventory(id,url) {
@@ -149,7 +156,7 @@
                     if (data) {
                         alert("库存删除成功!");
                         window.location.href="/Inventory/Inventory?"+url;
-                            
+
                     }
                 }
             })

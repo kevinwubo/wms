@@ -109,7 +109,6 @@ namespace GuoChe.Controllers
                 order.OperatorID = CurrentUser.UserID.ToString().ToInt(0);
             }
             OrderService.ModifyOrder(order);            
-            //Response.Redirect("/Order/");
             return Content("<script>alert('" + tips + "');window.location.href='/Order/OrderSearch?orderno=" + order.OrderNo + "'</script>");
         }
         #endregion
@@ -569,6 +568,7 @@ namespace GuoChe.Controllers
                 List<RegularOrderEntity> list = Cache.Get<List<RegularOrderEntity>>(token);
                 if (list != null && list.Count > 0)
                 {
+                    LogHelper.WriteTextLog("常规订单导入", JsonHelper.ToJson(list));
                     idsEntity = OrderService.GenerateRegularOrder(list, ordersource, orderType, operatorID);
                 }
             }
@@ -578,6 +578,7 @@ namespace GuoChe.Controllers
                 List<ImportOrderEntity> list = Cache.Get<List<ImportOrderEntity>>(token);
                 if (list != null && list.Count > 0)
                 {
+                    LogHelper.WriteTextLog("商超订单导入", JsonHelper.ToJson(list));
                     idsEntity = OrderService.GenerateOrder(list, ordersource, orderType, operatorID);
                 }
             }
@@ -606,6 +607,14 @@ namespace GuoChe.Controllers
             string begindate = "", string enddate = "", int p = 1, int pageSize = 20)
         {
             List<OrderEntity> mList = null;
+
+            // 默认当月
+            if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
+            {
+                DateTime dt = DateTime.Now;
+                begindate = dt.Year + "-" + dt.Month + "-" + "01";
+                enddate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
 
             int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno,begindate,enddate);
 

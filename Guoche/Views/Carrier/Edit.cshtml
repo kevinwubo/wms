@@ -32,20 +32,6 @@
                     <input type="hidden" id="CarrierID" name="CarrierID" value="@CarrierEntity.CarrierID">
                     <input type="hidden" id="ContactJson" name="ContactJson" value="@CarrierEntity.ContactJson">
                     <div class="control-group">
-                        <label class="control-label">承运商类型</label>
-                        <div class="controls" id="brandContainer">
-                            <select tabindex="1" class="span5" id="Type" name="Type">
-                                <option value="">--承运商类型--</option>
-                                @foreach (var item in CarrierModel)
-                                {
-                                    <option value="@item.ValueInfo" @(CarrierEntity.Type == item.ValueInfo ? "selected" : "")>@item.ValueInfo</option>
-                                }
-                            </select>
-
-                        </div>
-                    </div>
-
-                    <div class="control-group">
                         <label class="control-label">承运商名称</label>
                         <div class="controls">
                             <input class="span5" type="text" placeholder="承运商名称" id="CarrierName" name="CarrierName" value="@CarrierEntity.CarrierName" maxlength="200">
@@ -60,7 +46,20 @@
                     <div class="control-group">
                         <label class="control-label">承运商编号</label>
                         <div class="controls">
-                            <input class="span5" type="text" placeholder="承运商编号" id="CarrierNo" name="CarrierNo" value="@CarrierEntity.CarrierNo" maxlength="200">
+                            <input class="span5" type="text" placeholder="承运商编号" id="CarrierNo" name="CarrierNo" value="@(string.IsNullOrEmpty(CarrierEntity.CarrierNo) ? "LC" + StringHelper.GetRandomCode(4) : CarrierEntity.CarrierNo)" maxlength="200">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">承运商类型</label>
+                        <div class="controls" id="brandContainer">
+                            <select tabindex="1" class="span5" id="Type" name="Type">
+                                <option value="">--承运商类型--</option>
+                                @foreach (var item in CarrierModel)
+                                {
+                                    <option value="@item.ValueInfo" @(CarrierEntity.Type == item.ValueInfo ? "selected" : "")>@item.ValueInfo</option>
+                                }
+                            </select>
+
                         </div>
                     </div>
                     <div class="control-group">

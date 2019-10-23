@@ -426,10 +426,15 @@ namespace GuoChe.Controllers
         #endregion
 
         #region 导出excel
-        public FileResult ExportExcel(string guid)
+        public FileResult ExportExcel(string pagetype, string name, string batchNumber, int StorageID = -1, int customerID = -1)
         {
+            int count = InventoryService.GetInventoryCount(name, batchNumber, StorageID, customerID);
+            PagerInfo pager = new PagerInfo();
+            pager.PageIndex = 1;
+            pager.PageSize = count;
+            pager.SumCount = count;
             //获取list数据
-            List<InventoryEntity> list = Cache.Get<List<InventoryEntity>>(guid); //InventoryService.GetInventoryAll();
+            List<InventoryEntity> list = InventoryService.GetInventoryInfoByRule(name, batchNumber, StorageID, customerID, pager); 
 
             //创建Excel文件的对象
             HSSFWorkbook book = new HSSFWorkbook();

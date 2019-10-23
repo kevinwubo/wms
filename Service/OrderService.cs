@@ -1252,7 +1252,7 @@ namespace Service
 
             foreach (String str in listGroup)
             {
-                List<RegularOrderEntity> listNew = list.FindAll(p => str.Equals(p.CustomerName + p.ReceiverName));
+                List<RegularOrderEntity> listNew = list.FindAll(p => str.Equals(p.CustomerName + p.ReceiverName + p.Temp + p.GoodsName));
 
                 if (listNew != null && listNew.Count > 0)
                 {
@@ -1307,7 +1307,7 @@ namespace Service
                     info.CreateDate = DateTime.Now;
                     info.ChangeDate = DateTime.Now;
 
-                    info.IsImport = "F";//常规订单走普通订单模版
+                    info.IsImport = "T";//常规订单走普通订单模版
                     info.OrderSource = ordersource;
                     info.SalesMan = "";
                     info.PromotionMan = "";
@@ -1377,7 +1377,7 @@ namespace Service
         }
 
         /// <summary>
-        /// 订单导入 按照门店信息分组
+        /// 订单导入 客户名称+送达方 +温区+商品信息
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
@@ -1389,7 +1389,7 @@ namespace Service
             foreach (RegularOrderEntity entity in list)
             {
                 ImportGroup group = new ImportGroup();
-                group.name = entity.CustomerName + entity.ReceiverName;
+                group.name = entity.CustomerName + entity.ReceiverName + entity.Temp + entity.GoodsName;
                 strs.Add(group);
             }
 
