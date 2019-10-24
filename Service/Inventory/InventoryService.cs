@@ -281,11 +281,19 @@ namespace Service.Inventory
 
         }
 
-        public static List<InventoryEntity> GetInventoryByRule(int goodsid, int storageID, string batchNumber)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="goodsid">商品编号</param>
+        /// <param name="storageID"></param>
+        /// <param name="batchNumber">批次号</param>
+        /// <param name="CustomerID">客户ID</param>
+        /// <returns></returns>
+        public static List<InventoryEntity> GetInventoryByRule(int goodsid, int storageID, string batchNumber, int CustomerID = -1,bool DY0=false)
         {
             List<InventoryEntity> all = new List<InventoryEntity>();
             InventoryRepository mr = new InventoryRepository();
-            List<InventoryInfo> miList = mr.GetInventoryByRule(goodsid, storageID, batchNumber);
+            List<InventoryInfo> miList = mr.GetInventoryByRule(goodsid, storageID, batchNumber, CustomerID, DY0);
 
             if (!miList.IsEmpty())
             {

@@ -40,8 +40,9 @@ namespace DataRepository.DataAccess.BaseData
         /// <param name="goodsid"></param>
         /// <param name="storageID"></param>
         /// <param name="batchNumber"></param>
+        /// <param name="DY0">是否查询大于0</param>
         /// <returns></returns>
-        public List<InventoryInfo> GetInventoryByRule(int goodsid, int storageID, string batchNumber)
+        public List<InventoryInfo> GetInventoryByRule(int goodsid, int storageID, string batchNumber, int CustomerID,bool DY0)
         {
             List<InventoryInfo> result = new List<InventoryInfo>();
             string sqlText = InventoryStatement.GetAllInventoryByRule;
@@ -58,6 +59,17 @@ namespace DataRepository.DataAccess.BaseData
                 sqlText += " AND BatchNumber=@BatchNumber";
             }
 
+            if (CustomerID > 0)
+            {
+                sqlText += " AND CustomerID=@CustomerID";
+            }
+
+            // 只查询大于0的库存数据
+            if (DY0)
+            {
+                sqlText += " AND Quantity>0";
+            }
+
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
 
             if (goodsid > 0)
@@ -71,6 +83,11 @@ namespace DataRepository.DataAccess.BaseData
             if (!string.IsNullOrEmpty(batchNumber))
             {
                 command.AddInputParameter("@BatchNumber", DbType.String, batchNumber);
+            }
+
+            if (CustomerID > 0)
+            {
+                command.AddInputParameter("@CustomerID", DbType.String, CustomerID);
             }
 
             result = command.ExecuteEntityList<InventoryInfo>();

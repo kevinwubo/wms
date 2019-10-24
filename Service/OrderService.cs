@@ -247,7 +247,7 @@ namespace Service
 
         public static bool ModifyOrder(OrderEntity entity)
         {
-            long OrderID = 0;
+            long orderID = 0;
             long result = 0;
             if (entity != null)
             {
@@ -274,7 +274,7 @@ namespace Service
                     orderInfo.OrderID = entity.OrderID;
                     orderInfo.ChangeDate = DateTime.Now;
                     result = mr.ModifyOrder(orderInfo);
-                    OrderID = entity.OrderID;
+                    orderID = entity.OrderID;
                 }
                 else
                 {
@@ -288,8 +288,7 @@ namespace Service
                             oEntity.OrderNo = GetOrderNo();
                         }
                     }
-                    result = mr.CreateNew(orderInfo);
-                    OrderID = result;
+                    orderID = mr.CreateNew(orderInfo);
                 }
 
                 #region 订单明细更新
@@ -305,7 +304,7 @@ namespace Service
                         {
                             OrderDetailInfo info = new OrderDetailInfo();
                             info.ID = item.ID;
-                            info.OrderID = entity.OrderID > 0 ? item.OrderID : result.ToString().ToInt(0);
+                            info.OrderID = entity.OrderID > 0 ? item.OrderID : orderID.ToString().ToInt(0);
                             int goodsID = item.GoodsID.ToInt(0);
                             GoodsEntity goodsEntity = new GoodsEntity(); ;
                             if (goodsID < 1)
@@ -368,7 +367,9 @@ namespace Service
                         }
                     }
                     //库存更新
-                    OrderInventoryProcess(OrderID, orderInfo.OrderType, orderInfo.OperatorID, oldOrderDetail);
+                    //OrderInventoryProcess(orderID, orderInfo.OrderType, orderInfo.OperatorID, oldOrderDetail);
+
+                    OrderInventoryService.OrderInventoryProcess(orderID);
                 }
 
                 #endregion
@@ -824,6 +825,7 @@ namespace Service
             infoDetail.ChangeDate = DateTime.Now;
             mrDetail.CreateNew(infoDetail);
         }
+
         #endregion
 
         #region 订单审核拒绝
@@ -1110,7 +1112,7 @@ namespace Service
                             #endregion
                         }
                         //订单库存扣减处理
-                        OrderInventoryProcess(orderid.ToString().ToInt(0), orderType, OperatorID);
+                        OrderInventoryService.OrderInventoryProcess(orderid);
                     }
                 }
             }
@@ -1368,7 +1370,8 @@ namespace Service
                         #endregion
                     }
                     //订单库存扣减处理
-                    OrderInventoryProcess(orderid.ToString().ToInt(0), OrderType, OperatorID);
+                    //OrderInventoryProcess(orderid.ToString().ToInt(0), OrderType, OperatorID);
+                    OrderInventoryService.OrderInventoryProcess(orderid);
                 }
                 
                
