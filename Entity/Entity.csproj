@@ -63,6 +63,7 @@
     <Compile Include="ViewModel\MenuCompare.cs" />
     <Compile Include="ViewModel\MenuEntity.cs" />
     <Compile Include="ViewModel\NewsEntity.cs" />
+    <Compile Include="ViewModel\OrderDeliverPlanEntity.cs" />
     <Compile Include="ViewModel\OrderDetailEntity.cs" />
     <Compile Include="ViewModel\OrderEntity.cs" />
     <Compile Include="ViewModel\PriceSetEntity.cs" />

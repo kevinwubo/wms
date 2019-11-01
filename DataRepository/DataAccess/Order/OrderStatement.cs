@@ -68,17 +68,23 @@ namespace DataRepository.DataAccess.Order
         public static string GetOrderByKeys = @"SELECT * FROM wms_OrderInfo(NOLOCK) WHERE OrderID IN (#ids#)";
 
         public static string CreateNewOrder = @"INSERT INTO dbo.wms_OrderInfo(OrderNo,MergeNo,OrderType,ReceiverID,CustomerID,SendStorageID,ReceiverStorageID,CarrierID
-                                                ,OrderDate,SendDate,configPrice,configHandInAmt,configSortPrice,configCosting,configHandOutAmt,configSortCosting,TempType,OrderStatus
+                                                ,OrderDate,SendDate,configPrice,configHandInAmt,configSortPrice,configCosting,configHandOutAmt,configSortCosting,TempType,OrderStatus,OrderOutStatus,DeliveryType
                                                 ,UploadStatus,Status,Remark,OperatorID,OrderSource,SalesMan,PromotionMan,LineID,SubOrderType,IsImport,CreateDate,ChangeDate)
 			                                                VALUES(@OrderNo,@MergeNo,@OrderType,@ReceiverID,@CustomerID,@SendStorageID,@ReceiverStorageID,@CarrierID,
-                                                @OrderDate,@SendDate,@configPrice,@configHandInAmt,@configSortPrice,@configCosting,@configHandOutAmt,@configSortCosting,@TempType,@OrderStatus
+                                                @OrderDate,@SendDate,@configPrice,@configHandInAmt,@configSortPrice,@configCosting,@configHandOutAmt,@configSortCosting,@TempType,@OrderStatus,@OrderOutStatus,@DeliveryType
                                                 ,@UploadStatus,@Status,@Remark,@OperatorID,@OrderSource,@SalesMan,@PromotionMan,@LineID,@SubOrderType,@IsImport,@CreateDate,@ChangeDate) select @@IDENTITY";
 
         public static string ModifyOrder = @"UPDATE wms_OrderInfo SET OrderNo = @OrderNo,MergeNo = @MergeNo,OrderType = @OrderType,ReceiverID = @ReceiverID,CustomerID = @CustomerID
                                                 ,SendStorageID = @SendStorageID,ReceiverStorageID = @ReceiverStorageID,CarrierID = @CarrierID,OrderDate = @OrderDate,SendDate = @SendDate
                                                 ,configPrice = @configPrice,configHandInAmt = @configHandInAmt,configSortPrice = @configSortPrice,configCosting = @configCosting,configHandOutAmt = @configHandOutAmt
-                                                ,configSortCosting = @configSortCosting,TempType = @TempType,OrderStatus = @OrderStatus,UploadStatus = @UploadStatus,Status = @Status,Remark = @Remark
+                                                ,configSortCosting = @configSortCosting,TempType = @TempType,OrderStatus = @OrderStatus,DeliveryType=@DeliveryType,UploadStatus = @UploadStatus,Status = @Status,Remark = @Remark
                                                 ,OperatorID = @OperatorID,ChangeDate = @ChangeDate WHERE OrderID=@OrderID";
+
+        /// <summary>
+        /// 更新订单出库状态
+        /// </summary>
+
+        public static string UpdateOrderOutType = @"UPDATE wms_OrderInfo SET OrderOutStatus=@OrderOutStatus WHERE OrderID=@OrderID";
 
         /// <summary>
         /// 更新回单附件
@@ -95,6 +101,12 @@ namespace DataRepository.DataAccess.Order
         /// </summary>
 
         public static string UpdateOrderStatus = @"UPDATE wms_OrderInfo SET OrderStatus = @OrderStatus,ChangeDate = GetDate() WHERE OrderID=@OrderID";
+
+        /// <summary>
+        /// 更新承运商信息
+        /// </summary>
+
+        public static string UpdateOrderCarrier = @"UPDATE wms_OrderInfo SET CarrierID = @CarrierID,DeliveryStatus=@DeliveryStatus,ChangeDate = GetDate() WHERE OrderID=@OrderID";
         /// <summary>
         /// 更新接单状态
         /// </summary>

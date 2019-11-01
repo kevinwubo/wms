@@ -480,6 +480,7 @@ namespace GuoChe.Controllers
         }
         #endregion     
 
+        #region 库存删除
         public JsonResult Remove(string iid)
         {
 
@@ -489,6 +490,104 @@ namespace GuoChe.Controllers
                 Data = iid
             };
         }
+        #endregion
+        
+
+        #region 订单出库
+         /// <summary>
+        /// 订单出库  查询未出库订单
+        /// </summary>
+        /// <param name="carrierid"></param>
+        /// <param name="storageid"></param>
+        /// <param name="customerid"></param>
+        /// <param name="status"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public ActionResult OrderOut(int carrierid = 0, int storageid = 0, int customerid = 0, int status = -1, string orderno="",
+            string begindate = "", string enddate = "", int p = 1, int pageSize = 20)
+        {
+            List<OrderEntity> mList = null;
+
+            // 默认当月
+            if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
+            {
+                DateTime dt = DateTime.Now;
+                begindate = dt.Year + "-" + dt.Month + "-" + "01";
+                enddate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F");
+
+            PagerInfo pager = new PagerInfo();
+            pager.PageIndex = p;
+            pager.PageSize = pageSize;
+            pager.SumCount = count;
+            pager.URL = "OrderOut";
+           
+
+            if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            {
+                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F");
+            }
+            else
+            {
+                mList = OrderService.GetOrderInfoPager(pager);
+            }
+            //默认承运商
+            ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
+            //默认仓库
+            ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
+            //门店
+            ViewBag.Goods = GoodsService.GetGoodsByRule("", 1);//只显示使用中的数据
+            //客户信息
+            ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
+
+            ViewBag.UserID=CurrentUser!=null?CurrentUser.UserID:-1;
+            ViewBag.Status = status;
+            ViewBag.carrierid = carrierid;
+            ViewBag.customerid = customerid;
+            ViewBag.storageid = storageid;
+            ViewBag.OrderList = mList;
+            ViewBag.PageSize = pageSize;
+            ViewBag.BeginDate = begindate;
+            ViewBag.OrderNo = orderno;
+            ViewBag.EndDate = enddate;
+            ViewBag.Pager = pager;
+            return View();
+        }
+
+        /// <summary>
+        /// 订单出库操作
+        /// </summary>
+        /// <param name="orderids"></param>
+        /// <returns></returns>
+        public JsonResult OrderOutProcess(string orderids)
+        {
+            bool temp = false;
+
+            if (!string.IsNullOrEmpty(orderids))
+            {
+                string[] OrderIds = orderids.Split(',');
+                foreach(string orderid in OrderIds)
+                {
+                    if (!string.IsNullOrEmpty(orderid))
+                    {
+                        LogHelper.WriteTextLog("订单出库开始", "订单号：" + orderid + "操作人：" + CurrentUser.UserID);
+
+                        OrderInventoryService.OrderInventoryProcess(orderid.ToLong(0));
+
+                        LogHelper.WriteTextLog("订单出库结束", "订单号：" + orderid + "操作人：" + CurrentUser.UserID);
+                    }
+                }
+            }
+
+            return new JsonResult
+            {
+                Data = temp
+            };
+        }
+
+        #endregion
 
     }
 }

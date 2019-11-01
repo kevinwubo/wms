@@ -48,7 +48,7 @@ namespace Service.BaseBiz
             return info;
         }
 
-        private static CarrierEntity TranslateCarrierEntity(CarrierInfo info)
+        private static CarrierEntity TranslateCarrierEntity(CarrierInfo info,bool isNeedContact=false)
         {
             CarrierEntity entity = new CarrierEntity();
             if (info != null)
@@ -64,6 +64,11 @@ namespace Service.BaseBiz
                 entity.CreateDate = info.CreateDate;
                 entity.ChangeDate = info.ChangeDate;
                 entity.CarrierID = info.CarrierID;
+                if (isNeedContact)
+                {                    
+                    entity.listContact = ContactService.GetContactByRule(UnionType.Carrier.ToString(), info.CarrierID);
+                    entity.contactJson = entity.listContact != null && entity.listContact.Count > 0 ? JsonHelper.ToJson(entity.listContact) : "";
+                }
             }
 
             return entity;
@@ -182,7 +187,7 @@ namespace Service.BaseBiz
                     }
                     else
                     {
-                        CarrierEntity CarrierEntity = TranslateCarrierEntity(mInfo);
+                        CarrierEntity CarrierEntity = TranslateCarrierEntity(mInfo,true);
                         all.Add(CarrierEntity);
                     }
                     

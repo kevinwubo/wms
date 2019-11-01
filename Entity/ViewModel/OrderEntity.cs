@@ -101,6 +101,12 @@ namespace Entity.ViewModel
         /// </summary>
         public decimal configSortCosting { get; set; }
 
+
+        /// <summary>
+        /// 物流方式 零担，整车等等
+        /// </summary>
+        public string DeliveryType { get; set; }
+
         /// <summary>
         /// 温度
         /// </summary>
@@ -129,9 +135,19 @@ namespace Entity.ViewModel
         public string UploadStatusDesc { get; set; }
 
         /// <summary>
+        /// 是否安排物流计划  T是/F否
+        /// </summary>
+        public string DeliveryStatus { get; set; }
+
+        /// <summary>
         /// 状态   (1:使用中 0：已删除)
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// 订单是否出库  T：已出库 /F:未出库
+        /// </summary>
+        public string OrderOutStatus { get; set; }
 
         /// <summary>
         /// 备注

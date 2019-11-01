@@ -122,7 +122,8 @@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width: 120px;">类型</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">名称/姓名</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">原因</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">状态</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">合作状态</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">甄别状态</th>                                
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width: 40px;">操作</th>
                             </tr>
                         </thead>
@@ -142,6 +143,17 @@
                                         else
                                         {
                                             <span class="label">合作中</span>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (entity.SubStatus == 0)
+                                        {
+                                            <span class="label">谨慎合作</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label"></span>
                                         }
 
                                     </td>

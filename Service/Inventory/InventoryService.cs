@@ -89,8 +89,9 @@ namespace Service.Inventory
    
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                LogHelper.WriteErrorLog("入库保存异常", ex.ToString());
                 return false;
             }
             return true;

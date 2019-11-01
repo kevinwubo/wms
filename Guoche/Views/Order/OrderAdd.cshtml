@@ -9,8 +9,9 @@
     //List<ReceiverEntity> receivers = (List<ReceiverEntity>)ViewBag.Receiver;//收货人 [门店、仓库]
     OrderEntity entity = (OrderEntity)ViewBag.Order;//价格配置
     List<BaseDataEntity> temp = (List<BaseDataEntity>)ViewBag.TemList;//温度
+    List<BaseDataEntity> deliveryList = (List<BaseDataEntity>)ViewBag.DeliverList;//物流方式
     List<BaseDataEntity> receiverList = (List<BaseDataEntity>)ViewBag.ReceiverList;//收货方
-    List<BaseDataEntity> deliverList = (List<BaseDataEntity>)ViewBag.DeliverList;//配送方式
+   
 }
 @section Header{
 <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
@@ -219,19 +220,21 @@
                                     }
                                 </select>*@
                             </td>
-                            <td style=""><label class="control-label">承运商</label></td>
+                            @*<td style=""><label class="control-label">承运商</label></td>
                             <td style="">
-                                @*<select tabindex="1" class="" id="CarrierID" name="CarrierID">
-                                    @foreach (var item in carriers)
-                                    {
-                                        <option value="@item.CarrierID" @(item.CarrierID == entity.CarrierID ? "selected" : "")>@item.CarrierName</option>
-                                    }
-                                </select>*@
-
                                 <input type="hidden" id="CarrierID" name="CarrierID" value="@entity.CarrierID" />
                                 <input type="text" aria-controls="menus" autocomplete="off" id="CarrierName" name="CarrierName" value="@(entity.carrier != null ? entity.carrier.CarrierName : "")">
                                 <div id="div_carriere_items" style="display:none">
                                 </div>
+                            </td>*@
+                            <td style="">物流方式</td>
+                            <td>
+                                <select tabindex="1" class="" id="DeliveryType" name="DeliveryType">
+                                    @foreach (var item in deliveryList)
+                                    {
+                                        <option value="@item.ValueInfo" @(item.ValueInfo == entity.DeliveryType ? "selected" : "")>@item.ValueInfo</option>
+                                    }
+                                </select>
                             </td>
                             <td style=""><label class="control-label">配送时间</label></td>
                             <td style="">

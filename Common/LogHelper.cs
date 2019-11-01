@@ -41,5 +41,36 @@ namespace Common
             sw.Close();
         }
 
+        /// <summary>  
+        /// 写入日志到文本文件  
+        /// </summary>  
+        /// <param name="action">动作</param>  
+        /// <param name="strMessage">日志内容</param>  
+        /// <param name="time">时间</param>  
+        public static void WriteErrorLog(string action, string strMessage)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory + @"\Log\";
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            string fileFullPath = path + DateTime.Now.ToString("yyyy-MM-dd") + ".Error.txt";
+            StringBuilder str = new StringBuilder();
+            str.Append("Time:    " + DateTime.Now.ToString() + "\r\n");
+            str.Append("Action:  " + action + "\r\n");
+            str.Append("Message: " + strMessage + "\r\n");
+            str.Append("-----------------------------------------------------------\r\n\r\n");
+            StreamWriter sw;
+            if (!File.Exists(fileFullPath))
+            {
+                sw = File.CreateText(fileFullPath);
+            }
+            else
+            {
+                sw = File.AppendText(fileFullPath);
+            }
+            sw.WriteLine(str.ToString());
+            sw.Close();
+        }
+
     }
 }

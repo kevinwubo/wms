@@ -295,7 +295,7 @@ namespace GuoChe.Controllers
                         {
                             CarrierEntity model = new CarrierEntity();
                             model.CarrierID = k.CarrierID;
-                            model.CarrierName = k.CarrierName;
+                            model.CarrierName = k.CarrierName;                            
                             outList.Add(model);
 
                         }

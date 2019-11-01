@@ -29,3 +29,13 @@ function ReportOOOToExcel(type) {
     var endDate = $("#enddate").val();
     location.href = "ReportToExcel?carrierid=" + carrierID + "&storageid=" + storageID + "&customerid=" + customerID + "&orderno=" + orderNo + "&ordertype=" + orderType + "&begindate=" + beginDate + "&enddate=" + endDate + "&type=" + type;
 }
+
+
+///运输计划报表导出
+function OrderDeliverPlanReportToExcel()
+{
+    var carrierID = $("#carrierid").val();
+    var beginDate = $("#begindate").val();
+    var endDate = $("#enddate").val();
+    location.href = "OrderDeliverPlanReportToExcel?carrierid=" + carrierID + "&begindate=" + beginDate + "&enddate=" + endDate;
+}

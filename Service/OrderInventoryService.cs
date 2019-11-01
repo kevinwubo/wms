@@ -22,18 +22,23 @@ namespace Service
             try
             {
                 OrderEntity orderInfo = OrderService.GetOrderByOrderID(orderid);
-                if (orderInfo != null)
+                if (orderInfo != null && !orderInfo.OrderOutStatus.Equals("T"))//订单不是已出库状态
                 {
+                    LogHelper.WriteTextLog("订单出库", "订单号：" + orderInfo.OrderNo);
                     //仓配订单 仓配订单 仓到店，涉及仓的库存扣减，无视门店库存。
                     if (orderInfo.OrderType.Equals(OrderType.CPDD.ToString()))
                     {
+                        //出库操作
                         inventoryProcess(orderInfo);
+
+                        //更新订单出库状态为已出库
+                        OrderService.UpdateOrderOutType(orderInfo.OrderID);
                     }
                 }
             }
             catch (Exception ex)
             {
-
+                LogHelper.WriteErrorLog("订单出库", "出库异常："+ex.ToString());
             }
             return temp;
         }
@@ -87,30 +92,11 @@ namespace Service
                     {
                         //库存不足扣减
                         TotalGoodQuantity = TotalGoodQuantity - inventory.Quantity;//当前明细出库数量 减去库存数量
-                        //if (TotalGoodQuantity > 0)
-                        //{
                         //库存更新
                         deductionInventory(0, inventory);//库存直接清0
                         //库存明细更新
                         createInventoryDetail(orderDetail, orderInfo, inventory, inventory.Quantity);
-                        //}
-                        //else
-                        //{
-                        //    int quantity = inventory.Quantity - TotalGoodQuantity;
-                        //    //库存更新
-                        //    deductionInventory(quantity, inventory);//直接扣除库存
-
-                        //    //库存明细更新
-                        //    createInventoryDetail(orderDetail, orderInfo, inventory, TotalGoodQuantity);
-                        //}
-
-
-                        //if (TotalGoodQuantity == 0)
-                        //{
-                        //    break;
-                        //}
                     }
-
                 }
             }
         }

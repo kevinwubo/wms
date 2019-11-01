@@ -8,35 +8,51 @@
     List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
     List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
     List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
-
+    List<BaseDataEntity> CarrierModel = ((List<BaseDataEntity>)ViewBag.CarrierModel) ?? new List<BaseDataEntity>();
+    List<BaseDataEntity> deliveryList = (List<BaseDataEntity>)ViewBag.DeliverList;//物流方式
+    List<BaseDataEntity> temp = (List<BaseDataEntity>)ViewBag.TemList;//温度
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
 <link href="~/source/assets/css/queryItem.css" rel="stylesheet" />
 <link href="~/source/assets/css/comfirm.css" rel="stylesheet" />
 <link href="~/source/assets/css/viewer.min.css" rel="stylesheet" />
 <link href="~/source/assets/css/img.css" rel="stylesheet" />
+<link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<link href="~/source/assets/css/lctypein-alert.css" rel="stylesheet" />
 <link href="~/source/layui/css/layui.css" rel="stylesheet" />
+<style>
+    #div_carriere_items {
+        width: auto;
+        min-width: 206px;
+        height: 200px;
+        border: 1px solid #66afe9;
+        border-top: 0px;
+        overflow: auto;
+        display: none;
+        position: absolute;
+        background: #FFF;
+    }
+</style>
 <div class="row-fluid">
-    <h2 class="heading" style="margin-top:20px">@ViewBag.TitleName</h2>
+    <h2 class="heading" style="margin-top:50px">运输计划</h2>
 </div>
 <div class="row-fluid">
     <div class="widget widget-padding span12">
         <div class="widget-header">
             <input type="hidden" id="HidUserID" name="HidUserID" value="@ViewBag.UserID" />
             <i class="icon-laptop"></i>
-            <h5>@ViewBag.TitleName</h5>
+            <h5>运输计划</h5>
         </div>
         <div class="widget-body" style="margin-bottom:50px">
             <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
                 <div class="row-fluid">
                     <div class="">
-                        <form action="/Order/OrderSearch_Modify" method="get">
+                        <form action="/Line/OrderDeliveryPlan" method="get">
                             <div class="dataTables_length" id="menus_filter">
                                 <label>
                                     <input type="text" id="orderno" name="orderno" style="width:200px" value="@ViewBag.OrderNo" placeholder="订单号,收货方查询" />
                                 </label>
                                 <label>
-                                    <input type="hidden" id="type" name="type" value="@ViewBag.PageType" />
                                     <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
                                         <option value="">--请选择出库仓--</option>
                                         @foreach (var item in storages)
@@ -64,12 +80,12 @@
                                     </select>
                                 </label>
                                 @*<label>
-                                        订单状态: <select class="span3" style="width:150px" id="status" name="status">
-                                            <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
-                                            <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
-                                            <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
-                                        </select>
-                                    </label>*@
+                    订单状态: <select class="span3" style="width:150px" id="status" name="status">
+                        <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
+                        <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
+                        <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
+                    </select>
+                </label>*@
                                 <label>
                                     <select tabindex="1" class="" style="width: 65px" id="pageSize" name="pageSize">
                                         <option value="10" @(ViewBag.PageSize == 10 ? "selected" : "")>10条</option>
@@ -89,7 +105,7 @@
                                 <label>
                                     <input type="checkbox" id="chk_all" value="-1" />全选
                                 </label>
-                                <button class="btn btn-info" type="button" id="download_SHD">下载送货单</button>
+                                <button class="btn btn-info" type="button" id="btn_OrderPlan">安排计划</button>
                             </div>
                         </form>
                     </div>
@@ -100,12 +116,12 @@
                         @foreach (OrderEntity entity in orderList)
                         {
 
-                            <div class="lcItem" dataid="@entity.OrderID" storageid="23">
+                            <div class="lcItem" dataid="@entity.OrderID" storageid="23" style="background-color:#90ee902e">
                                 @if (entity.OrderType.Equals("RKD"))
                                 {
                                     <div class="lcItem_t">
                                         <div class="lcCheckDiv">
-                                            <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID+"-"+entity.IsImport)" />
+                                            <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID+"-"+entity.OrderNo)" />
                                         </div>
                                         <div class="lcItem_t_l">
                                             <div class="lcDivList">
@@ -179,29 +195,10 @@
                                                 </div>
                                                 @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
                                                 {
-                                                    <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
-                                                        查看回单
-                                                    </div>
+                                                <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
+                                                    查看回单
+                                                </div>
                                                 }
-                                                @*@if (ViewBag.PageType == "verify")
-                                                {
-                                                    <div class="showDiv">
-                                                        <a href="/Order/OrderPass?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">通过</a>
-                                                    </div>
-                                                    <div class="showDiv">
-                                                        <a href="/Order/OrderBack?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">拒绝</a>
-                                                    </div>
-                                                }
-                                                else if (ViewBag.PageType == "modify")
-                                                {
-                                                    <div class="mod">
-                                                        <a href="/Order/OrderAdd?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">修改</a>
-                                                    </div>
-                                                    <div class="del">
-                                                        
-                                                        <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType',@entity.OperatorID)" style="color:white">删除</a>
-                                                    </div>
-                                                }*@
                                             </div>
                                         </div>
                                     </div>
@@ -210,7 +207,7 @@
                                 {
                                     <div class="lcItem_t">
                                         <div class="lcCheckDiv">
-                                            <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID+"-"+entity.IsImport)" />
+                                            <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID)" />
                                         </div>
                                         <div class="lcItem_t_l">
                                             <div class="lcDivList">
@@ -313,28 +310,7 @@
                                                         查看回单
                                                     </div>
                                                 }
-                                                @if (ViewBag.PageType == "verify")
-                                                {
-                                                    <div class="showDiv">
-                                                        <a href="/Order/OrderPass?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">通过</a>
-                                                    </div>
-                                                    <div class="showDiv">
-                                                        <a href="/Order/OrderBack?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">拒绝</a>
-                                                    </div>
-                                                }
-                                                else if (ViewBag.PageType == "modify")
-                                                {
-                                                    //未出库订单 支持修改、删除
-                                                    if (!string.IsNullOrEmpty(entity.OrderOutStatus)&&entity.OrderOutStatus.Equals("F"))
-                                                    {
-                                                        <div class="mod">
-                                                            <a href="/Order/OrderAdd?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">修改</a>
-                                                        </div>
-                                                        <div class="del">
-                                                            <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType',@entity.OperatorID)" style="color:white">删除</a>
-                                                        </div>
-                                                    }
-                                                }
+
                                             </div>
                                         </div>
                                     </div>
@@ -419,6 +395,101 @@
     </div> <!-- /widget -->
 </div>
 
+<!--运输计划-->
+<div class="coumpLayer_ysjh" id="myModal" style="display: none;">
+    <div class="coumpLayer_ysjh_t">
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <td colspan="4" align="left" style="font-size:larger">运输计划单</td>
+                </tr>
+                <tr>
+                    <td colspan="4" align="left">
+                        本次计划单需安排<span id="orderCount" style="color:red"></span>张运输订单
+                        <input type="hidden" id="OrderIDS" name="OrderIDS" value="" />
+                    </td>
+                </tr>
+            </thead>
+            <tr>
+                <td>承运商类型</td>
+                <td>
+                    <select tabindex="1" class="" id="Type" style="width:220px" name="Type">
+                        <option value="">--承运商类型--</option>
+                        @foreach (var item in CarrierModel)
+                        {
+                            <option value="@item.ValueInfo">@item.ValueInfo</option>
+                        }
+                    </select>
+                </td>
+                <td>承运商名称</td>
+                <td>
+                    <input type="hidden" id="txt_CarrierID" name="txt_CarrierID" value="-1" />
+                    <input type="text" id="txt_CarrierName" style="width:220px" name="txt_CarrierName" />
+                    <div id="div_carriere_items" style="display:none">
+                    </div>
+                </td>
+
+            </tr>
+            <tr>
+                <td>温区</td>
+                <td>
+                    <select tabindex="1" class=" style=" width:220px" id="Temp" name="Temp">
+                        @foreach (var item in temp)
+                        {
+                            <option value="@item.ValueInfo">@item.ValueInfo</option>
+                        }
+                    </select>
+                </td>
+                <td>物流方式</td>
+                <td>
+                    <select tabindex="1" class="" id="DeliveryType" style="width:220px" name="DeliveryType">
+                        @foreach (var item in deliveryList)
+                        {
+                            <option value="@item.ValueInfo">@item.ValueInfo</option>
+                        }
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <td>驾驶员姓名</td>
+                <td><input type="text" placeholder="请输入驾驶员姓名" id="DriverName" name="DriverName" style="width:220px" /></td>
+                <td>联系电话</td>
+                <td><input type="text" placeholder="请输入联系电话" id="DriverTelephone" name="DriverTelephone" style="width:220px" /></td>
+            </tr>
+            <tr>
+                <td>车型</td>
+                <td><input type="text" placeholder="请输入车型" id="CarModel" name="CarModel" style="width:220px" /></td>
+                <td>提货车牌</td>
+                <td><input placeholder="请输入提货车牌" type="text" id="CarNo" name="CarNo" style="width:220px" /></td>
+
+            </tr>
+            <tr>
+                <td>提货时间</td>
+                <td>
+                    <input type="text" aria-controls="menus" class="layui-input" style="width:220px" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" placeholder="订单提货时间" id="DeliverDate" lay-key="3" autocomplete="off" name="DeliverDate">
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>备注</td>
+                <td colspan="3">
+                    <textarea id="Remark" cols="10" rows="20" style="margin: 0px; width: 628px; height: 58px;"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" align="center" style="padding-top: 10px;">
+                    <span id="msg" style="color:red"></span>
+                    <input id="hid_orderid" type="hidden" />
+                    <input type="button" id="btn_save" class="btn btn-info" value="确认" />
+                    <input type="button" id="btn_cancel" class="btn btn-info" value="取消" />
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
 <!--图片的弹窗-->
 <div class="docs-pictures clearfix" id="div_showImage">
 
@@ -426,24 +497,130 @@
 @section Footer{
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
-    <script type="text/javascript" src="~/source/Order/SearchOrder.js?@(DateTime.Now.ToShortDateString())"></script>
     <script type="text/javascript" src="~/source/assets/js/viewer-jquery.min.js"></script>
+    <script type="text/javascript" src="~/source/Order/SearchOrder.js?@(DateTime.Now.ToShortDateString())"></script>
     <script src="~/source/layui/layui.js"></script>
     <script>
+
+        //订单配送
+        $("#btn_OrderPlan").on("click", function () {
+            var orderids = "";
+            var count=0;
+            $.each($('input:checkbox:checked'), function () {
+                if ($(this).val() != "-1") {
+                    orderids += $(this).val() + ",";
+                    count++;
+                }
+            });
+            $("#myModal").hide();
+            if (count > 0) {
+                $("#OrderIDS").val(orderids);
+                $("#orderCount").html(count);
+                $("#myModal").show();
+            }
+            else {
+                alert("请选择订单！");
+            }
+        })
+
+
+        //运输计划取消
+        $("#btn_cancel").on("click", function () {
+            $("#myModal").hide();
+        })
+
+
+        $("#txt_CarrierName").keyup(function () {
+            var Name = $("#txt_CarrierName").val();
+            GetCarrierByName(Name);
+
+        })
+        $("#txt_CarrierName").focus(function () {
+            var Name = $("#txt_CarrierName").val();
+            GetCarrierByName(Name);
+        })
+
+        $("#div_carriere_items").on("click", "li", function () {
+            var name = $(this).text();
+            var id = $(this).attr("id");
+            var contact = $(this).attr("contact");
+            $('#txt_CarrierID').val(id);
+            $('#txt_CarrierName').val(name);
+            $('#div_carriere_items').hide(500);
+
+            if (contact != "") {
+                var item = $.parseJSON(contact);
+                if (item) {
+                    $("#DriverName").val(item[0].ContactName);
+                    $("#DriverTelephone").val(item[0].Mobile != "" ? item[0].Mobile : item[0].Telephone);
+                }
+            }
+        });
+        $("#txt_CarrierName").val($("#txt_CarrierName").val()).trigger("change");
+
+        //承运商模糊查询
+        function GetCarrierByName(Name) {
+            $.ajax({
+                type: "post",
+                url: "GetCarrierByName",
+                data: {
+                    name: Name,
+                    contactBlackCarrier: false
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        $("#div_carriere_items").html("")
+                        $("#div_carriere_items").show();
+                        for (var i = 0; i < data.length; i++) {
+                            $("#div_carriere_items").append("<li class='div_carriere_item' id='" + data[i].CarrierID + "' contact='" + data[i].contactJson + "'>" + data[i].CarrierName + "</li>");
+                        }
+                    }
+                }
+            })
+        }
+
+
         $(document).ready(function () {
             orderInfo.init();
         });
-        function delOrder(id, type, operaterid) {
-            var userid = $("#HidUserID").val();
-            if (operaterid == userid) {
-                if (confirm("确定删除订单?")) {
-                    window.location.href = "/Order/OrderDelete?orderid=" + id + "&type=" + type;
+
+        //物流计划保存
+        $("#btn_save").click(function () {
+
+            var orderids = $("#OrderIDS").val();
+            var carrierName = $("#txt_CarrierName").val();
+            var carrierId = $("#txt_CarrierID").val();
+            var temp = $("#Temp").val();
+            var deliveryType = $("#DeliveryType").val();
+            var driverName = $("#DriverName").val();
+            var driverTelephone = $("#DriverTelephone").val();
+            var carModel = $("#CarModel").val();
+            var carNo = $("#CarNo").val();
+            var deliverDate = $("#DeliverDate").val();
+            var remark = $("#Remark").val();
+
+            if (carrierName == "") {
+                $("#msg").html("请输入承运商信息!")
+                return false;
+            }
+
+            $.ajax({
+                type: "post",
+                url: "/Line/OrderDeliveryPlanProcess",
+                data: {
+                    orderids:orderids,  carrierName:carrierName,  carrierId:carrierId,  temp:temp,  deliveryType:deliveryType,
+                    driverName:driverName,  driverTelephone:driverTelephone,  carModel:carModel,  carNo:carNo,  deliverDate:deliverDate,  remark:remark
+                },
+                success: function (msg) {
+                    console.log(msg);
+                    alert("运输计划安排成功！");
+                    $("#myModal").hide();
                 }
-            }
-            else {
-                alert("仅允许修改或删除自己录制的订单");
-            }
-        }
+            })
+        });
+
+
         $("#chk_all").click(function () {
             //全选,设置chheckbox name='all' tbody id=tb
             $("input[name=chk_name]").each(function () {
@@ -458,6 +635,9 @@
             });
             laydate.render({
                 elem: '#enddate' //指定元素
+            });
+            laydate.render({
+                elem: '#DeliverDate' //指定元素
             });
         });
     </script>

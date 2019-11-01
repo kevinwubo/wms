@@ -103,6 +103,8 @@ namespace DataRepository.DataAccess.Order
             command.AddInputParameter("@configHandOutAmt", DbType.Decimal, Order.configHandOutAmt);
             command.AddInputParameter("@configSortCosting", DbType.Decimal, Order.configSortCosting);
 
+
+            command.AddInputParameter("@DeliveryType", DbType.String, Order.DeliveryType);
             command.AddInputParameter("@TempType", DbType.String, Order.TempType);
             command.AddInputParameter("@OrderStatus", DbType.Int32, Order.OrderStatus);
             command.AddInputParameter("@UploadStatus", DbType.Int32, Order.UploadStatus);
@@ -114,6 +116,7 @@ namespace DataRepository.DataAccess.Order
             command.AddInputParameter("@OrderSource", DbType.String, Order.OrderSource); 
             command.AddInputParameter("@SalesMan", DbType.String, Order.SalesMan); 
             command.AddInputParameter("@PromotionMan", DbType.String, Order.PromotionMan);
+            command.AddInputParameter("@OrderOutStatus", DbType.String, Order.OrderOutStatus);
             command.AddInputParameter("@LineID", DbType.Int32, Order.LineID); 
 
             command.AddInputParameter("@CreateDate", DbType.DateTime, Order.CreateDate);
@@ -121,6 +124,20 @@ namespace DataRepository.DataAccess.Order
 
             var o = command.ExecuteScalar<object>();
             return Convert.ToInt64(o);
+        }
+
+
+        /// <summary>
+        ///  更新订单出库状态
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public int UpdateOrderOutType(OrderInfo order)
+        {
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderStatement.UpdateOrderOutType, "Text"));
+            command.AddInputParameter("@OrderOutStatus", DbType.String, order.OrderOutStatus);
+            command.AddInputParameter("@OrderID", DbType.Int32, order.OrderID);
+            return command.ExecuteNonQuery();
         }
 
         public int UpdateOrderAttachmentIDs(OrderInfo order)
@@ -153,6 +170,20 @@ namespace DataRepository.DataAccess.Order
         {
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderStatement.UpdateOrderStatus, "Text"));
             command.AddInputParameter("@OrderStatus", DbType.Int32, order.OrderStatus);
+            command.AddInputParameter("@OrderID", DbType.Int32, order.OrderID);
+            return command.ExecuteNonQuery();
+        }
+
+
+        /// <summary>
+        /// 更新承运商信息
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public int UpdateOrderCarrier(OrderInfo order)
+        {
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderStatement.UpdateOrderCarrier, "Text"));
+            command.AddInputParameter("@CarrierID", DbType.Int32, order.CarrierID);
             command.AddInputParameter("@OrderID", DbType.Int32, order.OrderID);
             return command.ExecuteNonQuery();
         }
@@ -195,6 +226,7 @@ namespace DataRepository.DataAccess.Order
             command.AddInputParameter("@OrderStatus", DbType.Int32, Order.OrderStatus);
             command.AddInputParameter("@UploadStatus", DbType.Int32, Order.UploadStatus);
             command.AddInputParameter("@Status", DbType.Int32, Order.Status);
+            command.AddInputParameter("@DeliveryType", DbType.String, Order.DeliveryType);
             command.AddInputParameter("@Remark", DbType.String, Order.Remark);
             command.AddInputParameter("@OperatorID", DbType.Int32, Order.OperatorID);            
             command.AddInputParameter("@ChangeDate", DbType.DateTime, Order.ChangeDate);
@@ -231,22 +263,30 @@ namespace DataRepository.DataAccess.Order
             return result;
         }
 
+
         /// <summary>
-        /// 
+        /// 订单查询
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="carrierid">承运商ID</param>
-        /// <param name="storageid">仓库ID</param>
-        /// <param name="customerid">客户ID</param>
-        /// <param name="status">数据状态</param>
-        /// <param name="uploadstatus">接单状态</param>
+        /// <param name="carrierid">承运商</param>
+        /// <param name="storageid">仓库</param>
+        /// <param name="customerid">客户</param>
+        /// <param name="status">订单状态</param>
+        /// <param name="uploadstatus">状态</param>
         /// <param name="orderstatus">订单状态</param>
         /// <param name="ordertype">订单类型</param>
         /// <param name="orderno">订单编号</param>
+        /// <param name="begindate">订单开始时间</param>
+        /// <param name="enddate">订单结束时间</param>
+        /// <param name="operatorid">入单人</param>
+        /// <param name="ordersource">订单来源</param>
+        /// <param name="subOrderType">订单子状态</param>
+        /// <param name="OrderOutStatus">订单出库状态</param>
+        /// <param name="desc">排序规则</param>
         /// <param name="pager"></param>
         /// <returns></returns>
         public List<OrderInfo> GetOrderInfoByRule(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
-            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType,string desc, PagerInfo pager)
+            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType, string OrderOutStatus, string desc, PagerInfo pager)
         {
             List<OrderInfo> result = new List<OrderInfo>();
 
@@ -298,6 +338,11 @@ namespace DataRepository.DataAccess.Order
             if (!string.IsNullOrEmpty(subOrderType))
             {
                 builder.Append(" AND SubOrderType=@SubOrderType");
+            }
+
+            if (!string.IsNullOrEmpty(OrderOutStatus))
+            {
+                builder.Append(" AND OrderOutStatus=@OrderOutStatus");
             }
 
             string sqlText = OrderStatement.GetAllOrderInfoByRulePagerHeader + builder.ToString() + OrderStatement.GetAllOrderInfoByRulePagerFooter;
@@ -352,6 +397,10 @@ namespace DataRepository.DataAccess.Order
             {
                 command.AddInputParameter("@SubOrderType", DbType.String, subOrderType);
             }
+            if (!string.IsNullOrEmpty(OrderOutStatus))
+            {
+                command.AddInputParameter("@OrderOutStatus", DbType.String, OrderOutStatus);
+            }
             command.AddInputParameter("@PageIndex", DbType.Int32, pager.PageIndex);
             command.AddInputParameter("@PageSize", DbType.Int32, pager.PageSize);
             command.AddInputParameter("@recordCount", DbType.Int32, pager.SumCount);
@@ -361,7 +410,7 @@ namespace DataRepository.DataAccess.Order
         }
 
         public OrderFeeInfo GetOrderCount(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
-            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType)
+            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType, string OrderOutStatus)
         {
             OrderFeeInfo feeInfo = new OrderFeeInfo();
             StringBuilder builder = new StringBuilder();
@@ -416,6 +465,11 @@ namespace DataRepository.DataAccess.Order
                 builder.Append(" AND SubOrderType=@SubOrderType");
             }
 
+            if (!string.IsNullOrEmpty(OrderOutStatus))
+            {
+                builder.Append(" AND OrderOutStatus=@OrderOutStatus");
+            }
+
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(builder.ToString(), "Text"));
 
             if (carrierid > 0)
@@ -466,6 +520,11 @@ namespace DataRepository.DataAccess.Order
             if (!string.IsNullOrEmpty(subOrderType))
             {
                 command.AddInputParameter("@SubOrderType", DbType.String, subOrderType);
+            }
+
+            if (!string.IsNullOrEmpty(OrderOutStatus))
+            {
+                command.AddInputParameter("@OrderOutStatus", DbType.String, OrderOutStatus);
             }
             feeInfo = command.ExecuteEntity<OrderFeeInfo>();
             return feeInfo;

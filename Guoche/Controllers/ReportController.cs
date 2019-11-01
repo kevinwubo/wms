@@ -21,14 +21,126 @@ namespace GuoChe.Controllers
         public int PAGESIZE = 20;
 
         /// <summary>
-        /// 
+        /// 车辆计划报表
         /// </summary>
         /// <returns></returns>
-        public ActionResult Index()
+        public ActionResult OrderDeliverPlanReport(int carrierid = -1, string begindate = "", string enddate = "", int p = 1)
         {
+            // 默认当月
+            if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
+            {
+                DateTime dt = DateTime.Now;
+                begindate = dt.Year + "-" + dt.Month + "-" + "01";
+                enddate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            List<OrderDeliverPlanEntity> mList = null;
+
+            int count = OrderDeliverPlanService.GetOrderDeliverPlanCount( carrierid, begindate, enddate);
+            PagerInfo pager = new PagerInfo();
+            pager.PageIndex = p;
+            pager.PageSize = PAGESIZE;
+            pager.SumCount = count;
+            pager.URL = "OrderDeliverPlanReport";
+            
+            mList = OrderDeliverPlanService.GetOrderDeliverPlanInfoByRule(carrierid, begindate, enddate, pager);
+            //默认承运商
+            ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
+            ViewBag.reportList = mList;
+            ViewBag.carrierid = carrierid;
+            ViewBag.BeginDate = begindate;
+            ViewBag.EndDate = enddate;
+            ViewBag.Pager = pager;
             return View();
         }
 
+        /// <summary>
+        /// 车辆计划报表 Excel导出
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult OrderDeliverPlanReportToExcel(int carrierid = -1, string begindate = "", string enddate = "", int p = 1)
+        {
+            // 默认当月
+            if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
+            {
+                DateTime dt = DateTime.Now;
+                begindate = dt.Year + "-" + dt.Month + "-" + "01";
+                enddate = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+            List<OrderDeliverPlanEntity> list = null;
+
+            int count = OrderDeliverPlanService.GetOrderDeliverPlanCount(carrierid, begindate, enddate);
+            PagerInfo pager = new PagerInfo();
+            pager.PageIndex = p;
+            pager.PageSize = count;
+            pager.SumCount = count;
+
+            list = OrderDeliverPlanService.GetOrderDeliverPlanInfoByRule(carrierid, begindate, enddate, pager);
+
+            //创建Excel文件的对象
+            HSSFWorkbook book = new HSSFWorkbook();
+            //添加一个sheet
+            ISheet sheet1 = book.CreateSheet("Sheet1");
+            sheet1.SetColumnWidth(0, 15 * 256);
+            sheet1.SetColumnWidth(1, 15 * 256);
+            sheet1.SetColumnWidth(2, 15 * 256);
+            sheet1.SetColumnWidth(3, 15 * 256);
+            sheet1.SetColumnWidth(4, 15 * 256);
+            sheet1.SetColumnWidth(5, 15 * 256);
+            sheet1.SetColumnWidth(6, 15 * 256);
+            sheet1.SetColumnWidth(7, 15 * 256);
+            sheet1.SetColumnWidth(8, 15 * 256);
+            //给sheet1添加第一行的头部标题 								
+
+            int K = 0;
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("序号");
+            row1.CreateCell(1).SetCellValue("承运商名称");
+            row1.CreateCell(2).SetCellValue("温区");
+            row1.CreateCell(3).SetCellValue("物流方式");
+            row1.CreateCell(4).SetCellValue("驾驶员姓名");
+            row1.CreateCell(5).SetCellValue("联系电话");
+            row1.CreateCell(6).SetCellValue("车型");
+            row1.CreateCell(7).SetCellValue("提货时间");
+            row1.CreateCell(8).SetCellValue("备注");
+            //将数据逐步写入sheet1各个行
+            string remark = "";
+            string sfhd = "";
+            int row = 1;
+
+            if (list != null && list.Count > 0)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(row++);
+                    rowtemp.CreateCell(0).SetCellValue(list[i].PlanID);
+                    rowtemp.CreateCell(1).SetCellValue(list[i].CarrierName);
+                    rowtemp.CreateCell(2).SetCellValue(list[i].Temp);
+                    rowtemp.CreateCell(3).SetCellValue(list[i].DeliveryType);
+                    rowtemp.CreateCell(4).SetCellValue(list[i].DriverName);
+                    rowtemp.CreateCell(5).SetCellValue(list[i].DriverTelephone);
+                    rowtemp.CreateCell(6).SetCellValue(list[i].CarModel);
+                    rowtemp.CreateCell(7).SetCellValue(list[i].DeliverDate.ToShortDateString());
+                    rowtemp.CreateCell(8).SetCellValue(list[i].Remark);                    
+                }
+            }
+            
+            // 写入到客户端 
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMdd") + "车辆计划报表.xls");
+
+            ////默认承运商
+            //ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
+            //ViewBag.reportList = mList;
+            //ViewBag.carrierid = carrierid;
+            //ViewBag.BeginDate = begindate;
+            //ViewBag.EndDate = enddate;
+            //ViewBag.Pager = pager;
+            return View();
+        }
+
+        #region 客服日常报表
         /// <summary>
         /// 客服日常报表
         /// </summary>
@@ -99,8 +211,19 @@ namespace GuoChe.Controllers
             return View();
         }
 
-        
 
+        /// <summary>
+        /// 客服日常报表导出
+        /// </summary>
+        /// <param name="carrierid"></param>
+        /// <param name="storageid"></param>
+        /// <param name="customerid"></param>
+        /// <param name="receivername"></param>
+        /// <param name="ordertype"></param>
+        /// <param name="orderno"></param>
+        /// <param name="begindate"></param>
+        /// <param name="enddate"></param>
+        /// <returns></returns>
         public FileResult CustomServiceToExcel(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
             string ordertype = "", string orderno = "", string begindate = "", string enddate = "")
         {
@@ -110,7 +233,7 @@ namespace GuoChe.Controllers
             pager.PageSize = count;
             pager.SumCount = count;
             pager.URL = "CustomServiceReport";
-            List<OrderEntity> list = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1); 
+            List<OrderEntity> list = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
             //创建Excel文件的对象
             HSSFWorkbook book = new HSSFWorkbook();
             //添加一个sheet
@@ -161,17 +284,17 @@ namespace GuoChe.Controllers
             row1.CreateCell(16).SetCellValue("配送数量");
             row1.CreateCell(17).SetCellValue("货物重量");
             row1.CreateCell(18).SetCellValue("是否回单");
-            row1.CreateCell(19).SetCellValue("备注");           
+            row1.CreateCell(19).SetCellValue("备注");
             //将数据逐步写入sheet1各个行
             string remark = "";
-            string sfhd="";
+            string sfhd = "";
             int row = 1;
             for (int i = 0; i < list.Count; i++)
             {
                 sfhd = !string.IsNullOrEmpty(list[i].AttachmentIDs) ? "是" : "否";
                 remark = list[i].Remark;
                 List<OrderDetailEntity> listDetail = OrderDetailService.GetOrderDetailByOrderID(list[i].OrderID);
-                if(listDetail!=null&&listDetail.Count>0)
+                if (listDetail != null && listDetail.Count > 0)
                 {
                     for (int j = 0; j < listDetail.Count; j++)
                     {
@@ -184,7 +307,7 @@ namespace GuoChe.Controllers
                         rowtemp.CreateCell(5).SetCellValue(list[i].OrderDate);
                         rowtemp.CreateCell(6).SetCellValue(list[i].SendDate.ToShortDateString());
                         rowtemp.CreateCell(7).SetCellValue("");
-                        rowtemp.CreateCell(8).SetCellValue(list[i].receiver!=null?list[i].receiver.ReceiverName:"");
+                        rowtemp.CreateCell(8).SetCellValue(list[i].receiver != null ? list[i].receiver.ReceiverName : "");
                         rowtemp.CreateCell(9).SetCellValue(list[i].receiver != null ? (list[i].receiver.province != null ? list[i].receiver.province.ProvinceName : "") : "");
                         rowtemp.CreateCell(10).SetCellValue(list[i].receiver != null ? (list[i].receiver.city != null ? list[i].receiver.city.CityName : "") : "");
                         rowtemp.CreateCell(11).SetCellValue(list[i].receiver != null ? list[i].receiver.Address : "");
@@ -208,6 +331,9 @@ namespace GuoChe.Controllers
             return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMdd") + "客服日常报表.xls");
         }
 
+        #endregion
+
+        #region 客户对账单
         /// <summary>
         /// 客户对账单
         /// </summary>
@@ -254,7 +380,7 @@ namespace GuoChe.Controllers
             ReEntity report = ReportService.CreateReportList(mList);
             ViewBag.Report = report;
 
-            ViewBag.GUID = System.Guid.NewGuid().ToString();            
+            ViewBag.GUID = System.Guid.NewGuid().ToString();
             ViewBag.storageid = storageid;
             ViewBag.customerid = customerid;
             ViewBag.OrderType = ordertype;
@@ -267,6 +393,9 @@ namespace GuoChe.Controllers
             return View();
         }
 
+        #endregion
+
+        #region 供应商对账单
         /// <summary>
         /// 供应商对账单
         /// </summary>
@@ -297,7 +426,7 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "CarrierReport";
 
-            mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid,customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
 
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
@@ -328,8 +457,9 @@ namespace GuoChe.Controllers
             Cache.Add(ViewBag.GUID, report.reportList);
             return View();
         }
+        #endregion
 
-
+        #region 利润分析表
         /// <summary>
         /// 利润分析表
         /// </summary>
@@ -355,7 +485,7 @@ namespace GuoChe.Controllers
             }
 
             List<OrderEntity> mList = null;
-            OrderFeeInfo feeinfo= ReportService.GetOrderCount("", carrierid, storageid,customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+            OrderFeeInfo feeinfo = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
             int count = feeinfo.count;
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
@@ -363,7 +493,7 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "ProfitReport";
 
-            mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);          
+            mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
 
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
@@ -373,7 +503,7 @@ namespace GuoChe.Controllers
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
             //订单类型
             List<BaseDataEntity> orderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList").ToList();
-            
+
             ReEntity report = ReportService.CreateReportList(mList);
             report.TotalAllPayAmount = feeinfo.TotalAllPayAmount;
             report.TotalllReceiverAmount = feeinfo.TotalllReceiverAmount;
@@ -396,6 +526,7 @@ namespace GuoChe.Controllers
             ViewBag.Pager = pager;
             return View();
         }
+        #endregion
 
         #region 导出excel
 

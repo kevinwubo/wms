@@ -53,8 +53,10 @@
     <Compile Include="DataAccess\BaseData\BaseDataStatement.cs" />
     <Compile Include="DataAccess\BaseData\BaseDataRepository.cs" />
     <Compile Include="DataAccess\BaseData\BlackListRepository.cs" />
+    <Compile Include="DataAccess\BaseData\OrderDeliverPlanRepository.cs" />
     <Compile Include="DataAccess\BaseData\LineRepository.cs" />
     <Compile Include="DataAccess\BaseData\BlackListStatement.cs" />
+    <Compile Include="DataAccess\BaseData\OrderDeliverPlanStatement.cs" />
     <Compile Include="DataAccess\BaseData\LineStatement.cs" />
     <Compile Include="DataAccess\BaseData\StorageLocationRepository.cs" />
     <Compile Include="DataAccess\BaseData\StorageLocationStatement.cs" />
@@ -83,6 +85,7 @@
     <Compile Include="DataAccess\News\NewsRepository.cs" />
     <Compile Include="DataAccess\News\NewsStatement.cs" />
     <Compile Include="DataModel\BlackListInfo.cs" />
+    <Compile Include="DataModel\OrderDeliverPlanInfo.cs" />
     <Compile Include="DataModel\OrderDetailInfo.cs" />
     <Compile Include="DataAccess\Order\OrderDetailRepository.cs" />
     <Compile Include="DataAccess\Order\OrderDetailStatement.cs" />

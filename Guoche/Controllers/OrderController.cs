@@ -56,7 +56,7 @@ namespace GuoChe.Controllers
             ViewBag.TemList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "TM00" && t.Status == 1).ToList();
             //收货方类型
             ViewBag.ReceiverList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "Reveiver00" && t.Status == 1).ToList();
-            //收货方
+            //物流方式
             ViewBag.DeliverList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "DeliverModel00" && t.Status == 1).ToList();
             //收货人信息
             //ViewBag.Receiver = ReceiverService.GetReceiverByRule("", "", "", 1);//只显示使用中的数据
@@ -339,48 +339,6 @@ namespace GuoChe.Controllers
         }
         #endregion
 
-        //#region 删除
-        ///// <summary>
-        ///// DC订单查询下载确认
-        ///// </summary>
-        ///// <param name="type">dc_download:DC配送单下载  dc_confirm:DC订单确认 dc_search:DC订单查询</param>
-        ///// <param name="uploadstatus"></param>
-        ///// <param name="ordertype"></param>
-        ///// <param name="orderno"></param>
-        ///// <param name="p"></param>
-        ///// <returns></returns>
-        //public ActionResult OrderSearch_DC(string type, int uploadstatus = -1, string ordertype = "", string orderno = "", int p = 1)
-        //{
-        //    List<OrderEntity> mList = null;
-
-        //    int count = OrderService.GetOrderCount("", -1, -1, -1, -1,uploadstatus, ordertype, orderno);
-
-        //    PagerInfo pager = new PagerInfo();
-        //    pager.PageIndex = p;
-        //    pager.PageSize = PAGESIZE;
-        //    pager.SumCount = count;
-        //    pager.URL = "OrderSearch_DCS";
-
-        //    ViewBag.OrderTypeList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "OrderTypeList" && t.Status == 1).ToList();
-
-        //    if (uploadstatus > -1 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno))
-        //    {
-        //        mList = OrderService.GetOrderInfoByRule(pager, "", -1, -1, -1, -1, uploadstatus, ordertype, orderno);
-        //    }
-        //    else
-        //    {
-        //        mList = OrderService.GetOrderInfoPager(pager);
-        //    }
-
-        //    ViewBag.PageType = type;
-        //    ViewBag.uploadstatus = uploadstatus;
-        //    ViewBag.ordertype = ordertype;
-        //    ViewBag.orderno = orderno;            
-        //    ViewBag.OrderList = mList;
-        //    ViewBag.Pager = pager;
-        //    return View();
-        //}
-        //#endregion
 
         #region 承运商订单查询下载确认
         /// <summary>

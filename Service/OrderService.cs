@@ -80,13 +80,16 @@ namespace Service
                 info.configHandOutAmt = entity.configHandOutAmt;
                 info.configSortCosting = entity.configSortCosting;
 
+                info.DeliveryType = entity.DeliveryType;
                 info.TempType = entity.TempType;
                 info.OrderStatus = entity.OrderStatus;
                 info.UploadStatus = entity.UploadStatus;
                 info.Status = entity.Status;
+                info.OrderOutStatus = entity.OrderOutStatus;
                 info.Remark = entity.Remark;
                 info.OperatorID = entity.OperatorID;
 
+                info.OrderOutStatus = "F";//未出库
                 info.IsImport = entity.IsImport;
                 info.OrderSource = entity.OrderSource;
                 info.SalesMan = entity.SalesMan;
@@ -126,12 +129,14 @@ namespace Service
                 entity.configHandOutAmt = info.configHandOutAmt;
                 entity.configSortCosting = info.configSortCosting;
 
+                entity.DeliveryType = info.DeliveryType;
                 entity.TempType = info.TempType;
                 entity.OrderStatus = info.OrderStatus;
                 entity.OrderStatusDesc = StringHelper.GetOrderStatusDesc(info.OrderStatus);
                 entity.UploadStatus = info.UploadStatus;
                 entity.UploadStatusDesc = StringHelper.GetUploadStatusDesc(info.UploadStatus);
                 entity.Status = info.Status;
+                entity.OrderOutStatus = info.OrderOutStatus;
                 entity.Remark = info.Remark;
                 entity.OrderSource = info.OrderSource;
                 entity.SalesMan = info.SalesMan;
@@ -140,6 +145,8 @@ namespace Service
                 entity.OperatorID = info.OperatorID;
                 entity.CreateDate = info.CreateDate;
                 entity.ChangeDate = info.ChangeDate;
+                entity.DeliveryStatus = info.DeliveryStatus;
+                
                 entity.orderDetailList = OrderDetailService.GetOrderDetailByOrderID(entity.OrderID);
 
                 entity.receiver = ReceiverService.GetReceiverById(entity.ReceiverID);
@@ -193,6 +200,20 @@ namespace Service
         }
 
         /// <summary>
+        /// 更新订单出库状态
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static int UpdateOrderOutType(int orderID)
+        {
+            OrderRepository mr = new OrderRepository();
+            OrderInfo info = new OrderInfo();
+            info.OrderID = orderID;
+            info.OrderOutStatus = "T";//订单出库 T
+            return mr.UpdateOrderOutType(info);
+        }
+
+        /// <summary>
         /// 更新附件信息
         /// </summary>
         /// <param name="entity"></param>
@@ -219,6 +240,23 @@ namespace Service
             info.OrderID = orderid;
             info.OrderStatus = orderstatus;
             return mr.UpdateOrderStatus(info);
+        }
+
+
+        /// <summary>
+        /// 运输计划更新承运商
+        /// </summary>
+        /// <param name="orderid"></param>
+        /// <param name="carrierID"></param>
+        /// <returns></returns>
+        public static int UpdateOrderCarrier(int orderid, int carrierID)
+        {
+            OrderRepository mr = new OrderRepository();
+            OrderInfo info = new OrderInfo();
+            info.OrderID = orderid;
+            info.CarrierID = carrierID;
+            info.DeliveryStatus = "T";//是否已经安排物流
+            return mr.UpdateOrderCarrier(info);
         }
 
         /// <summary>
@@ -366,10 +404,8 @@ namespace Service
                             }                            
                         }
                     }
-                    //库存更新
-                    //OrderInventoryProcess(orderID, orderInfo.OrderType, orderInfo.OperatorID, oldOrderDetail);
 
-                    OrderInventoryService.OrderInventoryProcess(orderID);
+                    //OrderInventoryService.OrderInventoryProcess(orderID);
                 }
 
                 #endregion
@@ -483,9 +519,9 @@ namespace Service
 
         #region 分页相关
         public static int GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1,
-            int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType="")
+            int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType="",string  orderOutStatus = "")
         {
-            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType).count;
+            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, orderOutStatus).count;
         }
 
         public static List<OrderEntity> GetOrderInfoPager(PagerInfo pager)
@@ -502,11 +538,12 @@ namespace Service
         }
 
         public static List<OrderEntity> GetOrderInfoByRule(PagerInfo pager, string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1,
-            int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "")
+            int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", 
+            string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "",string orderOutStatus="")
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "DESC", pager);
+            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType,orderOutStatus, "DESC", pager);
 
             if (!miList.IsEmpty())
             {
@@ -522,311 +559,311 @@ namespace Service
         #endregion
 
 
-        #region 订单库存处理
-        /// <summary>
-        /// 仓配订单 仓到店，涉及仓的库存扣减，无视门店库存。
-        /// 调拨订单 仓到仓，涉及仓仓之间的库存扣减增加。
-        /// 运输订单A 厂到仓，涉及仓的库存增加，无视厂的库存。
-        /// 运输订单B 厂到店，均无视库存。
-        /// </summary>
-        /// <param name="orderid"></param>
-        /// <param name="orderType">订单类型：仓配订单/调拨订单/入库单/运输订单A/运输订单B</param>
-        /// <returns></returns>
-        public static bool OrderInventoryProcess(long orderid, string orderType, long operatorID, List<OrderDetailInfo> oldOrderDetail = null)
-        {
-            InventoryRepository mr = new InventoryRepository();
-            OrderEntity orderinfo = GetOrderByOrderID(orderid);
-            if (orderinfo != null)
-            {
-                if ("CPDD".Equals(orderType))
-                {
-                    #region 仓配订单 仓到店，涉及仓的库存扣减，无视门店库存。
-                    List<OrderDetailEntity> orderDetailList = orderinfo.orderDetailList;
-                    if (orderDetailList != null && orderDetailList.Count > 0)
-                    {
-                        foreach (OrderDetailEntity detail in orderDetailList)
-                        {
-                            InventoryEntity inventory = detail.inventory;
+        //#region 订单库存处理
+        ///// <summary>
+        ///// 仓配订单 仓到店，涉及仓的库存扣减，无视门店库存。
+        ///// 调拨订单 仓到仓，涉及仓仓之间的库存扣减增加。
+        ///// 运输订单A 厂到仓，涉及仓的库存增加，无视厂的库存。
+        ///// 运输订单B 厂到店，均无视库存。
+        ///// </summary>
+        ///// <param name="orderid"></param>
+        ///// <param name="orderType">订单类型：仓配订单/调拨订单/入库单/运输订单A/运输订单B</param>
+        ///// <returns></returns>
+        //public static bool OrderInventoryProcess(long orderid, string orderType, long operatorID, List<OrderDetailInfo> oldOrderDetail = null)
+        //{
+        //    InventoryRepository mr = new InventoryRepository();
+        //    OrderEntity orderinfo = GetOrderByOrderID(orderid);
+        //    if (orderinfo != null)
+        //    {
+        //        if ("CPDD".Equals(orderType))
+        //        {
+        //            #region 仓配订单 仓到店，涉及仓的库存扣减，无视门店库存。
+        //            List<OrderDetailEntity> orderDetailList = orderinfo.orderDetailList;
+        //            if (orderDetailList != null && orderDetailList.Count > 0)
+        //            {
+        //                foreach (OrderDetailEntity detail in orderDetailList)
+        //                {
+        //                    InventoryEntity inventory = detail.inventory;
 
-                            if (inventory != null)
-                            {
-                                //#region 库存扣减
-                                //InventoryInfo inventinfo = new InventoryInfo();
-                                //inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail, oldOrderDetail);//仓库库存减去订单明细中出库库存
-                                //inventinfo.InventoryID = inventory.InventoryID;
-                                //inventinfo.ChangeDate = DateTime.Now;
-                                //mr.ModifyInventoryQuantity(inventinfo);
-                                //#endregion
+        //                    if (inventory != null)
+        //                    {
+        //                        //#region 库存扣减
+        //                        //InventoryInfo inventinfo = new InventoryInfo();
+        //                        //inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail, oldOrderDetail);//仓库库存减去订单明细中出库库存
+        //                        //inventinfo.InventoryID = inventory.InventoryID;
+        //                        //inventinfo.ChangeDate = DateTime.Now;
+        //                        //mr.ModifyInventoryQuantity(inventinfo);
+        //                        //#endregion
 
-                                //#region 库存明细增加
-                                //CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
-                                //#endregion
-                                deductionInventory(detail, inventory, oldOrderDetail, orderinfo, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
-                            }
-                        }
-                    }
-                    #endregion                    
-                }
-                else if ("DBDD".Equals(orderType))
-                {
-                    #region 调拨订单 仓到仓，涉及仓仓之间的库存扣减增加。
-                    List<OrderDetailEntity> orderDetailList = orderinfo.orderDetailList;
-                    if (orderDetailList != null && orderDetailList.Count > 0)
-                    {
-                        foreach (OrderDetailEntity detail in orderDetailList)
-                        {
-                            InventoryEntity inventory = detail.inventory;
+        //                        //#region 库存明细增加
+        //                        //CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
+        //                        //#endregion
+        //                        deductionInventory(detail, inventory, oldOrderDetail, orderinfo, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
+        //                    }
+        //                }
+        //            }
+        //            #endregion                    
+        //        }
+        //        else if ("DBDD".Equals(orderType))
+        //        {
+        //            #region 调拨订单 仓到仓，涉及仓仓之间的库存扣减增加。
+        //            List<OrderDetailEntity> orderDetailList = orderinfo.orderDetailList;
+        //            if (orderDetailList != null && orderDetailList.Count > 0)
+        //            {
+        //                foreach (OrderDetailEntity detail in orderDetailList)
+        //                {
+        //                    InventoryEntity inventory = detail.inventory;
 
-                            if (inventory != null)
-                            {
-                                //#region 发货仓库库存扣减
-                                //InventoryInfo inventinfo = new InventoryInfo();
-                                //inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail,oldOrderDetail);//仓库库存减去订单明细中出库库存
-                                //inventinfo.InventoryID = inventory.InventoryID;
-                                //inventinfo.ChangeDate = DateTime.Now;
-                                //mr.ModifyInventoryQuantity(inventinfo);
+        //                    if (inventory != null)
+        //                    {
+        //                        //#region 发货仓库库存扣减
+        //                        //InventoryInfo inventinfo = new InventoryInfo();
+        //                        //inventinfo.Quantity = inventory.Quantity - UpdateQuantity(detail,oldOrderDetail);//仓库库存减去订单明细中出库库存
+        //                        //inventinfo.InventoryID = inventory.InventoryID;
+        //                        //inventinfo.ChangeDate = DateTime.Now;
+        //                        //mr.ModifyInventoryQuantity(inventinfo);
 
-                                ////库存明细增加
-                                //CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, OrderType.DBDD.ToString(), Common.InventoryType.出库.ToString());
-                                //#endregion
-                                deductionInventory(detail, inventory, oldOrderDetail, orderinfo, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
+        //                        ////库存明细增加
+        //                        //CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, OrderType.DBDD.ToString(), Common.InventoryType.出库.ToString());
+        //                        //#endregion
+        //                        deductionInventory(detail, inventory, oldOrderDetail, orderinfo, operatorID, OrderType.CPDD.ToString(), Common.InventoryType.出库.ToString());
 
-                                #region 收货仓库库存增加
-                                //库存增加
-                                CreateInventory(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.DBDD.ToString());
+        //                        #region 收货仓库库存增加
+        //                        //库存增加
+        //                        CreateInventory(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.DBDD.ToString());
 
-                                //库存明细增加
-                                CreateInventoryDetail(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.DBDD.ToString(), Common.InventoryType.入库.ToString(), orderinfo.OrderID, orderinfo.OrderNo);
-                                #endregion
-                            }
-                        }
-                    }
-                    #endregion
+        //                        //库存明细增加
+        //                        CreateInventoryDetail(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.DBDD.ToString(), Common.InventoryType.入库.ToString(), orderinfo.OrderID, orderinfo.OrderNo);
+        //                        #endregion
+        //                    }
+        //                }
+        //            }
+        //            #endregion
                     
-                }
-                else if ("YSDDA".Equals(orderType))
-                {
-                    #region 运输订单A 厂到仓，涉及仓的库存增加，无视厂的库存。
-                    List<OrderDetailEntity> orderDetailList = orderinfo.orderDetailList;
-                    if (orderDetailList != null && orderDetailList.Count > 0)
-                    {
-                        foreach (OrderDetailEntity detail in orderDetailList)
-                        {
-                            #region 收货仓库库存增加
-                            //库存增加
-                            CreateInventory(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.YSDDA.ToString());
-                            //库存明细增加
-                            CreateInventoryDetail(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.YSDDA.ToString(), Common.InventoryType.入库.ToString(), orderinfo.OrderID, orderinfo.OrderNo);
-                            #endregion
-                        }
-                    }
-                    #endregion
-                }
-                else if ("YSDDB".Equals(orderType))
-                {
-                    //运输订单B 厂到店，均无视库存。
-                }
-            }
-            return true;
-        }
+        //        }
+        //        else if ("YSDDA".Equals(orderType))
+        //        {
+        //            #region 运输订单A 厂到仓，涉及仓的库存增加，无视厂的库存。
+        //            List<OrderDetailEntity> orderDetailList = orderinfo.orderDetailList;
+        //            if (orderDetailList != null && orderDetailList.Count > 0)
+        //            {
+        //                foreach (OrderDetailEntity detail in orderDetailList)
+        //                {
+        //                    #region 收货仓库库存增加
+        //                    //库存增加
+        //                    CreateInventory(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.YSDDA.ToString());
+        //                    //库存明细增加
+        //                    CreateInventoryDetail(detail, orderinfo.ReceiverStorageID, operatorID, OrderType.YSDDA.ToString(), Common.InventoryType.入库.ToString(), orderinfo.OrderID, orderinfo.OrderNo);
+        //                    #endregion
+        //                }
+        //            }
+        //            #endregion
+        //        }
+        //        else if ("YSDDB".Equals(orderType))
+        //        {
+        //            //运输订单B 厂到店，均无视库存。
+        //        }
+        //    }
+        //    return true;
+        //}
 
-        #region 库存扣减逻辑
+        //#region 库存扣减逻辑
 
-        /// <summary>
-        /// 库存扣减 查看是否当前库存是否足够
-        /// </summary>
-        /// <param name="detail">订单商品明细</param>
-        /// <param name="inventory">订单商品对应的库存明细</param>
-        public static void deductionInventory(OrderDetailEntity detail, InventoryEntity inventory, List<OrderDetailInfo> oldOrderDetail,
-            OrderEntity orderinfo, long operatorID, string typedesc, string inventoryType)
-        {
-            if (detail != null && inventory != null)
-            {
-                int currentGoodsQuantity = detail.Quantity;
-                int goodsQuantity = detail.Quantity;// 当前商品需要出库数量
-                int inventQuantity = inventory.Quantity;//当前商品库存数量
-                int quantity = inventQuantity - goodsQuantity;//库存数量-商品出库数量
-                //库存数量足够
-                if (quantity >= 0)
-                {
-                    ExecuteInventory(detail, inventory, oldOrderDetail, orderinfo, operatorID, typedesc, inventoryType);
-                }
-                else
-                {
-                    //库存不够的情况
-                    List<GoodsEntity> goodsList = GoodsService.GetGoodsByRule("", -1, detail.GoodsName, detail.GoodsModel, "");
-                    if (goodsList != null && goodsList.Count > 0)
-                    {
-                        GoodsEntity goodsEntity = goodsList[0];
-                        List<InventoryEntity> inventList = InventoryService.GetInventoryByRule(goodsEntity.GoodsID, -1, "");////
-                        if (inventList != null && inventList.Count > 0)
-                        {
-                            foreach (InventoryEntity entity in inventList)
-                            {
-                                //库存数量-商品数量
-                                goodsQuantity = goodsQuantity - entity.Quantity;                                
+        ///// <summary>
+        ///// 库存扣减 查看是否当前库存是否足够
+        ///// </summary>
+        ///// <param name="detail">订单商品明细</param>
+        ///// <param name="inventory">订单商品对应的库存明细</param>
+        //public static void deductionInventory(OrderDetailEntity detail, InventoryEntity inventory, List<OrderDetailInfo> oldOrderDetail,
+        //    OrderEntity orderinfo, long operatorID, string typedesc, string inventoryType)
+        //{
+        //    if (detail != null && inventory != null)
+        //    {
+        //        int currentGoodsQuantity = detail.Quantity;
+        //        int goodsQuantity = detail.Quantity;// 当前商品需要出库数量
+        //        int inventQuantity = inventory.Quantity;//当前商品库存数量
+        //        int quantity = inventQuantity - goodsQuantity;//库存数量-商品出库数量
+        //        //库存数量足够
+        //        if (quantity >= 0)
+        //        {
+        //            ExecuteInventory(detail, inventory, oldOrderDetail, orderinfo, operatorID, typedesc, inventoryType);
+        //        }
+        //        else
+        //        {
+        //            //库存不够的情况
+        //            List<GoodsEntity> goodsList = GoodsService.GetGoodsByRule("", -1, detail.GoodsName, detail.GoodsModel, "");
+        //            if (goodsList != null && goodsList.Count > 0)
+        //            {
+        //                GoodsEntity goodsEntity = goodsList[0];
+        //                List<InventoryEntity> inventList = InventoryService.GetInventoryByRule(goodsEntity.GoodsID, -1, "");////
+        //                if (inventList != null && inventList.Count > 0)
+        //                {
+        //                    foreach (InventoryEntity entity in inventList)
+        //                    {
+        //                        //库存数量-商品数量
+        //                        goodsQuantity = goodsQuantity - entity.Quantity;                                
 
-                                if (goodsQuantity > 0)
-                                {
-                                    detail.Quantity = entity.Quantity;//优先减去库存中已有数量
-                                }
-                                else
-                                {
-                                    if (entity.Quantity > currentGoodsQuantity)
-                                    {
-                                        detail.Quantity = currentGoodsQuantity;
-                                    }
-                                    else
-                                    {
-                                        detail.Quantity = entity.Quantity;
-                                    }                                    
-                                }
-                                currentGoodsQuantity = currentGoodsQuantity - detail.Quantity;//总商品数量 减去扣除库存数量
-                                ExecuteInventory(detail, entity, oldOrderDetail, orderinfo, operatorID, typedesc, inventoryType);
+        //                        if (goodsQuantity > 0)
+        //                        {
+        //                            detail.Quantity = entity.Quantity;//优先减去库存中已有数量
+        //                        }
+        //                        else
+        //                        {
+        //                            if (entity.Quantity > currentGoodsQuantity)
+        //                            {
+        //                                detail.Quantity = currentGoodsQuantity;
+        //                            }
+        //                            else
+        //                            {
+        //                                detail.Quantity = entity.Quantity;
+        //                            }                                    
+        //                        }
+        //                        currentGoodsQuantity = currentGoodsQuantity - detail.Quantity;//总商品数量 减去扣除库存数量
+        //                        ExecuteInventory(detail, entity, oldOrderDetail, orderinfo, operatorID, typedesc, inventoryType);
 
-                                ////如果商品数量足够扣除 小于0  退出循环
-                                if (goodsQuantity < 0)
-                                {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
+        //                        ////如果商品数量足够扣除 小于0  退出循环
+        //                        if (goodsQuantity < 0)
+        //                        {
+        //                            break;
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
-        /// <summary>
-        /// 执行库存处理
-        /// </summary>
-        /// <param name="detail"></param>
-        /// <param name="inventory"></param>
-        /// <param name="oldOrderDetail"></param>
-        /// <param name="orderinfo"></param>
-        /// <param name="operatorID"></param>
-        /// <param name="typedesc"></param>
-        /// <param name="inventoryType"></param>
-        public static void ExecuteInventory(OrderDetailEntity detail, InventoryEntity inventory, List<OrderDetailInfo> oldOrderDetail,
-            OrderEntity orderinfo, long operatorID, string typedesc, string inventoryType)
-        {
-            #region 库存扣减
-            InventoryRepository mr = new InventoryRepository();
-            InventoryInfo inventinfo = new InventoryInfo();            
-            int InQuantity = UpdateQuantity(detail, oldOrderDetail);
-            LogHelper.WriteTextLog("库存扣减", "库存编号：" + inventory.InventoryID + "当前库存数量：" + inventory.Quantity + "出库数量：" + InQuantity);
-            inventinfo.Quantity = inventory.Quantity - InQuantity;//仓库库存减去订单明细中出库库存
-            inventinfo.InventoryID = inventory.InventoryID;
-            inventinfo.ChangeDate = DateTime.Now;
-            mr.ModifyInventoryQuantity(inventinfo);
-            LogHelper.WriteTextLog("库存扣减", "执行成功："+JsonHelper.ToJson(inventinfo));
-            #endregion
+        ///// <summary>
+        ///// 执行库存处理
+        ///// </summary>
+        ///// <param name="detail"></param>
+        ///// <param name="inventory"></param>
+        ///// <param name="oldOrderDetail"></param>
+        ///// <param name="orderinfo"></param>
+        ///// <param name="operatorID"></param>
+        ///// <param name="typedesc"></param>
+        ///// <param name="inventoryType"></param>
+        //public static void ExecuteInventory(OrderDetailEntity detail, InventoryEntity inventory, List<OrderDetailInfo> oldOrderDetail,
+        //    OrderEntity orderinfo, long operatorID, string typedesc, string inventoryType)
+        //{
+        //    #region 库存扣减
+        //    InventoryRepository mr = new InventoryRepository();
+        //    InventoryInfo inventinfo = new InventoryInfo();            
+        //    int InQuantity = UpdateQuantity(detail, oldOrderDetail);
+        //    LogHelper.WriteTextLog("库存扣减", "库存编号：" + inventory.InventoryID + "当前库存数量：" + inventory.Quantity + "出库数量：" + InQuantity);
+        //    inventinfo.Quantity = inventory.Quantity - InQuantity;//仓库库存减去订单明细中出库库存
+        //    inventinfo.InventoryID = inventory.InventoryID;
+        //    inventinfo.ChangeDate = DateTime.Now;
+        //    mr.ModifyInventoryQuantity(inventinfo);
+        //    LogHelper.WriteTextLog("库存扣减", "执行成功："+JsonHelper.ToJson(inventinfo));
+        //    #endregion
 
-            #region 库存明细增加
-            CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, typedesc, inventoryType, orderinfo.OrderID, orderinfo.OrderNo);
-            #endregion
-        }
+        //    #region 库存明细增加
+        //    CreateInventoryDetail(detail, orderinfo.SendStorageID, operatorID, typedesc, inventoryType, orderinfo.OrderID, orderinfo.OrderNo);
+        //    #endregion
+        //}
 
-        /// <summary>
-        /// 修改 如果修改出库数量
-        /// </summary>
-        /// <param name="detail"></param>
-        /// <param name="oldOrderDetail"></param>
-        /// <returns></returns>
-        public static int UpdateQuantity(OrderDetailEntity detail, List<OrderDetailInfo> oldOrderDetail)
-        {
-            int quantity = detail.Quantity;
-            if (oldOrderDetail != null && oldOrderDetail.Count > 0)
-            {
-                OrderDetailInfo olddetail = oldOrderDetail.Find(p => p.ID == detail.ID);
-                if (olddetail != null)
-                {
-                    quantity = detail.Quantity - olddetail.Quantity;
-                }
-            }
-            return quantity;
-        }
+        ///// <summary>
+        ///// 修改 如果修改出库数量
+        ///// </summary>
+        ///// <param name="detail"></param>
+        ///// <param name="oldOrderDetail"></param>
+        ///// <returns></returns>
+        //public static int UpdateQuantity(OrderDetailEntity detail, List<OrderDetailInfo> oldOrderDetail)
+        //{
+        //    int quantity = detail.Quantity;
+        //    if (oldOrderDetail != null && oldOrderDetail.Count > 0)
+        //    {
+        //        OrderDetailInfo olddetail = oldOrderDetail.Find(p => p.ID == detail.ID);
+        //        if (olddetail != null)
+        //        {
+        //            quantity = detail.Quantity - olddetail.Quantity;
+        //        }
+        //    }
+        //    return quantity;
+        //}
 
-        #endregion
+        //#endregion
 
         
 
-        /// <summary>
-        /// 库存更新
-        /// </summary>
-        /// <param name="detail"></param>
-        /// <param name="StorageID"></param>
-        /// <param name="operatorID"></param>
-        /// <param name="typedesc"></param>
-        private static void CreateInventory(OrderDetailEntity detail, int StorageID, long operatorID,string typedesc)
-        {
-            InventoryRepository mr = new InventoryRepository();
-            InventoryInfo info = new InventoryInfo();
-            info.GoodsID = detail.GoodsID;
-            info.StorageID = StorageID;
-            info.Quantity = detail.Quantity;
-            if (detail.GoodsID > 0)
-            {
-                info.CustomerID = detail.goods != null ? detail.goods.CustomerID : 0;
-            }
-            if (detail.InventoryID > 0)
-            {
-                info.CustomerID = detail.inventory != null ? detail.inventory.CustomerID : 0;
-            }
-            info.InventoryType = Common.InventoryType.入库.ToString();
-            info.BatchNumber = detail.BatchNumber;
-            info.ProductDate = detail.ProductDate;
-            info.InventoryDate = DateTime.Now;
-            info.UnitPrice = 0;
-            info.Remark = typedesc;
-            info.OperatorID = operatorID;
-            info.CreateDate = DateTime.Now;
-            info.ChangeDate = DateTime.Now;
-            info.Quantity = detail.Quantity;
-            //插入库存
-            mr.CreateNew(info);
+        ///// <summary>
+        ///// 库存更新
+        ///// </summary>
+        ///// <param name="detail"></param>
+        ///// <param name="StorageID"></param>
+        ///// <param name="operatorID"></param>
+        ///// <param name="typedesc"></param>
+        //private static void CreateInventory(OrderDetailEntity detail, int StorageID, long operatorID,string typedesc)
+        //{
+        //    InventoryRepository mr = new InventoryRepository();
+        //    InventoryInfo info = new InventoryInfo();
+        //    info.GoodsID = detail.GoodsID;
+        //    info.StorageID = StorageID;
+        //    info.Quantity = detail.Quantity;
+        //    if (detail.GoodsID > 0)
+        //    {
+        //        info.CustomerID = detail.goods != null ? detail.goods.CustomerID : 0;
+        //    }
+        //    if (detail.InventoryID > 0)
+        //    {
+        //        info.CustomerID = detail.inventory != null ? detail.inventory.CustomerID : 0;
+        //    }
+        //    info.InventoryType = Common.InventoryType.入库.ToString();
+        //    info.BatchNumber = detail.BatchNumber;
+        //    info.ProductDate = detail.ProductDate;
+        //    info.InventoryDate = DateTime.Now;
+        //    info.UnitPrice = 0;
+        //    info.Remark = typedesc;
+        //    info.OperatorID = operatorID;
+        //    info.CreateDate = DateTime.Now;
+        //    info.ChangeDate = DateTime.Now;
+        //    info.Quantity = detail.Quantity;
+        //    //插入库存
+        //    mr.CreateNew(info);
 
-        }
+        //}
 
-        /// <summary>
-        /// 库存明细更新
-        /// </summary>
-        /// <param name="detail"></param>
-        /// <param name="StorageID"></param>
-        /// <param name="OperatorID"></param>
-        /// <param name="typedesc"></param>
-        /// <param name="inventoryType"></param>
-        private static void CreateInventoryDetail(OrderDetailEntity detail, int StorageID, long OperatorID,string typedesc,string inventoryType,long orderID,string orderNo)
-        {
-            InventoryDetailRepository mrDetail = new InventoryDetailRepository();
-            InventoryDetailInfo infoDetail = new InventoryDetailInfo();
-            infoDetail.OrderID = orderID;
-            infoDetail.OrderNo = orderNo;
-            infoDetail.OrderType = typedesc;//订单类型
-            infoDetail.GoodsID = detail.GoodsID;
-            infoDetail.StorageID = StorageID;
-            infoDetail.Quantity = detail.Quantity;
-            if (detail.GoodsID > 0)
-            {
-                infoDetail.CustomerID = detail.goods != null ? detail.goods.CustomerID : 0;
-            }
-            if(detail.InventoryID>0)
-            {
-                infoDetail.CustomerID = detail.inventory != null ? detail.inventory.CustomerID : 0;    
-            }
-            infoDetail.InventoryType = inventoryType;
-            infoDetail.BatchNumber = detail.BatchNumber;
-            infoDetail.ProductDate = detail.ProductDate;
-            infoDetail.InventoryDate = DateTime.Now;
-            infoDetail.UnitPrice =  0;
-            infoDetail.Remark = typedesc;
-            infoDetail.OperatorID = OperatorID;
-            infoDetail.CreateDate = DateTime.Now;
-            infoDetail.ChangeDate = DateTime.Now;
-            mrDetail.CreateNew(infoDetail);
-        }
+        ///// <summary>
+        ///// 库存明细更新
+        ///// </summary>
+        ///// <param name="detail"></param>
+        ///// <param name="StorageID"></param>
+        ///// <param name="OperatorID"></param>
+        ///// <param name="typedesc"></param>
+        ///// <param name="inventoryType"></param>
+        //private static void CreateInventoryDetail(OrderDetailEntity detail, int StorageID, long OperatorID,string typedesc,string inventoryType,long orderID,string orderNo)
+        //{
+        //    InventoryDetailRepository mrDetail = new InventoryDetailRepository();
+        //    InventoryDetailInfo infoDetail = new InventoryDetailInfo();
+        //    infoDetail.OrderID = orderID;
+        //    infoDetail.OrderNo = orderNo;
+        //    infoDetail.OrderType = typedesc;//订单类型
+        //    infoDetail.GoodsID = detail.GoodsID;
+        //    infoDetail.StorageID = StorageID;
+        //    infoDetail.Quantity = detail.Quantity;
+        //    if (detail.GoodsID > 0)
+        //    {
+        //        infoDetail.CustomerID = detail.goods != null ? detail.goods.CustomerID : 0;
+        //    }
+        //    if(detail.InventoryID>0)
+        //    {
+        //        infoDetail.CustomerID = detail.inventory != null ? detail.inventory.CustomerID : 0;    
+        //    }
+        //    infoDetail.InventoryType = inventoryType;
+        //    infoDetail.BatchNumber = detail.BatchNumber;
+        //    infoDetail.ProductDate = detail.ProductDate;
+        //    infoDetail.InventoryDate = DateTime.Now;
+        //    infoDetail.UnitPrice =  0;
+        //    infoDetail.Remark = typedesc;
+        //    infoDetail.OperatorID = OperatorID;
+        //    infoDetail.CreateDate = DateTime.Now;
+        //    infoDetail.ChangeDate = DateTime.Now;
+        //    mrDetail.CreateNew(infoDetail);
+        //}
 
-        #endregion
+        //#endregion
 
         #region 订单审核拒绝
         public static bool OrderBack(int orderid, string type, long operatorID)
@@ -1021,6 +1058,7 @@ namespace Service
                     info.TempType = "";
                     info.OrderStatus = 0;
                     info.UploadStatus = 0;
+                    info.OrderOutStatus = "F";//未出库
                     info.Status = 1;
                     info.Remark = orderEntity.Remark;
                     info.OperatorID = OperatorID.ToString().ToInt(0);
@@ -1111,8 +1149,8 @@ namespace Service
                             long id = ordetail.CreateNew(infodetail);
                             #endregion
                         }
-                        //订单库存扣减处理
-                        OrderInventoryService.OrderInventoryProcess(orderid);
+                        ////订单库存扣减处理
+                        //OrderInventoryService.OrderInventoryProcess(orderid);
                     }
                 }
             }
@@ -1304,6 +1342,7 @@ namespace Service
                     info.OrderStatus = 0;
                     info.UploadStatus = 0;
                     info.Status = 1;
+                    info.OrderOutStatus = "F";//未出库
                     info.Remark = entity.Remark;
                     info.OperatorID = OperatorID.ToString().ToInt(0);
                     info.CreateDate = DateTime.Now;
@@ -1370,11 +1409,8 @@ namespace Service
                         #endregion
                     }
                     //订单库存扣减处理
-                    //OrderInventoryProcess(orderid.ToString().ToInt(0), OrderType, OperatorID);
-                    OrderInventoryService.OrderInventoryProcess(orderid);
+                    //OrderInventoryService.OrderInventoryProcess(orderid);
                 }
-                
-               
             }
             return idsEntity;
         }
@@ -1524,6 +1560,7 @@ namespace Service
                 info.OrderStatus = 0;
                 info.UploadStatus = 0;
                 info.Status = 0;
+                info.OrderOutStatus = "";
                 info.Remark = entity.Remark;
                 info.OperatorID = entity.OperatorID.ToString().ToInt(0);
 

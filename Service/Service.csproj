@@ -64,6 +64,7 @@
     <Compile Include="Inventory\InventoryDetailService.cs" />
     <Compile Include="Inventory\InventoryService.cs" />
     <Compile Include="NewsService.cs" />
+    <Compile Include="OrderDeliverPlanService.cs" />
     <Compile Include="OrderDetailService.cs" />
     <Compile Include="OrderInventoryService.cs" />
     <Compile Include="OrderService.cs" />

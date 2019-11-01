@@ -60,8 +60,8 @@ var LineInfo = {
             var type = $("#Type").val();
             var unionid = $("#hid_UnionID").val();
             var unionname = $("#UnionName").val();
-            var status = $("#Status").prop("checked") ? 1 : 0;//$("#Status").val();
-            var subStatus = $("#SubStatus").prop("checked") ? 1 : 0;//$("#SubStatus").val();
+            var status = $("#Status").prop("checked") ? 0 : 1;//$("#Status").val();
+            var subStatus = $("#SubStatus").prop("checked") ? 0 : 1;//$("#SubStatus").val();
             var cardCode = $("#CardCode").val();
             var remark = $("#Remark").val();
 
@@ -94,14 +94,14 @@ function ModifyBlack(blackid, type, unionid, unionname,status,substatus,cardCode
     $("#hid_UnionID").val(unionid);
     $("#UnionName").val(unionname);
 
-    if (substatus == "1") {
+    if (substatus == "0") {
         $("#SubStatus").attr("checked", true);//勾选
     }
     else {
         $("#SubStatus").attr("checked", false);//勾选
     }
 
-    if (status == "1") {
+    if (status == "0") {
         $("#Status").attr("checked", true);//勾选
     }
     else {

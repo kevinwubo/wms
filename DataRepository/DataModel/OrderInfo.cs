@@ -72,6 +72,12 @@ namespace DataRepository.DataModel
         public int CarrierID { get; set; }
 
         /// <summary>
+        /// 是否安排物流计划  T是/F否
+        /// </summary>
+        [DataMapping("DeliveryStatus", DbType.String)]
+        public string DeliveryStatus { get; set; }
+
+        /// <summary>
         /// 下单时间
         /// </summary>
         [DataMapping("OrderDate", DbType.DateTime)]
@@ -130,6 +136,12 @@ namespace DataRepository.DataModel
         public string TempType { get; set; }
 
         /// <summary>
+        /// 物流方式 零担，整车等等
+        /// </summary>
+        [DataMapping("DeliveryType", DbType.String)]
+        public string DeliveryType { get; set; }
+
+        /// <summary>
         /// 订单状态
         /// 未配送 = 0, 已配送 = 1,已回单 2, 订单完成 = 3, 已拒绝 = 4
         /// </summary>
@@ -147,6 +159,12 @@ namespace DataRepository.DataModel
         /// </summary>
         [DataMapping("Status", DbType.Int32)]
         public int Status { get; set; }
+
+        /// <summary>
+        /// 订单是否出库  T：已出库 /F:未出库
+        /// </summary>
+        [DataMapping("OrderOutStatus", DbType.String)]
+        public string OrderOutStatus { get; set; }
         
         /// <summary>
         /// 备注
