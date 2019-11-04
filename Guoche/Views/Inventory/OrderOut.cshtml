@@ -411,11 +411,12 @@
         $(document).ready(function () {
             orderInfo.init();
         });
+
         $("#btn_OrderOut").click(function () {
+            var orderNos = "";
+            var orderIds = "";
             $.each($('input:checkbox:checked'), function () {
-                var ids = $(this).val();
-                var orderNos = "";
-                var orderIds = "";
+                var ids = $(this).val(); 
                 if (ids != "-1") {
                     var IDS = ids.split("-");
                     if (IDS[1] == "T") {
@@ -426,8 +427,13 @@
                         orderIds += IDS[0] + ",";
                         orderNos += IDS[1] + ",";
                     }
-                }
-
+                }                
+            });
+            if (orderIds == "") {
+                alert("请选择需要出库的订单！");
+            }
+            else
+            {
                 if (confirm("确定订单出库?")) {
                     $("#btn_OrderOut").attr("disabled", true);
                     $.ajax({
@@ -444,7 +450,7 @@
                         }
                     })
                 }
-            });
+            }
         });
 
 

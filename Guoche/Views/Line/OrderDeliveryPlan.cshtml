@@ -101,7 +101,7 @@
                                 <label>
                                     <input type="text" aria-controls="menus" class="layui-input" style="width:150px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
                                 </label>
-                                <button class="btn btn-info" type="submit">搜索</button>
+                                <button class="btn btn-info" type="submit" id="btn_submit">搜索</button>
                                 <label>
                                     <input type="checkbox" id="chk_all" value="-1" />全选
                                 </label>
@@ -616,6 +616,7 @@
                     console.log(msg);
                     alert("运输计划安排成功！");
                     $("#myModal").hide();
+                    $("#btn_submit").click();
                 }
             })
         });

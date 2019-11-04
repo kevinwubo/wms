@@ -87,23 +87,22 @@ namespace GuoChe.Controllers
                 enddate = DateTime.Now.ToString("yyyy-MM-dd");
             }
 
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "T");
-
+            //查询未出库 未安排运输计划订单
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", "F");
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = pageSize;
             pager.SumCount = count;
             pager.URL = "OrderDeliveryPlan";
 
-
-            if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
-            {
-                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "T");
-            }
-            else
-            {
-                mList = OrderService.GetOrderInfoPager(pager);
-            }
+            //if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            //{
+                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", "F");
+            //}
+            //else
+            //{
+            //    mList = OrderService.GetOrderInfoPager(pager);
+            //}
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库

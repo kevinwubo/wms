@@ -493,7 +493,7 @@ namespace GuoChe.Controllers
         #endregion
         
 
-        #region 订单出库
+        #region 订单出库  订单最后一步
          /// <summary>
         /// 订单出库  查询未出库订单
         /// </summary>
@@ -515,8 +515,8 @@ namespace GuoChe.Controllers
                 begindate = dt.Year + "-" + dt.Month + "-" + "01";
                 enddate = DateTime.Now.ToString("yyyy-MM-dd");
             }
-
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F");
+            //查询未出库 已安排运输计划订单
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", "T");
 
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
@@ -525,14 +525,14 @@ namespace GuoChe.Controllers
             pager.URL = "OrderOut";
            
 
-            if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
-            {
-                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F");
-            }
-            else
-            {
-                mList = OrderService.GetOrderInfoPager(pager);
-            }
+            //if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            //{
+            mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", "T");
+            //}
+            //else
+            //{
+            //    mList = OrderService.GetOrderInfoPager(pager);
+            //}
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库

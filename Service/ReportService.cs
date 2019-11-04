@@ -17,7 +17,7 @@ namespace Service
         public static OrderFeeInfo GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1,
             int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "")
         {
-            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "");
+            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "", "");
         }
 
         public static List<OrderEntity> GetOrderInfoPager(PagerInfo pager)
@@ -38,7 +38,7 @@ namespace Service
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType,"", "ASC", pager);
+            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "", "ASC", "", pager);
 
             if (!miList.IsEmpty())
             {
@@ -90,6 +90,7 @@ namespace Service
                     rEntity.configSortCosting = entity.configSortCosting;
 
                     rEntity.Profit = rEntity.TotalReceiverFee - rEntity.TotalPayFee;
+                    rEntity.Remark = entity.Remark;
                     
                     reportList.Add(rEntity);
                 }

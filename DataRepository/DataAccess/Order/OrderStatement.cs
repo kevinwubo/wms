@@ -68,10 +68,10 @@ namespace DataRepository.DataAccess.Order
         public static string GetOrderByKeys = @"SELECT * FROM wms_OrderInfo(NOLOCK) WHERE OrderID IN (#ids#)";
 
         public static string CreateNewOrder = @"INSERT INTO dbo.wms_OrderInfo(OrderNo,MergeNo,OrderType,ReceiverID,CustomerID,SendStorageID,ReceiverStorageID,CarrierID
-                                                ,OrderDate,SendDate,configPrice,configHandInAmt,configSortPrice,configCosting,configHandOutAmt,configSortCosting,TempType,OrderStatus,OrderOutStatus,DeliveryType
+                                                ,OrderDate,SendDate,configPrice,configHandInAmt,configSortPrice,configCosting,configHandOutAmt,configSortCosting,TempType,OrderStatus,OrderOutStatus,DeliveryType,DeliveryStatus
                                                 ,UploadStatus,Status,Remark,OperatorID,OrderSource,SalesMan,PromotionMan,LineID,SubOrderType,IsImport,CreateDate,ChangeDate)
 			                                                VALUES(@OrderNo,@MergeNo,@OrderType,@ReceiverID,@CustomerID,@SendStorageID,@ReceiverStorageID,@CarrierID,
-                                                @OrderDate,@SendDate,@configPrice,@configHandInAmt,@configSortPrice,@configCosting,@configHandOutAmt,@configSortCosting,@TempType,@OrderStatus,@OrderOutStatus,@DeliveryType
+                                                @OrderDate,@SendDate,@configPrice,@configHandInAmt,@configSortPrice,@configCosting,@configHandOutAmt,@configSortCosting,@TempType,@OrderStatus,@OrderOutStatus,@DeliveryType,@DeliveryStatus
                                                 ,@UploadStatus,@Status,@Remark,@OperatorID,@OrderSource,@SalesMan,@PromotionMan,@LineID,@SubOrderType,@IsImport,@CreateDate,@ChangeDate) select @@IDENTITY";
 
         public static string ModifyOrder = @"UPDATE wms_OrderInfo SET OrderNo = @OrderNo,MergeNo = @MergeNo,OrderType = @OrderType,ReceiverID = @ReceiverID,CustomerID = @CustomerID
