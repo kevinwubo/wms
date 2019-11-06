@@ -79,6 +79,12 @@
                                         }
                                     </select>
                                 </label>
+                                <label>
+                                    <select tabindex="1" class="" style="width: 200px" id="deliveryStatus" name="deliveryStatus">
+                                        <option value="F" @("F".Equals(ViewBag.deliveryStatus) ? "selected" : "")>未安排订单</option>
+                                        <option value="T" @("T".Equals(ViewBag.deliveryStatus) ? "selected" : "")>已安排订单</option>
+                                    </select>
+                                </label>
                                 @*<label>
                     订单状态: <select class="span3" style="width:150px" id="status" name="status">
                         <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>

@@ -127,6 +127,21 @@ namespace DataRepository.DataAccess.Order
             return Convert.ToInt64(o);
         }
 
+        /// <summary>
+        /// 运输订单B 入库单 出库状态默认T 其他都为F
+        /// </summary>
+        /// <param name="OrderType"></param>
+        /// <returns></returns>
+        private string getDefaultOutStatus(string orderType)
+        {
+            string temp = "F";
+            //运输订单B 入库单 出库状态默认T 其他都为F
+            if (orderType.Equals(OrderType.YSDDB.ToString()) || orderType.Equals(OrderType.RKD.ToString()))
+            {
+                temp = "T";
+            }
+            return temp;
+        }
 
         /// <summary>
         ///  更新订单出库状态
@@ -289,7 +304,7 @@ namespace DataRepository.DataAccess.Order
         /// <returns></returns>
         public List<OrderInfo> GetOrderInfoByRule(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
             int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType,
-            string OrderOutStatus, string desc, string deliveryStatus, PagerInfo pager)
+            string OrderOutStatus, string desc, string deliveryStatus,string sqlwhere, PagerInfo pager)
         {
             List<OrderInfo> result = new List<OrderInfo>();
 
@@ -351,7 +366,11 @@ namespace DataRepository.DataAccess.Order
             {
                 builder.Append(" AND DeliveryStatus=@DeliveryStatus");
             }
-            
+
+            if (!string.IsNullOrEmpty(sqlwhere))
+            {
+                builder.Append(sqlwhere);
+            }
 
             string sqlText = OrderStatement.GetAllOrderInfoByRulePagerHeader + builder.ToString() + OrderStatement.GetAllOrderInfoByRulePagerFooter;
 
@@ -424,8 +443,8 @@ namespace DataRepository.DataAccess.Order
         }
 
         public OrderFeeInfo GetOrderCount(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
-            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, 
-            string subOrderType, string OrderOutStatus,string deliveryStatus)
+            int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource,
+            string subOrderType, string OrderOutStatus, string deliveryStatus, string sqlwhere)
         {
             OrderFeeInfo feeInfo = new OrderFeeInfo();
             StringBuilder builder = new StringBuilder();
@@ -487,6 +506,10 @@ namespace DataRepository.DataAccess.Order
             if (!string.IsNullOrEmpty(deliveryStatus))
             {
                 builder.Append(" AND DeliveryStatus=@DeliveryStatus");
+            }
+            if (!string.IsNullOrEmpty(sqlwhere))
+            {
+                builder.Append(sqlwhere);
             }
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(builder.ToString(), "Text"));

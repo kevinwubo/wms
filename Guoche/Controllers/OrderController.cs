@@ -109,7 +109,8 @@ namespace GuoChe.Controllers
                 order.OperatorID = CurrentUser.UserID.ToString().ToInt(0);
             }
             OrderService.ModifyOrder(order);            
-            return Content("<script>alert('" + tips + "');window.location.href='/Order/OrderSearch?orderno=" + order.OrderNo + "'</script>");
+            //return Content("<script>alert('" + tips + "');window.location.href='/Order/OrderSearch?orderno=" + order.OrderNo + "'</script>");
+            return Content("<script>alert('" + tips + "');window.location.href='/Order/Index'</script>");
         }
         #endregion
 

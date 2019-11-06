@@ -64,7 +64,7 @@ namespace GuoChe.Controllers
         }
 
 
-        #region 订单出库
+        #region 运输计划
         /// <summary>
         /// 运输计划  查询已出库订单
         /// </summary>
@@ -75,7 +75,7 @@ namespace GuoChe.Controllers
         /// <param name="p"></param>
         /// <returns></returns>
         public ActionResult OrderDeliveryPlan(int carrierid = 0, int storageid = 0, int customerid = 0, int status = -1, string orderno = "",
-            string begindate = "", string enddate = "", int p = 1, int pageSize = 20)
+            string begindate = "", string enddate = "", string deliveryStatus = "", int p = 1, int pageSize = 20)
         {
             List<OrderEntity> mList = null;
 
@@ -87,8 +87,8 @@ namespace GuoChe.Controllers
                 enddate = DateTime.Now.ToString("yyyy-MM-dd");
             }
 
-            //查询未出库 未安排运输计划订单
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", "F");
+            //查询未出库 未安排运输计划订单  不包含入库单
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", deliveryStatus, " AND OrderType!='RKD'");
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = pageSize;
@@ -97,7 +97,7 @@ namespace GuoChe.Controllers
 
             //if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
             //{
-                mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", "F");
+            mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", deliveryStatus, " AND OrderType!='RKD'");
             //}
             //else
             //{
@@ -128,6 +128,7 @@ namespace GuoChe.Controllers
             ViewBag.BeginDate = begindate;
             ViewBag.OrderNo = orderno;
             ViewBag.EndDate = enddate;
+            ViewBag.deliveryStatus = deliveryStatus;
             ViewBag.Pager = pager;
             return View();
         }
