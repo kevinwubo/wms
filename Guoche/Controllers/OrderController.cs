@@ -110,7 +110,7 @@ namespace GuoChe.Controllers
             }
             OrderService.ModifyOrder(order);            
             //return Content("<script>alert('" + tips + "');window.location.href='/Order/OrderSearch?orderno=" + order.OrderNo + "'</script>");
-            return Content("<script>alert('" + tips + "');window.location.href='/Order/Index'</script>");
+            return Content("<script>alert('" + tips + "');window.location.href='/Order/OrderSearch_Modify?type=modify'</script>");
         }
         #endregion
 

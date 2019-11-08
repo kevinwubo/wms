@@ -67,7 +67,7 @@ namespace Service.BaseBiz
                 if (isNeedContact)
                 {                    
                     entity.listContact = ContactService.GetContactByRule(UnionType.Carrier.ToString(), info.CarrierID);
-                    entity.contactJson = entity.listContact != null && entity.listContact.Count > 0 ? JsonHelper.ToJson(entity.listContact) : "";
+                    entity.ContactJson = entity.listContact != null && entity.listContact.Count > 0 ? JsonHelper.ToJson(entity.listContact) : "";
                 }
             }
 

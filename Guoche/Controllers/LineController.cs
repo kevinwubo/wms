@@ -63,6 +63,32 @@ namespace GuoChe.Controllers
             Response.Redirect("/Line/Index");
         }
 
+        /// <summary>
+        /// 现实订单明细信息
+        /// </summary>
+        /// <param name="orderIDs"></param>
+        /// <returns></returns>
+        public JsonResult getOrderDetailByOrderID(string orderIDs)
+        {
+            List<OrderEntity> list = new List<OrderEntity>();
+
+            if (!string.IsNullOrEmpty(orderIDs))
+            {
+                List<string> orderList = orderIDs.Split(',').ToList<string>();
+                if (orderList != null && orderList.Count > 0)
+                {
+                    foreach (string orderid in orderList)
+                    {
+                        if (!string.IsNullOrEmpty(orderid))
+                        {
+                            OrderEntity orderEntity = OrderService.GetOrderByOrderID(orderid.ToInt(0));                            
+                            list.Add(orderEntity);
+                        }
+                    }
+                }
+            }
+            return Json(list);
+        }
 
         #region 运输计划
         /// <summary>

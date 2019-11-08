@@ -61,7 +61,7 @@ namespace Entity.ViewModel
         public string ContactJson { get; set; }
 
 
-        public string contactJson { get; set; }
+        //public string contactJson { get; set; }
         /// <summary>
         /// 联系人信息
         /// </summary>

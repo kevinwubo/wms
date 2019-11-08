@@ -376,7 +376,7 @@ namespace GuoChe.Controllers
                         listNew.Add(entity);
                     }
                 }
-                ViewBag.Username = CurrentUser != null ? CurrentUser.UserName : "";
+                ViewBag.Username = CurrentUser != null ? CurrentUser.NickName : "";
 
                 List<MenuEntity> listN= listNew.OrderBy(p => p.GroupCode).ToList();
 

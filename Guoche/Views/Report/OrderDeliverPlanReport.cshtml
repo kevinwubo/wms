@@ -4,12 +4,17 @@
     ViewBag.Title = "车辆计划报表";
     ReEntity report = (ReEntity)ViewBag.Report;
     List<OrderDeliverPlanEntity> reportList = (List<OrderDeliverPlanEntity>)ViewBag.reportList;
-    
- 
+
+
     List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
-<link href="~/source/assets/css/setprice.css" rel="stylesheet" />
+<link href="~/source/assets/css/queryItem.css" rel="stylesheet" />
+<link href="~/source/assets/css/comfirm.css" rel="stylesheet" />
+<link href="~/source/assets/css/viewer.min.css" rel="stylesheet" />
+<link href="~/source/assets/css/img.css" rel="stylesheet" />
+<link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+<link href="~/source/assets/css/lctypein-alert.css" rel="stylesheet" />
 <link href="~/source/layui/css/layui.css" rel="stylesheet" />
 <div class="row-fluid">
     <h2 class="heading" style="margin-top:20px"></h2>
@@ -46,7 +51,7 @@
                             </div>
                         </form>
                     </div>
-                </div>              
+                </div>
                 @*//序号	承运商名称	温区	物流方式	驾驶员姓名	联系电话	车型	提货时间	备注*@
                 <table id="users" class="table table-striped table-bordered dataTable" aria-describedby="users_info">
                     <thead>
@@ -61,6 +66,7 @@
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">车牌</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">提货时间</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">备注</th>
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">订单明细</th>
                         </tr>
                     </thead>
                     @if (reportList != null && reportList.Count > 0)
@@ -74,40 +80,90 @@
                                     <td class=" ">@entity.CarrierName</td>
                                     <td class=" ">@entity.Temp</td>
                                     <td class=" ">@entity.DeliveryType</td>
-                                    <td class=" ">@entity.DriverName</td>  
-                                    <td class=" ">@entity.DriverTelephone</td>                                    
+                                    <td class=" ">@entity.DriverName</td>
+                                    <td class=" ">@entity.DriverTelephone</td>
                                     <td class=" ">@entity.CarModel</td>
                                     <td class=" ">@entity.CarNo</td>
-                                    <td class=" ">@entity.DeliverDate.ToShortDateString() </td>   
+                                    <td class=" ">@entity.DeliverDate.ToShortDateString() </td>
                                     <td class=" ">@entity.Remark</td>
+                                    <td class=" "><a href="###" style="color: #26AEF2;" onclick="showOrderDetail('@entity.OrderIDS')">查看订单明细</a></td>
                                 </tr>
                             }
 
                         </tbody>
                     }
                 </table>
-                
+
                 @{ Html.RenderPartial("../Pager", p); }
             </div>
         </div> <!-- /widget-body -->
     </div> <!-- /widget -->
 </div>
+
+<div class="coumpLayer_ysjh" id="myModal" style="overflow-x: auto; overflow-y: auto; height: 400px; width:800px;display: none;">
+    <div class="coumpLayer_ysjh_t">
+        <table style="width:100%;" id="orderDetail"></table>
+        <input type='button' id='btn_cancel' class='btn btn-info' value='关闭' />
+    </div>
+</div>
+
 @section Footer{
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
     <script type="text/javascript" src="~/source/Report.js"></script>
-<script src="~/source/layui/layui.js"></script>
-<script>
-    layui.use('laydate', function () {
+    <script src="~/source/layui/layui.js"></script>
+    <script>
+        layui.use('laydate', function () {
 
-        var laydate = layui.laydate;
-        laydate.render({
-            elem: '#begindate' //指定元素
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#begindate' //指定元素
+            });
+            laydate.render({
+                elem: '#enddate' //指定元素
+            });
         });
-        laydate.render({
-            elem: '#enddate' //指定元素
-        });
-    });
+        function showOrderDetail(orderids)
+        {
+            $.ajax({
+                url: "/Line/getOrderDetailByOrderID",
+                type: 'post',
+                cache: false,
+                data: {
+                    orderIDs: orderids,
+                },
+            }).done(function (data) {
+                if ("" != data) {
+                    $("#myModal").show();
+                    console.log(data);
+                    $("#orderDetail").html("");
+                    var html = "";
+                    for(var i=0;i<data.length;i++){
+                        html += "<tr>"
+                        html += "<td style='width:200px'>订单号:" + data[i].OrderNo + "</td><td  style='width:200px'>温区:" + data[i].TempType + "</td><td  style='width:200px'>下单时间:" + data[i].OrderDate + "</td><td  style='width:200px'>送货时间:" + data[i].SendDate + "</td>";
+                        html += "</tr>"
 
-</script>
+                        html += "<tr>"
+                        html += "<td>发货仓库:" + data[i].sendstorage.StorageName + "</td><td>承运商:" + data[i].carrier.CarrierName + "</td><td>订单归属:" + data[i].customer.CustomerName + "</td><td>备注:" + data[i].Remark + "</td>";
+                        html += "</tr>"
+
+                        html += "<tr>"
+                        html += "<td>收货方:" + data[i].contact.name + "</td><td>收货人:" + data[i].contact.contact + "</td><td>联系方式:" + data[i].contact.telephone + "</td><td>配送地址:" + data[i].contact.address + "</td>";
+                        html += "</tr>"
+
+                        $("#orderDetail").append(html);
+                    }                   
+                }
+            }).fail(function (res) {
+                $("#myModal").hide();
+                console.log(res);
+            });
+        }
+
+        //关闭订单明细
+        $("#btn_cancel").on("click", function () {
+            $("#myModal").hide();
+        })
+
+    </script>
 }
