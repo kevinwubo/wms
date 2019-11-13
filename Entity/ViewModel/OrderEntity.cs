@@ -551,5 +551,10 @@ namespace Entity.ViewModel
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+
+        /// <summary>
+        /// 物流方式
+        /// </summary>
+        public string DeliveryType { get; set; }
     }
 }

@@ -104,7 +104,7 @@ namespace GuoChe.Controllers
             string begindate = "", string enddate = "", string deliveryStatus = "", int p = 1, int pageSize = 20)
         {
             List<OrderEntity> mList = null;
-
+            deliveryStatus = !string.IsNullOrEmpty(deliveryStatus) ? deliveryStatus : "F";//默认未安排计划的订单
             // 默认当月
             if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
             {

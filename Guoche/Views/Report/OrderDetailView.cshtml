@@ -1,15 +1,9 @@
 ﻿@using Entity.ViewModel;
 @using Common;
 @{
-    ViewBag.Title = ViewBag.TitleName;
+    ViewBag.Title = "订单查询";
+    Layout = null;
     List<OrderEntity> orderList = (List<OrderEntity>)ViewBag.OrderList;
-    List<BaseDataEntity> PriceSetModel = ((List<BaseDataEntity>)ViewBag.PriceSetModel) ?? new List<BaseDataEntity>();
-
-    List<StorageEntity> storages = (List<StorageEntity>)ViewBag.Storage;
-    List<CarrierEntity> carriers = (List<CarrierEntity>)ViewBag.Carrier;
-    List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;
-
-    PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
 <link href="~/source/assets/css/queryItem.css" rel="stylesheet" />
 <link href="~/source/assets/css/comfirm.css" rel="stylesheet" />
@@ -17,87 +11,11 @@
 <link href="~/source/assets/css/img.css" rel="stylesheet" />
 <link href="~/source/layui/css/layui.css" rel="stylesheet" />
 <div class="row-fluid">
-    <h2 class="heading" style="margin-top:50px">订单出库</h2>
-</div>
-<div class="row-fluid">
     <div class="widget widget-padding span12">
-        <div class="widget-header">
-            <input type="hidden" id="HidUserID" name="HidUserID" value="@ViewBag.UserID" />
-            <i class="icon-laptop"></i>
-            <h5>订单出库</h5>
-        </div>
         <div class="widget-body" style="margin-bottom:50px">
             <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
                 <div class="row-fluid">
                     <div class="">
-                        <form action="/Inventory/OrderOut" method="get">
-                            <div class="dataTables_length" id="menus_filter">
-                                <label>
-                                    <input type="text" id="orderno" name="orderno" style="width:200px" value="@ViewBag.OrderNo" placeholder="订单号,收货方查询" />
-                                </label>
-                                <label>
-                                    <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
-                                        <option value="">--请选择出库仓--</option>
-                                        @foreach (var item in storages)
-                                        {
-                                            <option value="@item.StorageID" @(item.StorageID == ViewBag.storageid ? "selected" : "")>@item.StorageName</option>
-                                        }
-                                    </select>
-                                </label>
-                                <label>
-                                    <select tabindex="1" class="" style="width: 200px" id="carrierid" name="carrierid">
-                                        <option value="">--请选择承运商--</option>
-                                        @foreach (var item in carriers)
-                                        {
-                                            <option value="@item.CarrierID" @(item.CarrierID == ViewBag.carrierid ? "selected" : "")>@item.CarrierName</option>
-                                        }
-                                    </select>
-                                </label>
-                                <label>
-                                    <select tabindex="1" class="" style="width: 200px" id="customerid" name="customerid">
-                                        <option value="">--请选择客户--</option>
-                                        @foreach (var item in customers)
-                                        {
-                                            <option value="@item.CustomerID" @(item.CustomerID == ViewBag.customerid ? "selected" : "")>@item.CustomerName</option>
-                                        }
-                                    </select>
-                                </label>
-           
-                                <label>
-                                    <select tabindex="1" class="" style="width: 200px" id="orderOutStatus" name="orderOutStatus">
-                                        <option value="F" @("F".Equals(ViewBag.orderOutStatus) ? "selected" : "")>待出库</option>
-                                        <option value="T" @("T".Equals(ViewBag.orderOutStatus) ? "selected" : "")>已出库</option>
-                                    </select>
-                                </label>
-                                @*<label>
-                    订单状态: <select class="span3" style="width:150px" id="status" name="status">
-                        <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
-                        <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
-                        <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
-                    </select>
-                </label>*@
-                                <label>
-                                    <select tabindex="1" class="" style="width: 65px" id="pageSize" name="pageSize">
-                                        <option value="10" @(ViewBag.PageSize == 10 ? "selected" : "")>10条</option>
-                                        <option value="20" @(ViewBag.PageSize == 20 ? "selected" : "")>20条</option>
-                                        <option value="30" @(ViewBag.PageSize == 30 ? "selected" : "")>30条</option>
-                                        <option value="40" @(ViewBag.PageSize == 40 ? "selected" : "")>40条</option>
-                                        <option value="50" @(ViewBag.PageSize == 50 ? "selected" : "")>50条</option>
-                                    </select>
-                                </label>
-                                <label>
-                                    <input type="text" aria-controls="menus" class="layui-input" style="width:150px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" lay-key="1" autocomplete="off" name="begindate">
-                                </label>
-                                <label>
-                                    <input type="text" aria-controls="menus" class="layui-input" style="width:150px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
-                                </label>
-                                <button class="btn btn-info" type="submit">搜索</button>
-                                <label>
-                                    <input type="checkbox" id="chk_all" value="-1" />全选
-                                </label>
-                                <button class="btn btn-info" type="button" id="btn_OrderOut">确认出库</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
                 @if (orderList != null && orderList.Count > 0)
@@ -106,12 +24,13 @@
                         @foreach (OrderEntity entity in orderList)
                         {
 
-                            <div class="lcItem" dataid="@entity.OrderID" storageid="23" style="background-color:#ffffe06b;">
+                            <div class="lcItem" dataid="@entity.OrderID" storageid="23">
+
                                 @if (entity.OrderType.Equals("RKD"))
                                 {
                                     <div class="lcItem_t">
                                         <div class="lcCheckDiv">
-                                            <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID+"-"+entity.OrderNo)" />
+                                            <input type="checkbox" class="checkbox" name="chk_name" value="@(entity.OrderID+"-"+entity.IsImport)" />
                                         </div>
                                         <div class="lcItem_t_l">
                                             <div class="lcDivList">
@@ -179,7 +98,7 @@
                                                     <h5>@entity.OrderDate</h5>
                                                 </div>
                                             </div>
-                                            <div class="lcItem_t_r_btnList" style="width: 270px;">
+                                            <div class="lcItem_t_r_btnList" style="width: 130px;">
                                                 <div class="showDiv" isok="true">
                                                     订单详情
                                                 </div>
@@ -187,25 +106,6 @@
                                                 {
                                                     <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
                                                         查看回单
-                                                    </div>
-                                                }
-                                                @if (ViewBag.PageType == "verify")
-                                                {
-                                                    <div class="showDiv">
-                                                        <a href="/Order/OrderPass?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">通过</a>
-                                                    </div>
-                                                    <div class="showDiv">
-                                                        <a href="/Order/OrderBack?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">拒绝</a>
-                                                    </div>
-                                                }
-                                                else if (ViewBag.PageType == "modify")
-                                                {
-                                                    <div class="mod">
-                                                        <a href="/Order/OrderAdd?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">修改</a>
-                                                    </div>
-                                                    <div class="del">
-                                                        @*<a href="/Order/OrderDelete?orderid=@entity.OrderID"  style="color:white">删除</a>*@
-                                                        <a href="javascript:delOrder(@entity.OrderID,'@ViewBag.PageType',@entity.OperatorID)" style="color:white">删除</a>
                                                     </div>
                                                 }
                                             </div>
@@ -284,7 +184,7 @@
                                                     <p>制单人</p>
                                                     <h5>@(entity.user != null ? entity.user.UserName : "")</h5>
                                                 </div>
-                                                <div title="2019-05-15 17:31:11">
+                                                <div title="@entity.OrderDate">
                                                     <p>制单时间</p>
                                                     <h5>@entity.OrderDate</h5>
                                                 </div>
@@ -309,7 +209,7 @@
                                                     <h5>@(!string.IsNullOrEmpty(entity.OrderOutStatus) && entity.OrderOutStatus.Equals("T") ? "已出库" : "待出库")</h5>
                                                 </div>
                                             </div>
-                                            <div class="lcItem_t_r_btnList" style="width: 270px;">
+                                            <div class="lcItem_t_r_btnList" style="width: 130px;">
                                                 <div class="showDiv" isok="true">
                                                     订单详情
                                                 </div>
@@ -319,12 +219,13 @@
                                                         查看回单
                                                     </div>
                                                 }
-
                                             </div>
                                         </div>
                                     </div>
-
                                 }
+
+
+
                                 <div class="lcItem_b">
                                     <table>
                                         <thead>
@@ -397,85 +298,39 @@
                         }
                     </div>
                 }
-
-                @{ Html.RenderPartial("../Pager", p); }
             </div>
         </div> <!-- /widget-body -->
     </div> <!-- /widget -->
 </div>
 
-<!--图片的弹窗-->
+<!--图片显示模板-->
 <div class="docs-pictures clearfix" id="div_showImage">
-
 </div>
-@section Footer{
+
+<script type="text/javascript" src="/source/assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/raphael-min.js"></script>
+<script type="text/javascript" src="/source/assets/js/bootstrap.js"></script>
+
+<script type="text/javascript" src='/source/assets/js/morris.min.js'></script>
+<script type="text/javascript" src="/source/assets/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.masonry.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.imagesloaded.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.facybox.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.alertify.min.js"></script>
+<script type="text/javascript" src="/source/assets/js/jquery.knob.js"></script>
+<script type='text/javascript' src='/source/assets/js/fullcalendar.min.js'></script>
+<script type='text/javascript' src='/source/assets/js/jquery.gritter.min.js'></script>
+
+<script type="text/javascript" src="/source/assets/js/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/source/Common.js"></script>
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
-    <script type="text/javascript" src="~/source/assets/js/viewer-jquery.min.js"></script>
     <script type="text/javascript" src="~/source/Order/SearchOrder.js?@(DateTime.Now.ToShortDateString())"></script>
+    <script type="text/javascript" src="~/source/assets/js/viewer-jquery.min.js"></script>
     <script src="~/source/layui/layui.js"></script>
     <script>
         $(document).ready(function () {
             orderInfo.init();
-        });
-
-        $("#btn_OrderOut").click(function () {
-            var orderNos = "";
-            var orderIds = "";
-            $.each($('input:checkbox:checked'), function () {
-                var ids = $(this).val(); 
-                if (ids != "-1") {
-                    var IDS = ids.split("-");
-                    if (IDS[1] == "T") {
-                        orderIds += IDS[0] + ",";
-                        orderNos += IDS[1] + ",";
-                    }
-                    else {
-                        orderIds += IDS[0] + ",";
-                        orderNos += IDS[1] + ",";
-                    }
-                }                
-            });
-            if (orderIds == "") {
-                alert("请选择需要出库的订单！");
-            }
-            else
-            {
-                if (confirm("确定订单出库?")) {
-                    $("#btn_OrderOut").attr("disabled", true);
-                    $.ajax({
-                        type: "post",
-                        url: "/Inventory/OrderOutProcess",
-                        data: {
-                            orderIDs: orderIds,
-                        },
-                        success: function (msg) {
-                            console.log(msg);
-                            alert("出库成功");
-                            $("#btn_OrderOut").attr("disabled", false);
-                            window.location.href = "/Inventory/OrderOut";
-                        }
-                    })
-                }
-            }
-        });
-
-
-        $("#chk_all").click(function () {
-            //全选,设置chheckbox name='all' tbody id=tb
-            $("input[name=chk_name]").each(function () {
-                $(this).prop('checked', $(this).is(':checked') ? false : true);
-            });
-        });
-        layui.use('laydate', function () {
-
-            var laydate = layui.laydate;
-            laydate.render({
-                elem: '#begindate' //指定元素
-            });
-            laydate.render({
-                elem: '#enddate' //指定元素
-            });
-        });
+        });       
     </script>
-}

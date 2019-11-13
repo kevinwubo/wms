@@ -504,9 +504,11 @@ namespace GuoChe.Controllers
         /// <param name="p"></param>
         /// <returns></returns>
         public ActionResult OrderOut(int carrierid = 0, int storageid = 0, int customerid = 0, int status = -1, string orderno="",
-            string begindate = "", string enddate = "", int p = 1, int pageSize = 20)
+            string begindate = "", string enddate = "", string orderOutStatus = "", int p = 1, int pageSize = 20)
         {
             List<OrderEntity> mList = null;
+
+            orderOutStatus = !string.IsNullOrEmpty(orderOutStatus) ? orderOutStatus : "F";//默认未出库订单
 
             // 默认当月
             if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
@@ -516,7 +518,7 @@ namespace GuoChe.Controllers
                 enddate = DateTime.Now.ToString("yyyy-MM-dd");
             }
             //查询未出库 已安排运输计划订单
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", "T");
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", orderOutStatus, "T", " AND OrderType!='YSDDB'");
 
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
@@ -527,7 +529,7 @@ namespace GuoChe.Controllers
 
             //if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
             //{
-            mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", "T");
+            mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", orderOutStatus, "T", " AND OrderType!='YSDDB'");
             //}
             //else
             //{
@@ -552,6 +554,7 @@ namespace GuoChe.Controllers
             ViewBag.BeginDate = begindate;
             ViewBag.OrderNo = orderno;
             ViewBag.EndDate = enddate;
+            ViewBag.orderOutStatus = orderOutStatus;
             ViewBag.Pager = pager;
             return View();
         }

@@ -1246,7 +1246,8 @@ namespace Service
                                 entity.sendDate = dt.Rows[i]["要求送达时间"].ToString();
                                 entity.sendStorageName = dt.Rows[i]["发货仓库"].ToString();
                                 entity.Temp = dt.Rows[i]["温区"].ToString();
-                                entity.CarrierName = dt.Rows[i]["承运商"].ToString();
+                                entity.CarrierName = "";
+                                entity.DeliveryType = dt.Rows[i]["物流方式"].ToString();
                                 entity.CustomerName = dt.Rows[i]["客户名称"].ToString();
                                 entity.ReceiverName = dt.Rows[i]["送达方(门店/仓库)"].ToString();
                                 entity.GoodsName = dt.Rows[i]["商品名称"].ToString();
@@ -1341,6 +1342,7 @@ namespace Service
                     info.TempType = entity.Temp;//温区
                     info.OrderStatus = 0;
                     info.UploadStatus = 0;
+                    info.DeliveryType = entity.DeliveryType;
                     info.Status = 1;
                     info.OrderOutStatus = "F";//未出库
                     info.Remark = entity.Remark;

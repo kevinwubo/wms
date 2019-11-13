@@ -4,52 +4,52 @@
     ViewBag.Title = "订单录入";
 }
 @section Header{
-<link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
-<style>
-    .btnAutoDiv {
-        width: 440px;
-        height: 85px;
-        display: flex;
-        justify-content: space-between;
-        position: absolute;
-        top: 110px;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-    }
+    <link href="~/source/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet" />
+    <style>
+        .btnAutoDiv {
+            width: 540px;
+            height: 85px;
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            top: 110px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+        }
 
-    .btnAutoDiv div {
-        width: 200px;
-        height: 85px;
-        text-align: center;
-        line-height: 50px;
-        font-size: 26px;
-        color: #fff;
-        background: #00a7d0;
-        border-radius: 8px;
-        cursor: pointer;
-        position: relative;
-    }
+            .btnAutoDiv div {
+                width: 250px;
+                height: 85px;
+                text-align: center;
+                line-height: 50px;
+                font-size: 26px;
+                color: #fff;
+                background: #00a7d0;
+                border-radius: 8px;
+                cursor: pointer;
+                position: relative;
+            }
 
-    .btnAutoDiv div h5 {
-        width: 150px;
-        height: 40px;
-        margin: 0;
-        position: absolute;
-        top: 40px;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        line-height: 20px;
-        font-size: 12px;
-        color: #fff;
-        font-weight: normal;
-    }
+                .btnAutoDiv div h5 {
+                    width: auto;
+                    height: 40px;
+                    margin: 0;
+                    position: absolute;
+                    top: 40px;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                    line-height: 20px;
+                    font-size: 12px;
+                    color: #fff;
+                    font-weight: normal;
+                }
 
-    .btnAutoDiv div:hover {
-        transform: scale(1.1);
-    }
-</style>
+                .btnAutoDiv div:hover {
+                    transform: scale(1.1);
+                }
+    </style>
 
 
 
@@ -61,12 +61,32 @@
                 <i class="icon-list-alt"></i><h5>订单录入</h5>
             </div>
             <div class="btnAutoDiv">
-                <div onclick="openUrl('CPDD')" class="addShop">仓配订单<h5>仓到店，涉及仓的库存扣减，无视门店库存。</h5></div>
-                <div onclick="openUrl('DBDD')" class="addStorage">调拨订单<h5>仓到仓，涉及仓仓之间的库存扣减增加。</h5></div>
+                <div onclick="openUrl('CPDD')" class="addShop">
+                    仓配订单<h5>
+                        @*仓到店，涉及仓的库存扣减，无视门店库存。*@
+                        仓配订单流程<br />下单->车辆计划->分拣出库
+                    </h5>
+                </div>
+                <div onclick="openUrl('DBDD')" class="addStorage">
+                    调拨订单<h5>
+                        @*仓到仓，涉及仓仓之间的库存扣减增加。*@
+                        调拨订单流程<br/>下单->车辆计划->分拣出库->商品入库
+                    </h5>
+                </div>
             </div>
             <div class="btnAutoDiv" style="top: 220px;">
-                <div onclick="openUrl('YSDDA')" class="addStorage1">运输订单A<h5>厂到仓，涉及仓的库存增加，无视厂的库存。</h5></div>
-                <div onclick="openUrl('YSDDB')" class="addShop1">运输订单B<h5>厂到店，均无视库存。</h5></div>
+                <div onclick="openUrl('YSDDA')" class="addStorage1">
+                    运输订单A<h5>
+                        @*厂到仓，涉及仓的库存增加，无视厂的库存。*@
+                        运输订单A流程<br />下单->车辆计划->商品入库
+                    </h5>
+                </div>
+                <div onclick="openUrl('YSDDB')" class="addShop1">
+                    运输订单B<h5>
+                        @*厂到店，均无视库存。*@
+                        运输订单B流程<br/>下单->车辆计划
+                    </h5>
+                </div>
             </div>
         </div>
     </form>

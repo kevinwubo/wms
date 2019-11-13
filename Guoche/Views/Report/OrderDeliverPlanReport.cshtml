@@ -125,39 +125,48 @@
         });
         function showOrderDetail(orderids)
         {
-            $.ajax({
-                url: "/Line/getOrderDetailByOrderID",
-                type: 'post',
-                cache: false,
-                data: {
-                    orderIDs: orderids,
-                },
-            }).done(function (data) {
-                if ("" != data) {
-                    $("#myModal").show();
-                    console.log(data);
-                    $("#orderDetail").html("");
-                    var html = "";
-                    for(var i=0;i<data.length;i++){
-                        html += "<tr>"
-                        html += "<td style='width:200px'>订单号:" + data[i].OrderNo + "</td><td  style='width:200px'>温区:" + data[i].TempType + "</td><td  style='width:200px'>下单时间:" + data[i].OrderDate + "</td><td  style='width:200px'>送货时间:" + data[i].SendDate + "</td>";
-                        html += "</tr>"
+            var obj = window;
+            obj.name = "我是父窗口";  //子窗口获得的是这个
+            var openUrl = "OrderDetailView?orderIDs=" + orderids;//弹出窗口的url
+            var iWidth = 1200; //弹出窗口的宽度;
+            var iHeight = 600; //弹出窗口的高度;
+            var iTop = (window.screen.availHeight - 30 - iHeight) / 2; //获得窗口的垂直位置;
+            var iLeft = (window.screen.availWidth - 10 - iWidth) / 2; //获得窗口的水平位置;
+            myWindow = window.open(openUrl, "Child", "height=" + iHeight + ", width=" + iWidth + ", top=" + iTop + ", left=" + iLeft + ",alwaysRaised=yes,z-look=yes,location=yes");
+            myWindow.focus(); //置顶
+            //$.ajax({
+            //    url: "/Line/getOrderDetailByOrderID",
+            //    type: 'post',
+            //    cache: false,
+            //    data: {
+            //        orderIDs: orderids,
+            //    },
+            //}).done(function (data) {
+            //    if ("" != data) {
+            //        $("#myModal").show();
+            //        console.log(data);
+            //        $("#orderDetail").html("");
+            //        var html = "";
+            //        for(var i=0;i<data.length;i++){
+            //            html += "<tr>"
+            //            html += "<td style='width:200px'>订单号:" + data[i].OrderNo + "</td><td  style='width:200px'>温区:" + data[i].TempType + "</td><td  style='width:200px'>下单时间:" + data[i].OrderDate + "</td><td  style='width:200px'>送货时间:" + data[i].SendDate + "</td>";
+            //            html += "</tr>"
 
-                        html += "<tr>"
-                        html += "<td>发货仓库:" + data[i].sendstorage.StorageName + "</td><td>承运商:" + data[i].carrier.CarrierName + "</td><td>订单归属:" + data[i].customer.CustomerName + "</td><td>备注:" + data[i].Remark + "</td>";
-                        html += "</tr>"
+            //            html += "<tr>"
+            //            html += "<td>发货仓库:" + data[i].sendstorage.StorageName + "</td><td>承运商:" + data[i].carrier.CarrierName + "</td><td>订单归属:" + data[i].customer.CustomerName + "</td><td>备注:" + data[i].Remark + "</td>";
+            //            html += "</tr>"
 
-                        html += "<tr>"
-                        html += "<td>收货方:" + data[i].contact.name + "</td><td>收货人:" + data[i].contact.contact + "</td><td>联系方式:" + data[i].contact.telephone + "</td><td>配送地址:" + data[i].contact.address + "</td>";
-                        html += "</tr>"
+            //            html += "<tr>"
+            //            html += "<td>收货方:" + data[i].contact.name + "</td><td>收货人:" + data[i].contact.contact + "</td><td>联系方式:" + data[i].contact.telephone + "</td><td>配送地址:" + data[i].contact.address + "</td>";
+            //            html += "</tr>"
 
-                        $("#orderDetail").append(html);
-                    }                   
-                }
-            }).fail(function (res) {
-                $("#myModal").hide();
-                console.log(res);
-            });
+            //            $("#orderDetail").append(html);
+            //        }                   
+            //    }
+            //}).fail(function (res) {
+            //    $("#myModal").hide();
+            //    console.log(res);
+            //});
         }
 
         //关闭订单明细

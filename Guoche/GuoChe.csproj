@@ -1024,6 +1024,7 @@
     <Content Include="Views\Inventory\OrderOut.cshtml" />
     <Content Include="Views\Line\OrderDeliveryPlan.cshtml" />
     <Content Include="Views\Report\OrderDeliverPlanReport.cshtml" />
+    <Content Include="Views\Report\OrderDetailView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -53,6 +53,42 @@ namespace GuoChe.Controllers
             return View();
         }
 
+
+        #region 订单查询
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type">页面权限控制类型 check:通过、拒绝</param>
+        /// <param name="carrierid"></param>
+        /// <param name="storageid"></param>
+        /// <param name="customerid"></param>
+        /// <param name="orderstatus"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public ActionResult OrderDetailView(string orderIDs)
+        {
+            List<OrderEntity> mList = new List<OrderEntity>();
+
+            if (!string.IsNullOrEmpty(orderIDs))
+            {
+                List<string> orderList = orderIDs.Split(',').ToList<string>();
+                if (orderList != null && orderList.Count > 0)
+                {
+                    foreach (string orderid in orderList)
+                    {
+                        if (!string.IsNullOrEmpty(orderid))
+                        {
+                            OrderEntity orderEntity = OrderService.GetOrderByOrderID(orderid.ToInt(0));
+                            mList.Add(orderEntity);
+                        }
+                    }
+                }
+            }
+            ViewBag.OrderList = mList;           
+            return View();
+        }
+        #endregion
+
         /// <summary>
         /// 车辆计划报表 Excel导出
         /// </summary>
