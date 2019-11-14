@@ -112,9 +112,14 @@ namespace GuoChe.Controllers
                 begindate = dt.Year + "-" + dt.Month + "-" + "01";
                 enddate = DateTime.Now.ToString("yyyy-MM-dd");
             }
+            string orderOutStatus = "F";
+            if (deliveryStatus.Equals("T"))//出库状态默认未出库  如果查询已安排配送 忽视订单是否出库
+            {
+                orderOutStatus = "";
+            }
 
             //查询未出库 未安排运输计划订单  不包含入库单
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", deliveryStatus, " AND OrderType!='RKD'");
+            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", orderOutStatus, deliveryStatus, " AND OrderType!='RKD'");
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = pageSize;
@@ -123,7 +128,7 @@ namespace GuoChe.Controllers
 
             //if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
             //{
-            mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", "F", deliveryStatus, " AND OrderType!='RKD'");
+            mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", orderOutStatus, deliveryStatus, " AND OrderType!='RKD'");
             //}
             //else
             //{
