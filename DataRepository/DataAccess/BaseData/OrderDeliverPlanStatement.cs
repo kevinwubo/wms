@@ -45,7 +45,7 @@ namespace DataRepository.DataAccess.BaseData
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH OrderDeliverPlans AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY PlanID ) AS RowNumber FROM (SELECT * FROM wms_OrderDeliverPlan WHERE 1=1 )as T ) 
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY DeliverDate DESC ) AS RowNumber FROM (SELECT * FROM wms_OrderDeliverPlan WHERE 1=1 )as T ) 
 		                                                  SELECT *  FROM OrderDeliverPlans 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize
 	                                                  END";
@@ -65,7 +65,7 @@ namespace DataRepository.DataAccess.BaseData
 		                                                  SET @UP=@PageSize*(@PageIndex-1);
 		                                                  ---------分页查询-----------
 		                                                  WITH OrderDeliverPlans AS
-		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY PlanID ) AS RowNumber FROM (SELECT * FROM wms_OrderDeliverPlan WHERE 1=1 ";
+		                                                  (SELECT *,ROW_NUMBER() OVER (ORDER BY DeliverDate DESC ) AS RowNumber FROM (SELECT * FROM wms_OrderDeliverPlan WHERE 1=1 ";
         public static string GetAllOrderDeliverPlanInfoByRulePagerFooter = @")as T ) 
 		                                                  SELECT *  FROM OrderDeliverPlans 
 		                                                  WHERE RowNumber BETWEEN @UP+1 AND @UP+@PageSize

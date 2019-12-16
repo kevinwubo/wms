@@ -38,7 +38,7 @@ namespace Service
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "", "ASC", "", "", pager);
+            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "", "DESC", "", "", pager);
 
             if (!miList.IsEmpty())
             {
