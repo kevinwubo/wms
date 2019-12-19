@@ -35,28 +35,22 @@ namespace DataRepository.DataAccess.Order
             return result;
         }
 
-        public List<OrderInfo> GetOrderByRule(string name, int status)
+        public List<OrderInfo> GetOrderByRule(string begindate, string enddate)
         {
             List<OrderInfo> result = new List<OrderInfo>();
             string sqlText = OrderStatement.GetAllOrderByRule;
-            if (!string.IsNullOrEmpty(name))
-            {
-                sqlText += " AND OrderName LIKE '%'+@key+'%'";
-            }
-            if (status > -1)
-            {
-                sqlText += " AND Status=@Status";
-            }
 
+            if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
+            {
+                sqlText += " AND OrderDate BETWEEN @begindate AND @enddate ";
+            }
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
-            if (!string.IsNullOrEmpty(name))
+
+            if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {
-                command.AddInputParameter("@key", DbType.String, name);
-            }
-            if (status > -1)
-            {
-                command.AddInputParameter("@Status", DbType.Int32, status);
+                command.AddInputParameter("@begindate", DbType.String, begindate);
+                command.AddInputParameter("@enddate", DbType.String, enddate);
             }
 
             result = command.ExecuteEntityList<OrderInfo>();

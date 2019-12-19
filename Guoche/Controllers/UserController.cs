@@ -9,6 +9,7 @@ using Common;
 using Infrastructure.Helper;
 using System.Text;
 using System.Web.Security;
+using Service;
 
 namespace GuoChe.Controllers
 {
@@ -16,6 +17,23 @@ namespace GuoChe.Controllers
     {
         public ActionResult Home()
         {
+            List<OrderStatisticsEntity> orderStatisicsList = new List<OrderStatisticsEntity>();
+            string beginTime = DateTime.Now.ToShortDateString();
+            string endTime = DateTime.Now.ToString();
+            List<OrderEntity> orderList = OrderService.GetOrderByRule(beginTime, endTime);
+            if (orderList != null && orderList.Count > 0)
+            {
+                var list = orderList.GroupBy(x => x.OperatorID);
+                foreach (var item in list)
+                {
+                    OrderStatisticsEntity entity = new OrderStatisticsEntity();
+                    List<OrderEntity> orderLst= orderList.FindAll(p => p.OperatorID == item.Key);
+                    entity.key = orderLst[0].user.UserName;
+                    entity.count = orderLst.Count;
+                    orderStatisicsList.Add(entity);
+                }
+            }
+            ViewBag.orderStatisicsList = orderStatisicsList;
             return View();
         }
 

@@ -454,11 +454,11 @@ namespace Service
 
         }
 
-        public static List<OrderEntity> GetOrderByRule(string name, int status)
+        public static List<OrderEntity> GetOrderByRule(string begindate, string enddate)
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderByRule(name, status);
+            List<OrderInfo> miList = mr.GetOrderByRule(begindate, enddate);
 
             if (!miList.IsEmpty())
             {

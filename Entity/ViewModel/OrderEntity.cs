@@ -557,4 +557,10 @@ namespace Entity.ViewModel
         /// </summary>
         public string DeliveryType { get; set; }
     }
+
+    public class OrderStatisticsEntity
+    {
+        public string key { get; set; }
+        public int count { get; set; }
+    }
 }
