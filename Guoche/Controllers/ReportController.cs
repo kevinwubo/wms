@@ -191,7 +191,7 @@ namespace GuoChe.Controllers
         /// <param name="p"></param>
         /// <returns></returns>
         public ActionResult CustomServiceReport(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
-            string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int p = 1)
+            string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid=-1, int p = 1)
         {
             // 默认当月
             if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
@@ -203,16 +203,16 @@ namespace GuoChe.Controllers
 
             List<OrderEntity> mList = null;
 
-            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1).count;
+            int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, operatorid).count;
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
             pager.URL = "CustomServiceReport";
 
-            if (carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
+            if (carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(ordertype) || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate) || operatorid > 0)
             {
-                mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
+                mList = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, operatorid);
             }
             else
             {
@@ -240,9 +240,12 @@ namespace GuoChe.Controllers
             ViewBag.BeginDate = begindate;
             ViewBag.EndDate = enddate;
             ViewBag.orderTypeList = orderTypeList;
+            ViewBag.OperatorID = operatorid;
             ViewBag.GUID = System.Guid.NewGuid().ToString();
             //存入缓存
             Cache.Add(ViewBag.GUID, report.reportList);
+            //操作人
+            ViewBag.Users = UserService.GetUserAll();
             ViewBag.Pager = pager;
             return View();
         }
