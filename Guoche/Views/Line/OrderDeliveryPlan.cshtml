@@ -86,12 +86,12 @@
                                     </select>
                                 </label>
                                 @*<label>
-                    订单状态: <select class="span3" style="width:150px" id="status" name="status">
-                        <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
-                        <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
-                        <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
-                    </select>
-                </label>*@
+                                        订单状态: <select class="span3" style="width:150px" id="status" name="status">
+                                            <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
+                                            <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
+                                            <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
+                                        </select>
+                                    </label>*@
                                 <label>
                                     <select tabindex="1" class="" style="width: 65px" id="pageSize" name="pageSize">
                                         <option value="10" @(ViewBag.PageSize == 10 ? "selected" : "")>10条</option>
@@ -199,12 +199,14 @@
                                                 <div class="showDiv" isok="true">
                                                     订单详情
                                                 </div>
+
                                                 @if (!string.IsNullOrEmpty(entity.AttachmentIDs))
                                                 {
-                                                <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
-                                                    查看回单
-                                                </div>
-                                                }
+                                                    <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
+                                                        查看回单
+                                                    </div>
+                                                }                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -316,7 +318,12 @@
                                                         查看回单
                                                     </div>
                                                 }
-
+                                                @if (entity.PlanID > 0)
+                                                {
+                                                    <div class="修改" onclick="javascript:updateOrderDeliverPlan('@entity.PlanID')">
+                                                        修改
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -410,9 +417,10 @@
                     <td colspan="4" align="left" style="font-size:larger">运输计划单</td>
                 </tr>
                 <tr>
-                    <td colspan="4" align="left">
+                    <td colspan="4" align="left">                        
                         本次计划单需安排<span id="orderCount" style="color:red"></span>张运输订单
                         <input type="hidden" id="OrderIDS" name="OrderIDS" value="" />
+                        <input type="hidden" id="PlanID" name="PlanID" value="-1" />
                     </td>
                 </tr>
             </thead>
@@ -465,7 +473,22 @@
             </tr>
             <tr>
                 <td>车型</td>
-                <td><input type="text" placeholder="请输入车型" id="CarModel" name="CarModel" style="width:220px" /></td>
+                <td>
+                    @*<input type="text" placeholder="请输入车型" id="CarModel" name="CarModel" style="width:220px" />*@
+                    @*4.2米，5.2米，6.8米，7.6米，9.6米，12.5米，13.7米，15米，17.5米，其他*@
+                    <select tabindex="1" class="" id="CarModel" style="width:220px" name="CarModel">
+                        <option value="4.2米">4.2米</option>
+                        <option value="5.2米">5.2米</option>
+                        <option value="6.8米">6.8米</option>
+                        <option value="7.6米">7.6米</option>
+                        <option value="9.6米">9.6米</option>
+                        <option value="12.5米">12.5米</option>
+                        <option value="13.7米">13.7米</option>
+                        <option value="15米">15米</option>
+                        <option value="17.5米">17.5米</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </td>
                 <td>提货车牌</td>
                 <td><input placeholder="请输入提货车牌" type="text" id="CarNo" name="CarNo" style="width:220px" /></td>
 
@@ -477,6 +500,19 @@
                 </td>
                 <td></td>
                 <td></td>
+            </tr>
+            @*,,,*@
+            <tr>
+                <td>油卡卡号</td>
+                <td><input type="text" placeholder="请输入油卡卡号" id="OilCardNo" name="OilCardNo" style="width:220px" /></td>
+                <td>油卡余额</td>
+                <td><input type="text" placeholder="请输入油卡余额(只能输入数字)" id="OilCardBalance" name="OilCardBalance" style="width:220px" /></td>
+            </tr>
+            <tr>
+                <td>GPS编号</td>
+                <td><input type="text" placeholder="请输入GPS编号" id="GPSNo" name="GPSNo" style="width:220px" /></td>
+                <td>是否开票</td>
+                <td><input type="checkbox" id="NeedTicket" name="NeedTicket" />是否开票</td>
             </tr>
             <tr>
                 <td>备注</td>
@@ -511,7 +547,7 @@
         //订单配送
         $("#btn_OrderPlan").on("click", function () {
             var orderids = "";
-            var count=0;
+            var count = 0;
             $.each($('input:checkbox:checked'), function () {
                 if ($(this).val() != "-1") {
                     orderids += $(this).val() + ",";
@@ -550,10 +586,11 @@
             var name = $(this).text();
             var id = $(this).attr("id");
             var contact = $(this).attr("contact");
+            var carNo = $(this).attr("carNo");
             $('#txt_CarrierID').val(id);
             $('#txt_CarrierName').val(name);
             $('#div_carriere_items').hide(500);
-
+            $('#CarNo').val(carNo);
             if (contact != "") {
                 var item = $.parseJSON(contact);
                 if (item) {
@@ -579,7 +616,7 @@
                         $("#div_carriere_items").html("")
                         $("#div_carriere_items").show();
                         for (var i = 0; i < data.length; i++) {
-                            $("#div_carriere_items").append("<li class='div_carriere_item' id='" + data[i].CarrierID + "' contact='" + data[i].contactJson + "'>" + data[i].CarrierName + "</li>");
+                            $("#div_carriere_items").append("<li class='div_carriere_item' id='" + data[i].CarrierID + "' contact='" + data[i].ContactJson + "' carNo='" + data[i].CarNo + "' >" + data[i].CarrierName + "</li>");
                         }
                     }
                 }
@@ -590,6 +627,44 @@
         $(document).ready(function () {
             orderInfo.init();
         });
+
+
+        //修改物流计划安排
+        function updateOrderDeliverPlan(planID) {
+            $.ajax({
+                type: "post",
+                url: "/Line/GetOrderDeliverPlanByPlanID",
+                data: {
+                    planID: planID,
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#myModal").show();
+                    if (data) {                        
+                        var item = data;
+                        $("#PlanID").val(planID);
+                        $("#OrderIDS").val(item.OrderIDS);
+                        $("#txt_CarrierID").val(item.CarrierID);
+                        $("#txt_CarrierName").val(item.CarrierName);                        
+                        $("#Temp").val(item.Temp);
+                        $("#DeliveryType").val(item.DeliveryType);
+                        $("#DriverName").val(item.DriverName);
+                        $("#DriverTelephone").val(item.DriverTelephone);
+                        $("#CarModel").val(item.CarModel);
+                        $("#CarNo").val(item.CarNo);
+                        $("#DeliverDate").val(item.formatDeliverDate);
+                        $("#Remark").val(item.Remark);
+                        $("#OilCardNo").val(item.OilCardNo);
+                        $("#OilCardBalance").val(item.OilCardBalance);
+                        $("#GPSNo").val(item.GPSNo);
+                        if (item.NeedTicket) {
+                            $('#NeedTicket').attr("checked", "checked");
+                        }
+                        
+                    }
+                }
+            })
+        }
 
         //物流计划保存
         $("#btn_save").click(function () {
@@ -605,7 +680,11 @@
             var carNo = $("#CarNo").val();
             var deliverDate = $("#DeliverDate").val();
             var remark = $("#Remark").val();
-
+            var oilcardNo = $("#OilCardNo").val();
+            var oilCardBalance = $("#OilCardBalance").val();
+            var gpsNo = $("#GPSNo").val();
+            var needTicket = $('#NeedTicket').is(':checked') ? "T" : "F";
+            var planID = $("#PlanID").val();
             if (carrierName == "") {
                 $("#msg").html("请输入承运商信息!")
                 return false;
@@ -615,8 +694,9 @@
                 type: "post",
                 url: "/Line/OrderDeliveryPlanProcess",
                 data: {
-                    orderids:orderids,  carrierName:carrierName,  carrierId:carrierId,  temp:temp,  deliveryType:deliveryType,
-                    driverName:driverName,  driverTelephone:driverTelephone,  carModel:carModel,  carNo:carNo,  deliverDate:deliverDate,  remark:remark
+                    orderids: orderids, carrierName: carrierName, carrierId: carrierId, temp: temp, deliveryType: deliveryType,
+                    driverName: driverName, driverTelephone: driverTelephone, carModel: carModel, carNo: carNo, deliverDate: deliverDate, remark: remark,
+                    oilcardNo: oilcardNo, oilCardBalance: oilCardBalance, gpsNo: gpsNo, needTicket: needTicket, planID: planID
                 },
                 success: function (msg) {
                     console.log(msg);

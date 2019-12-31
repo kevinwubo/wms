@@ -55,7 +55,8 @@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">承运商名称</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">承运商简称</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">承运商编号</th>     
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">承运商类型</th>                                
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">承运商类型</th>      
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">车牌号</th>                                
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">描述</th>                                
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">合作状态</th>  
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width: 40px;">操作</th>
@@ -70,6 +71,7 @@
                                     <td class=" ">@Carrier[i].CarrierShortName</td>
                                     <td class=" ">@Carrier[i].CarrierNo</td>
                                     <td class=" ">@Carrier[i].Type</td>
+                                    <td class=" ">@Carrier[i].CarNo</td>
                                     <td class=" ">@Carrier[i].Remark</td>   
                                     <td class=" ">
                                         @if (Carrier[i].Status==1)

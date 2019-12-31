@@ -38,6 +38,7 @@ namespace Service.BaseBiz
                 info.CarrierNo = entity.CarrierNo;
                 info.Type = entity.Type;
                 info.Remark = entity.Remark;
+                info.CarNo = entity.CarNo;
                 info.Status = entity.Status;
                 info.CreateDate = entity.CreateDate;
                 info.ChangeDate = entity.ChangeDate;
@@ -60,6 +61,7 @@ namespace Service.BaseBiz
                 entity.CarrierNo = info.CarrierNo;
                 entity.Type = info.Type;
                 entity.Remark = info.Remark;
+                entity.CarNo = info.CarNo;
                 entity.Status = info.Status;
                 entity.CreateDate = info.CreateDate;
                 entity.ChangeDate = info.ChangeDate;

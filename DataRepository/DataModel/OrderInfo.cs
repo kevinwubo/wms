@@ -72,6 +72,14 @@ namespace DataRepository.DataModel
         public int CarrierID { get; set; }
 
         /// <summary>
+        /// 订单配送ID
+        /// </summary>
+        [DataMapping("PlanID", DbType.Int32)]
+        public int PlanID { get; set; }
+
+        
+
+        /// <summary>
         /// 是否安排物流计划  T是/F否
         /// </summary>
         [DataMapping("DeliveryStatus", DbType.String)]

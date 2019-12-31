@@ -42,7 +42,7 @@ namespace DataRepository.DataAccess.Goods
         /// <param name="status">状态</param>
         /// <param name="BarCode">条形码</param>
         /// <returns></returns>
-        public List<GoodsInfo> GetGoodsByRule(string goodsNo, int status, string goodsName, string goodsModel, string BarCode)
+        public List<GoodsInfo> GetGoodsByRule(string goodsNo, int status, string goodsName, string goodsModel, string BarCode, int customerID)
         {
             List<GoodsInfo> result = new List<GoodsInfo>();
             string sqlText = GoodsStatement.GetAllGoodsByRule;
@@ -66,7 +66,10 @@ namespace DataRepository.DataAccess.Goods
             {
                 sqlText += " AND BarCode=@BarCode";
             }
-
+            if (customerID > 0)
+            {
+                sqlText += " AND customerID = @customerID";
+            }
 
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
             if (!string.IsNullOrEmpty(goodsNo))
@@ -89,6 +92,10 @@ namespace DataRepository.DataAccess.Goods
             {
                 command.AddInputParameter("@BarCode", DbType.String, BarCode);
             }
+            if (customerID > 0)
+            {
+                command.AddInputParameter("@customerID", DbType.String, customerID);
+            }
             result = command.ExecuteEntityList<GoodsInfo>();
             return result;
         }
@@ -103,30 +110,34 @@ namespace DataRepository.DataAccess.Goods
         }
 
         public int CreateNew(GoodsInfo group)
-        {            
-            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(GoodsStatement.CreateNewGoods, "Text"));
-            command.AddInputParameter("@TypeCode", DbType.String, group.TypeCode);
-            command.AddInputParameter("@CustomerID", DbType.Int64, group.CustomerID);
-            command.AddInputParameter("@GoodsName", DbType.String, group.GoodsName);
-            command.AddInputParameter("@GoodsModel", DbType.String, group.GoodsModel);
-            command.AddInputParameter("@Weight", DbType.String, group.Weight);
-            command.AddInputParameter("@Size", DbType.String, group.Size);
-            command.AddInputParameter("@Units", DbType.String, group.Units);
-            command.AddInputParameter("@Costing", DbType.Decimal, group.Costing);
-            command.AddInputParameter("@SalePrice", DbType.Decimal, group.SalePrice);
-            command.AddInputParameter("@Torr", DbType.String, group.Torr);
-            command.AddInputParameter("@exDate", DbType.String, group.exDate);
-            command.AddInputParameter("@exUnits", DbType.String, group.exUnits);
-            command.AddInputParameter("@AnotherNO", DbType.String, group.AnotherNO);
-            command.AddInputParameter("@AnotherName", DbType.String, group.AnotherName);
-            command.AddInputParameter("@Remark", DbType.String, group.Remark);
-            command.AddInputParameter("@BarCode", DbType.String, group.BarCode);
-            command.AddInputParameter("@OperatorID", DbType.Int64, group.OperatorID);
-            command.AddInputParameter("@GoodsNo", DbType.String, group.GoodsNo);
-            command.AddInputParameter("@Status", DbType.Int32, group.Status);
-            command.AddInputParameter("@CreateDate", DbType.DateTime, group.CreateDate);
-
-            return command.ExecuteNonQuery();
+        {
+            List<GoodsInfo> goodsList = GetGoodsByRule("", -1, group.GoodsName, "", "", group.CustomerID);
+            if (goodsList == null || goodsList.Count == 0)
+            {
+                DataCommand command = new DataCommand(ConnectionString, GetDbCommand(GoodsStatement.CreateNewGoods, "Text"));
+                command.AddInputParameter("@TypeCode", DbType.String, group.TypeCode);
+                command.AddInputParameter("@CustomerID", DbType.Int64, group.CustomerID);
+                command.AddInputParameter("@GoodsName", DbType.String, group.GoodsName);
+                command.AddInputParameter("@GoodsModel", DbType.String, group.GoodsModel);
+                command.AddInputParameter("@Weight", DbType.String, group.Weight);
+                command.AddInputParameter("@Size", DbType.String, group.Size);
+                command.AddInputParameter("@Units", DbType.String, group.Units);
+                command.AddInputParameter("@Costing", DbType.Decimal, group.Costing);
+                command.AddInputParameter("@SalePrice", DbType.Decimal, group.SalePrice);
+                command.AddInputParameter("@Torr", DbType.String, group.Torr);
+                command.AddInputParameter("@exDate", DbType.String, group.exDate);
+                command.AddInputParameter("@exUnits", DbType.String, group.exUnits);
+                command.AddInputParameter("@AnotherNO", DbType.String, group.AnotherNO);
+                command.AddInputParameter("@AnotherName", DbType.String, group.AnotherName);
+                command.AddInputParameter("@Remark", DbType.String, group.Remark);
+                command.AddInputParameter("@BarCode", DbType.String, group.BarCode);
+                command.AddInputParameter("@OperatorID", DbType.Int64, group.OperatorID);
+                command.AddInputParameter("@GoodsNo", DbType.String, group.GoodsNo);
+                command.AddInputParameter("@Status", DbType.Int32, group.Status);
+                command.AddInputParameter("@CreateDate", DbType.DateTime, group.CreateDate);
+                return command.ExecuteNonQuery();
+            }
+            return 0;
         }
 
         public int ModifyGroup(GoodsInfo group)

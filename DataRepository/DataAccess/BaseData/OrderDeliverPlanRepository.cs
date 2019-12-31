@@ -29,10 +29,11 @@ namespace DataRepository.DataAccess.BaseData
             return result;
         }
 
-        public long CreateNew(OrderDeliverPlanInfo info)
+        public int CreateNew(OrderDeliverPlanInfo info)
         {
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderDeliverPlanStatement.CreateNewOrderDeliverPlan, "Text"));
             command.AddInputParameter("@OrderIDS", DbType.String, info.OrderIDS);
+            command.AddInputParameter("@DeliveryNo", DbType.String, info.DeliveryNo);
             command.AddInputParameter("@CarrierName", DbType.String, info.CarrierName);
             command.AddInputParameter("@CarrierID", DbType.String, info.CarrierID);
             command.AddInputParameter("@Temp", DbType.String, info.Temp);
@@ -41,13 +42,17 @@ namespace DataRepository.DataAccess.BaseData
             command.AddInputParameter("@DriverTelephone", DbType.String, info.DriverTelephone);
             command.AddInputParameter("@CarModel", DbType.String, info.CarModel);
             command.AddInputParameter("@CarNo", DbType.String, info.CarNo);
+            command.AddInputParameter("@OilCardNo", DbType.String, info.OilCardNo);
+            command.AddInputParameter("@OilCardBalance", DbType.Decimal, info.OilCardBalance);
+            command.AddInputParameter("@GPSNo", DbType.String, info.GPSNo);
+            command.AddInputParameter("@NeedTicket", DbType.Boolean, info.NeedTicket);
             command.AddInputParameter("@DeliverDate", DbType.DateTime, info.DeliverDate);
             command.AddInputParameter("@Remark", DbType.String, info.Remark);
             command.AddInputParameter("@OperatorID", DbType.String, info.OperatorID);
             command.AddInputParameter("@CreateDate", DbType.DateTime, info.CreateDate);
             command.AddInputParameter("@ChangeDate", DbType.DateTime, info.ChangeDate);
             var o = command.ExecuteScalar<object>();
-            return Convert.ToInt64(o);
+            return Convert.ToInt32(o);
         }
 
         public int ModifyOrderDeliverPlan(OrderDeliverPlanInfo info)
@@ -55,21 +60,23 @@ namespace DataRepository.DataAccess.BaseData
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderDeliverPlanStatement.ModifyOrderDeliverPlan, "Text"));
             command.AddInputParameter("@PlanID", DbType.Int32, info.PlanID);
             command.AddInputParameter("@OrderIDS", DbType.String, info.OrderIDS);
+            command.AddInputParameter("@DeliveryNo", DbType.String, info.DeliveryNo);
             command.AddInputParameter("@CarrierName", DbType.String, info.CarrierName);
             command.AddInputParameter("@CarrierID", DbType.String, info.CarrierID);
             command.AddInputParameter("@Temp", DbType.String, info.Temp);
             command.AddInputParameter("@DeliveryType", DbType.String, info.DeliveryType);
-            command.AddInputParameter("@Temp", DbType.String, info.Temp);
             command.AddInputParameter("@DriverName", DbType.String, info.DriverName);
             command.AddInputParameter("@DriverTelephone", DbType.String, info.DriverTelephone);
             command.AddInputParameter("@CarModel", DbType.String, info.CarModel);
             command.AddInputParameter("@CarNo", DbType.String, info.CarNo);
+            command.AddInputParameter("@OilCardNo", DbType.String, info.OilCardNo);
+            command.AddInputParameter("@OilCardBalance", DbType.Decimal, info.OilCardBalance);
+            command.AddInputParameter("@GPSNo", DbType.String, info.GPSNo);
+            command.AddInputParameter("@NeedTicket", DbType.Boolean, info.NeedTicket);
             command.AddInputParameter("@DeliverDate", DbType.DateTime, info.DeliverDate);
             command.AddInputParameter("@Remark", DbType.String, info.Remark);
             command.AddInputParameter("@OperatorID", DbType.String, info.OperatorID);
-            command.AddInputParameter("@CreateDate", DbType.DateTime, info.CreateDate);
             command.AddInputParameter("@ChangeDate", DbType.DateTime, info.ChangeDate);
-
 
             return command.ExecuteNonQuery();            
         }

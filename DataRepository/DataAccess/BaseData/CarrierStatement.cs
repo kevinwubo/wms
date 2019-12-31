@@ -65,8 +65,8 @@ namespace DataRepository.DataAccess.BaseData
 
         public static string GetCarrierByKeys = @"SELECT * FROM wms_CarrierInfo(NOLOCK) WHERE CarrierID IN (#ids#)";
 
-        public static string CreateNewCarrier = @"INSERT INTO [wms_CarrierInfo]([CarrierName],[CarrierShortName],[CarrierNo],[Remark],Type)VALUES(@CarrierName,@CarrierShortName,@CarrierNo,@Remark,@Type) select @@IDENTITY";
+        public static string CreateNewCarrier = @"INSERT INTO [wms_CarrierInfo]([CarrierName],[CarrierShortName],[CarrierNo],[Remark],Type,CarNo)VALUES(@CarrierName,@CarrierShortName,@CarrierNo,@Remark,@Type,@CarNo) select @@IDENTITY";
 
-        public static string ModifyCarrier = @"UPDATE [wms_CarrierInfo]SET [CarrierName] = @CarrierName,[CarrierShortName] = @CarrierShortName,[CarrierNo] = @CarrierNo,[Remark] = @Remark,Status=@Status,Type=@Type WHERE CarrierID=@CarrierID";
+        public static string ModifyCarrier = @"UPDATE [wms_CarrierInfo]SET [CarrierName] = @CarrierName,[CarrierShortName] = @CarrierShortName,[CarrierNo] = @CarrierNo,[Remark] = @Remark,Status=@Status,Type=@Type,CarNo=@CarNo WHERE CarrierID=@CarrierID";
     }
 }

@@ -194,6 +194,7 @@ namespace DataRepository.DataAccess.Order
         {
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderStatement.UpdateOrderCarrier, "Text"));
             command.AddInputParameter("@CarrierID", DbType.Int32, order.CarrierID);
+            command.AddInputParameter("@PlanID", DbType.Int32, order.PlanID);
             command.AddInputParameter("@DeliveryStatus", DbType.String, order.DeliveryStatus);//是否安排物流计划  T是/F否
             command.AddInputParameter("@OrderID", DbType.Int32, order.OrderID);
             return command.ExecuteNonQuery();

@@ -36,6 +36,12 @@ namespace DataRepository.DataModel
         public string CarrierNo { get; set; }
 
         /// <summary>
+        /// 车牌号
+        /// </summary>
+        [DataMapping("CarNo", DbType.String)]
+        public string CarNo { get; set; }
+
+        /// <summary>
         /// 操作人ID
         /// </summary>
         [DataMapping("OperatorID", DbType.Int64)]

@@ -94,7 +94,7 @@ namespace Service
                 info.OrderSource = entity.OrderSource;
                 info.SalesMan = entity.SalesMan;
                 info.PromotionMan = entity.PromotionMan;
-
+                info.PlanID = entity.PlanID;
                 info.CreateDate = entity.CreateDate;
                 info.ChangeDate = entity.ChangeDate;
             }
@@ -146,7 +146,7 @@ namespace Service
                 entity.CreateDate = info.CreateDate;
                 entity.ChangeDate = info.ChangeDate;
                 entity.DeliveryStatus = info.DeliveryStatus;
-                
+                entity.PlanID = info.PlanID;
                 entity.orderDetailList = OrderDetailService.GetOrderDetailByOrderID(entity.OrderID);
 
                 entity.receiver = ReceiverService.GetReceiverById(entity.ReceiverID);
@@ -249,12 +249,13 @@ namespace Service
         /// <param name="orderid"></param>
         /// <param name="carrierID"></param>
         /// <returns></returns>
-        public static int UpdateOrderCarrier(int orderid, int carrierID)
+        public static int UpdateOrderCarrier(int orderid, int carrierID, int planID)
         {
             OrderRepository mr = new OrderRepository();
             OrderInfo info = new OrderInfo();
             info.OrderID = orderid;
             info.CarrierID = carrierID;
+            info.PlanID = planID;
             info.DeliveryStatus = "T";//是否已经安排物流
             return mr.UpdateOrderCarrier(info);
         }

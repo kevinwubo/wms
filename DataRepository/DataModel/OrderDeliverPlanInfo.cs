@@ -21,6 +21,12 @@ namespace DataRepository.DataModel
         public string OrderIDS { get; set; }
 
         /// <summary>
+        /// 运单编号
+        /// </summary>
+        [DataMapping("DeliveryNo", DbType.String)]
+        public string DeliveryNo { get; set; }
+        
+        /// <summary>
         /// 承运商编号
         /// </summary>
         [DataMapping("CarrierID", DbType.Int32)]
@@ -69,6 +75,31 @@ namespace DataRepository.DataModel
         /// </summary>
         [DataMapping("CarNo", DbType.String)]
         public string CarNo { get; set; }
+
+
+        /// <summary>
+        ///  油卡卡号
+        /// </summary>
+        [DataMapping("OilCardNo", DbType.String)]
+        public string OilCardNo { get; set; }
+
+        /// <summary>
+        /// 油卡余额
+        /// </summary>
+        [DataMapping("OilCardBalance", DbType.Decimal)]
+        public decimal OilCardBalance { get; set; }
+
+        /// <summary>
+        /// gps编号
+        /// </summary>
+        [DataMapping("GPSNo", DbType.String)]
+        public string GPSNo { get; set; }
+
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        [DataMapping("NeedTicket", DbType.Boolean)]
+        public bool NeedTicket { get; set; }
 
         /// <summary>
         /// 提货物流时间

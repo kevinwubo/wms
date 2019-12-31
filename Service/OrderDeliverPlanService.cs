@@ -32,6 +32,7 @@ namespace Service
             {
                 info.PlanID = entity.PlanID;
                 info.OrderIDS = entity.OrderIDS;
+                info.DeliveryNo = entity.DeliveryNo;
                 info.CarrierName = entity.CarrierName;
                 info.CarrierID = entity.CarrierID;
                 info.Temp = entity.Temp;
@@ -40,6 +41,10 @@ namespace Service
                 info.DriverTelephone = entity.DriverTelephone;
                 info.CarModel = entity.CarModel;
                 info.CarNo = entity.CarNo;
+                info.OilCardNo = entity.OilCardNo;
+                info.OilCardBalance = entity.OilCardBalance;
+                info.GPSNo = entity.GPSNo;
+                info.NeedTicket = entity.NeedTicket;
                 info.DeliverDate = entity.DeliverDate;
                 info.Remark = entity.Remark;
                 info.OperatorID = entity.OperatorID;
@@ -67,7 +72,15 @@ namespace Service
                 entity.DriverTelephone = info.DriverTelephone;
                 entity.CarModel = info.CarModel;
                 entity.CarNo = info.CarNo;
+                entity.OilCardNo = info.OilCardNo;
+                entity.OilCardBalance = info.OilCardBalance;
+                entity.GPSNo = info.GPSNo;
+                entity.NeedTicket = info.NeedTicket;
                 entity.DeliverDate = info.DeliverDate;
+                if (entity.DeliverDate != null)
+                {
+                    entity.formatDeliverDate = info.DeliverDate.ToString("yyyy-MM-dd");
+                }
                 entity.Remark = info.Remark;
                 entity.OperatorID = info.OperatorID;
                 entity.CreateDate = info.CreateDate;
@@ -77,9 +90,9 @@ namespace Service
             return entity;
         }
 
-        public static bool ModifyOrderDeliverPlan(OrderDeliverPlanEntity entity)
+        public static int ModifyOrderDeliverPlan(OrderDeliverPlanEntity entity)
         {
-            long result = 0;
+            int result = entity.PlanID;
             if (entity != null)
             {
                 OrderDeliverPlanRepository mr = new OrderDeliverPlanRepository();
@@ -97,7 +110,7 @@ namespace Service
                 }
 
             }
-            return result > 0;
+            return result;
         }
 
         public static List<OrderDeliverPlanEntity> GetOrderDeliverPlanAll()

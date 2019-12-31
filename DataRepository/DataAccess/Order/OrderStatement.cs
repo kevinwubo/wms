@@ -106,7 +106,7 @@ namespace DataRepository.DataAccess.Order
         /// 更新承运商信息
         /// </summary>
 
-        public static string UpdateOrderCarrier = @"UPDATE wms_OrderInfo SET CarrierID = @CarrierID,DeliveryStatus=@DeliveryStatus,ChangeDate = GetDate() WHERE OrderID=@OrderID";
+        public static string UpdateOrderCarrier = @"UPDATE wms_OrderInfo SET CarrierID = @CarrierID,DeliveryStatus=@DeliveryStatus,PlanID=@PlanID,ChangeDate = GetDate() WHERE OrderID=@OrderID";
         /// <summary>
         /// 更新接单状态
         /// </summary>

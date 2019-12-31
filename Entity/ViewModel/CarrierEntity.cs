@@ -44,6 +44,11 @@ namespace Entity.ViewModel
         public string Remark { get; set; }
 
         /// <summary>
+        /// 车牌号
+        /// </summary>
+        public string CarNo { get; set; }
+
+        /// <summary>
         /// 状态   (1:使用中 0：已删除)
         /// </summary>
         public int Status { get; set; }

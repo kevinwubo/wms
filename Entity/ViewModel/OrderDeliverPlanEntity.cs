@@ -16,6 +16,11 @@ namespace Entity.ViewModel
         public string OrderIDS { get; set; }
 
         /// <summary>
+        /// 运单编号
+        /// </summary>
+        public string DeliveryNo { get; set; }
+
+        /// <summary>
         /// 承运商编号
         /// </summary>
         public int CarrierID { get; set; }
@@ -56,6 +61,31 @@ namespace Entity.ViewModel
         /// 驾驶员联系电话
         /// </summary>
         public string CarNo { get; set; }
+
+        /// <summary>
+        ///  油卡卡号
+        /// </summary>
+        public string OilCardNo { get; set; }
+
+        /// <summary>
+        /// 油卡余额
+        /// </summary>
+        public decimal OilCardBalance { get; set; }
+
+        /// <summary>
+        /// gps编号
+        /// </summary>
+        public string GPSNo { get; set; }
+
+        /// <summary>
+        /// 是否开票
+        /// </summary>
+        public bool NeedTicket { get; set; }
+
+        /// <summary>
+        /// 格式化提货物流时间
+        /// </summary>
+        public string formatDeliverDate { get; set; }
 
         /// <summary>
         /// 提货物流时间

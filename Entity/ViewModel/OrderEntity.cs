@@ -202,6 +202,11 @@ namespace Entity.ViewModel
         /// </summary>
         public string IsImport { get; set; }
 
+        /// <summary>
+        /// 订单配送ID
+        /// </summary>
+        public int PlanID { get; set; }
+
         #region 其他属性
         /// <summary>
         /// 订单明细对象

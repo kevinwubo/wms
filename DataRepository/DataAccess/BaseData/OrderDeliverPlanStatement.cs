@@ -16,15 +16,16 @@ namespace DataRepository.DataAccess.BaseData
 
         public static string GetAllOrderDeliverPlanByRule = @"SELECT * FROM wms_OrderDeliverPlan(NOLOCK) WHERE 1=1 ";
 
-        public static string GetOrderDeliverPlanByKey = @"SELECT * FROM wms_OrderDeliverPlan(NOLOCK) WHERE ID=@ID";
+        public static string GetOrderDeliverPlanByKey = @"SELECT * FROM wms_OrderDeliverPlan(NOLOCK) WHERE PlanID=@PlanID";
 
         public static string Delete = @"Delete FROM wms_OrderDeliverPlan WHERE ID=@ID";
 
-        public static string CreateNewOrderDeliverPlan = @"INSERT INTO wms_OrderDeliverPlan(OrderIDS,CarrierName,CarrierID,Temp,DeliveryType,DriverName,DriverTelephone,CarModel,CarNo,DeliverDate,Remark,OperatorID,CreateDate,ChangeDate)
-                                                VALUES(@OrderIDS,@CarrierName,@CarrierID,@Temp,@DeliveryType,@DriverName,@DriverTelephone,@CarModel,@CarNo,@DeliverDate,@Remark,@OperatorID,@CreateDate,@ChangeDate) select @@IDENTITY";
+        public static string CreateNewOrderDeliverPlan = @"INSERT INTO wms_OrderDeliverPlan(OrderIDS,CarrierName,CarrierID,Temp,DeliveryType,DriverName,DriverTelephone,CarModel,CarNo,DeliverDate,Remark,OperatorID,CreateDate,ChangeDate,OilCardNo,OilCardBalance,GPSNo,NeedTicket,DeliveryNo)
+                                                VALUES(@OrderIDS,@CarrierName,@CarrierID,@Temp,@DeliveryType,@DriverName,@DriverTelephone,@CarModel,@CarNo,@DeliverDate,@Remark,@OperatorID,@CreateDate,@ChangeDate,@OilCardNo,@OilCardBalance,@GPSNo,@NeedTicket,@DeliveryNo) select @@IDENTITY";
 
         public static string ModifyOrderDeliverPlan = @"UPDATE wms_OrderDeliverPlan   SET OrderIDS=@OrderIDS,CarrierName = @CarrierName,CarrierID=@CarrierID,Temp = @Temp,DeliveryType = @DeliveryType,DriverName = @DriverName
                                         ,DriverTelephone = @DriverTelephone,CarModel = @CarModel,CarNo = @CarNo,DeliverDate = @DeliverDate,Remark = @Remark,OperatorID = @OperatorID,ChangeDate = @ChangeDate
+                                        ,OilCardNo = @OilCardNo,OilCardBalance = @OilCardBalance,GPSNo = @GPSNo,NeedTicket = @NeedTicket
                                          WHERE PlanID=@PlanID";
         #region 分页相关
          public static string GetCount = @"SELECT COUNT(1) AS C FROM wms_OrderDeliverPlan(NOLOCK) WHERE 1=1 ";

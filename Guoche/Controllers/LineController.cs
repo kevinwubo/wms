@@ -91,6 +91,19 @@ namespace GuoChe.Controllers
         }
 
         #region 运输计划
+
+
+        /// <summary>
+        /// 获取配送计划
+        /// </summary>
+        /// <param name="planID"></param>
+        /// <returns></returns>
+        public JsonResult GetOrderDeliverPlanByPlanID(int planID)
+        {
+            OrderDeliverPlanEntity entity = OrderDeliverPlanService.GetOrderDeliverPlanEntityById(planID);
+            return Json(entity);
+        }
+
         /// <summary>
         /// 运输计划  查询已出库订单
         /// </summary>
@@ -170,12 +183,15 @@ namespace GuoChe.Controllers
         /// <param name="orderids"></param>
         /// <returns></returns>
         public JsonResult OrderDeliveryPlanProcess(string orderids, string carrierName, int carrierId, string temp, string deliveryType,
-            string driverName, string driverTelephone, string carModel, string carNo, string deliverDate, string remark)
+            string driverName, string driverTelephone, string carModel, string carNo, string deliverDate, string remark, string oilcardNo,
+            string oilCardBalance, string gpsNo, string needTicket, int planID)
         {
             bool result = false;
             if (CurrentUser != null)
             {
                 OrderDeliverPlanEntity entity = new OrderDeliverPlanEntity();
+                entity.PlanID = planID;
+                entity.DeliveryNo = DateTime.Now.ToString("yyyyMMddhhmmsss");
                 entity.OrderIDS = orderids;
                 entity.CarrierName = carrierName;
                 entity.CarrierID = carrierId;
@@ -187,11 +203,16 @@ namespace GuoChe.Controllers
                 entity.CarNo = carNo;
                 entity.DeliverDate = !string.IsNullOrEmpty(deliverDate) ? Convert.ToDateTime(deliverDate) : DateTime.Now;
                 entity.Remark = remark;
+                entity.OilCardNo = oilcardNo;
+                entity.OilCardBalance = !string.IsNullOrEmpty(oilCardBalance) ? Convert.ToDecimal(oilCardBalance) : 0;
+                entity.GPSNo = gpsNo;
+
+                entity.NeedTicket = !string.IsNullOrEmpty(needTicket) && needTicket.Equals("T") ? true : false;
                 entity.OperatorID = CurrentUser != null ? CurrentUser.UserID.ToString().ToInt(0) : -1;
 
                 LogHelper.WriteTextLog("运输计划", "保存参数：" + JsonHelper.ToJson(entity) + "操作人：" + CurrentUser.UserID);
                 //运输计划保存
-                OrderDeliverPlanService.ModifyOrderDeliverPlan(entity);
+               int UpdatePlanID=  OrderDeliverPlanService.ModifyOrderDeliverPlan(entity);
 
                 //更新订单承运商
                 if (!string.IsNullOrEmpty(orderids))
@@ -203,7 +224,7 @@ namespace GuoChe.Controllers
                         {
                             LogHelper.WriteTextLog("承运商更新", "订单ID：" + id + "承运商名称：" + carrierName);
                             //更新订单承运商
-                            OrderService.UpdateOrderCarrier(id.ToInt(0), carrierId);
+                            OrderService.UpdateOrderCarrier(id.ToInt(0), carrierId, UpdatePlanID);
                         }
                     }
                 }

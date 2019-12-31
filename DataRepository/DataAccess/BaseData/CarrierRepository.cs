@@ -79,6 +79,7 @@ namespace DataRepository.DataAccess.BaseData
             command.AddInputParameter("@CarrierNo", DbType.String, Carrier.CarrierNo);
             command.AddInputParameter("@Remark", DbType.String, Carrier.Remark);
             command.AddInputParameter("@Type", DbType.String, Carrier.Type);
+            command.AddInputParameter("@CarNo", DbType.String, Carrier.CarNo);
             command.AddInputParameter("@OperatorID", DbType.String, Carrier.OperatorID);
             command.AddInputParameter("@CreateDate", DbType.DateTime, Carrier.CreateDate);
             command.AddInputParameter("@ChangeDate", DbType.DateTime, Carrier.ChangeDate);
@@ -96,6 +97,7 @@ namespace DataRepository.DataAccess.BaseData
             command.AddInputParameter("@CarrierNo", DbType.String, Carrier.CarrierNo);
             command.AddInputParameter("@Type", DbType.String, Carrier.Type);
             command.AddInputParameter("@Remark", DbType.String, Carrier.Remark);
+            command.AddInputParameter("@CarNo", DbType.String, Carrier.CarNo);
             command.AddInputParameter("@OperatorID", DbType.Int64, Carrier.OperatorID);
             command.AddInputParameter("@Status", DbType.Boolean, Carrier.Status);   
             command.AddInputParameter("@ChangeDate", DbType.DateTime, Carrier.ChangeDate);
