@@ -42,7 +42,7 @@
                             <select tabindex="1" class="span2" id="CustomerID" name="CustomerID">
                                 @foreach (var item in customerlist)
                                 {
-                                    <option value="@item.CustomerID">@item.CustomerName</option>
+                                    <option value="@item.CustomerID" @(item.CustomerID == ReceiverEntity.CustomerID ? "selected" : "")>@item.CustomerName</option>
                                 }
                             </select>
                         </div>

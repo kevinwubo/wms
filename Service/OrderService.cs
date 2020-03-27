@@ -155,6 +155,7 @@ namespace Service
                 entity.sendstorage = StorageService.GetStorageEntityById(entity.SendStorageID);
                 entity.contact = new OrderContactEntity();
                 entity.AttachmentIDs = info.AttachmentIDs;
+
                 if (isContact)
                 {
                     OrderContactEntity item = new OrderContactEntity();

@@ -12,7 +12,7 @@ namespace DataRepository.DataAccess.BaseData
     public class OrderDeliverPlanStatement
     {
 
-        public static string GetAllOrderDeliverPlan = @"SELECT * FROM wms_OrderDeliverPlan(NOLOCK)";
+        public static string GetAllOrderDeliverPlan = @"SELECT * FROM wms_OrderDeliverPlan(NOLOCK)  WHERE 1=1 ";
 
         public static string GetAllOrderDeliverPlanByRule = @"SELECT * FROM wms_OrderDeliverPlan(NOLOCK) WHERE 1=1 ";
 

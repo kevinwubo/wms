@@ -56,7 +56,8 @@
                 <table id="users" class="table table-striped table-bordered dataTable" aria-describedby="users_info">
                     <thead>
                         <tr role="row">
-                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">序号</th>
+                            @*<th role="columnheader" tabindex="0" rowspan="1" colspan="1">序号</th>*@
+                            <th role="columnheader" tabindex="0" rowspan="1" colspan="1">运单号</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">承运商名称</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">温区</th>
                             <th role="columnheader" tabindex="0" rowspan="1" colspan="1">物流方式</th>
@@ -76,7 +77,8 @@
                             {
 
                                 <tr class="">
-                                    <td class=" sorting_1">@entity.PlanID</td>
+                                    @*<td class=" sorting_1">@entity.PlanID</td>*@
+                                    <td class=" ">@entity.DeliveryNo</td>
                                     <td class=" ">@entity.CarrierName</td>
                                     <td class=" ">@entity.Temp</td>
                                     <td class=" ">@entity.DeliveryType</td>

@@ -88,51 +88,52 @@
                                 <a class="accordion-toggle b_C1F8A9 collapsed" href="/User/Home/"><i class="icon-home"></i> <span>首页</span></a>
                             </div>
                         </div>
-                            @if (menus != null && menus.Count > 0)
+                        @if (menus != null && menus.Count > 0)
+                        {
+                            var dict = menus.GroupBy(t => t.GroupCode);
+
+                            foreach (var item in dict)
                             {
-                                var dict = menus.GroupBy(t => t.GroupCode);
-
-                                foreach (var item in dict)
+                                BaseDataEntity b = item.First().BaseData;
+                                bool isShow = false;
+                                foreach (var inner in item)
                                 {
-                                    BaseDataEntity b = item.First().BaseData;
-                                    bool isShow = false;
-                                    foreach (var inner in item)
+                                    if (inner.IsShow)
                                     {
-                                        if (inner.IsShow)
-                                        {
-                                            isShow = true;
-                                            break;
-                                        }
+                                        isShow = true;
+                                        break;
                                     }
-                                    var collapsed = isShow ? "" : "collapsed";
-                                    var height = isShow ? "auto;" : "0px;";
+                                }
+                                var collapsed = isShow ? "" : "collapsed";
+                                var height = isShow ? "auto;" : "0px;";
 
-                                    <div class="accordion-group">
-                                        <div class="accordion-heading">
-                                            <a class="accordion-toggle b_C1F8A9 @collapsed" data-toggle="collapse" data-parent="#accordion2" href="javascript:void(0)"><i class="icon-bar-chart"></i> <span>@b.Description</span></a>
-                                            <div id="baseData" class="accordion-body in collapse" style="height:@height">
-                                                <div class="accordion-inner">
-                                                    @foreach (var inner in item)
-                                                    {
-                                                        @*if (inner.URL.Contains("?"))
-                                                        {
-                                                             <a class="accordion-toggle" href="@inner.URL&Code=@inner.GroupCode"><i class="@inner.PreFlag"></i>  @inner.MenuName</a>
-                                                        }
-                                                        else
-                                                        {*@ 
-                                                            <a class="accordion-toggle" href="@inner.URL"><i class="@inner.PreFlag"></i>  @inner.MenuName</a>
-                                                        @*  *@}
-                                                        
-                                                    }
-                                                </div>
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        <a class="accordion-toggle b_C1F8A9 @collapsed" data-toggle="collapse" data-parent="#accordion2" href="javascript:void(0)"><i class="icon-bar-chart"></i> <span>@b.Description</span></a>
+                                        <div id="baseData" class="accordion-body in collapse" style="height:@height">
+                                            <div class="accordion-inner">
+                                                @foreach (var inner in item)
+                                                {
+                                                    @*if (inner.URL.Contains("?"))
+                                        {
+                                             <a class="accordion-toggle" href="@inner.URL&Code=@inner.GroupCode"><i class="@inner.PreFlag"></i>  @inner.MenuName</a>
+                                        }
+                                        else
+                                        {*@
+                                                    <a class="accordion-toggle" href="@inner.URL"><i class="@inner.PreFlag"></i>  @inner.MenuName</a>
+                                                    @*  *@}
+
+                                                }
                                             </div>
                                         </div>
                                     </div>
-                                }
-
+                                </div>
                             }
 
-                        </div>
+                        }
+
+                    </div>
+
                 </div>
                 <div class="main_container" id="tables_page">
                     @RenderBody()

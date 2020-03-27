@@ -54,7 +54,7 @@ namespace Service
         #endregion
 
 
-        public static ReEntity CreateReportList(List<OrderEntity> list)
+        public static ReEntity CreateReportList(List<OrderEntity> list, bool isContainDeliverPlan=false)
         {
             ReEntity reEntity = new ReEntity();
             if (list != null && list.Count > 0)
@@ -91,7 +91,19 @@ namespace Service
 
                     rEntity.Profit = rEntity.TotalReceiverFee - rEntity.TotalPayFee;
                     rEntity.Remark = entity.Remark;
-                    
+
+                    if (isContainDeliverPlan)
+                    {
+                        List<OrderDeliverPlanEntity> planList = OrderDeliverPlanService.GetOrderDeliverPlanAll(entity.OrderID + ",");
+                        if (planList != null && planList.Count > 0)
+                        {
+                            OrderDeliverPlanEntity planEntity = planList[0];
+                            rEntity.CarNo = planEntity.CarNo;
+                            rEntity.CarModel = planEntity.CarModel;
+                            rEntity.DriverName = planEntity.DriverName;
+                        }
+                    }
+
                     reportList.Add(rEntity);
                 }
                 reEntity.reportList = reportList;

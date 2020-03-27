@@ -113,11 +113,11 @@ namespace Service
             return result;
         }
 
-        public static List<OrderDeliverPlanEntity> GetOrderDeliverPlanAll()
+        public static List<OrderDeliverPlanEntity> GetOrderDeliverPlanAll(string orderids)
         {
             List<OrderDeliverPlanEntity> all = new List<OrderDeliverPlanEntity>();
             OrderDeliverPlanRepository mr = new OrderDeliverPlanRepository();
-            List<OrderDeliverPlanInfo> miList = mr.GetAllOrderDeliverPlan();//Cache.Get<List<OrderDeliverPlanInfo>>("OrderDeliverPlanALL");
+            List<OrderDeliverPlanInfo> miList = mr.GetAllOrderDeliverPlan(orderids);//Cache.Get<List<OrderDeliverPlanInfo>>("OrderDeliverPlanALL");
             //if (miList.IsEmpty())
             //{
             //    miList = mr.GetAllOrderDeliverPlan();

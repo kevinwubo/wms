@@ -53,12 +53,12 @@ namespace Entity.ViewModel
         public string DriverTelephone { get; set; }
 
         /// <summary>
-        /// 驾驶员联系电话
+        /// 车型
         /// </summary>
         public string CarModel { get; set; }
 
         /// <summary>
-        /// 驾驶员联系电话
+        /// 车牌
         /// </summary>
         public string CarNo { get; set; }
 

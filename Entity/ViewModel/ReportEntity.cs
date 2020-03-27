@@ -103,6 +103,12 @@ namespace Entity.ViewModel
         /// 
         /// </summary>
         public string Remark { get; set; }
+
+
+        //车牌、车型，驾驶员
+        public string CarNo { get; set; }
+        public string CarModel { get; set; }
+        public string DriverName { get; set; }
     }
 
     /// <summary>

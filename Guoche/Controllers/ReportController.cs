@@ -138,6 +138,8 @@ namespace GuoChe.Controllers
             row1.CreateCell(6).SetCellValue("车型");
             row1.CreateCell(7).SetCellValue("提货时间");
             row1.CreateCell(8).SetCellValue("备注");
+            row1.CreateCell(9).SetCellValue("备注1（客服备注）");
+            row1.CreateCell(10).SetCellValue("备注2（运营备注）");
             //将数据逐步写入sheet1各个行
             string remark = "";
             string sfhd = "";
@@ -156,7 +158,9 @@ namespace GuoChe.Controllers
                     rowtemp.CreateCell(5).SetCellValue(list[i].DriverTelephone);
                     rowtemp.CreateCell(6).SetCellValue(list[i].CarModel);
                     rowtemp.CreateCell(7).SetCellValue(list[i].DeliverDate.ToShortDateString());
-                    rowtemp.CreateCell(8).SetCellValue(list[i].Remark);                    
+                    rowtemp.CreateCell(8).SetCellValue(list[i].Remark);
+                    rowtemp.CreateCell(9).SetCellValue("");
+                    rowtemp.CreateCell(10).SetCellValue("");    
                 }
             }
             
@@ -488,7 +492,7 @@ namespace GuoChe.Controllers
             ViewBag.orderTypeList = orderTypeList;
             ViewBag.ReceiverName = receivername;
 
-            ReEntity report = ReportService.CreateReportList(mList);
+            ReEntity report = ReportService.CreateReportList(mList,true);
             ViewBag.Report = report;
 
             ViewBag.GUID = System.Guid.NewGuid().ToString();
@@ -580,7 +584,7 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "CustomServiceReport";
             List<OrderEntity> list = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
-            ReEntity report = ReportService.CreateReportList(list);
+            ReEntity report = ReportService.CreateReportList(list,true);
             return ReportExportExcel(type, report.reportList);
         }
         /// <summary>
@@ -659,6 +663,13 @@ namespace GuoChe.Controllers
             }
             row1.CreateCell(K++).SetCellValue("备注");
 
+            if ("GYSR".Equals(type))
+            {
+                row1.CreateCell(K++).SetCellValue("车牌");
+                row1.CreateCell(K++).SetCellValue("车型");
+                row1.CreateCell(K++).SetCellValue("驾驶员");
+            }
+
             //将数据逐步写入sheet1各个行
             for (int i = 0; i < list.Count; i++)
             {
@@ -699,6 +710,21 @@ namespace GuoChe.Controllers
                 {
                     rowtemp.CreateCell(KK++).SetCellValue(list[i].Profit.ToString());
                 }
+
+                if ("GYSR".Equals(type))
+                {
+                    try
+                    {
+                            rowtemp.CreateCell(KK++).SetCellValue(list[i].CarNo != null ? list[i].CarNo.ToString() : "");
+                            rowtemp.CreateCell(KK++).SetCellValue(list[i].CarModel != null ? list[i].CarModel.ToString() : "");
+                            rowtemp.CreateCell(KK++).SetCellValue(list[i].DriverName != null ? list[i].DriverName.ToString() : "");
+                    }
+                    catch (Exception)
+                    {
+                        LogHelper.WriteErrorLog("GYSR", "GYSR");
+                    }
+                }
+
                 rowtemp.CreateCell(KK++).SetCellValue(list[i].Remark);
             }
             // 写入到客户端 

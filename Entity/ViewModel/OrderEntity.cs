@@ -229,7 +229,6 @@ namespace Entity.ViewModel
         /// </summary>
         public List<OrderDetailEntity> orderDetailList { get; set; }
 
-
         #endregion
     }
     [Serializable]

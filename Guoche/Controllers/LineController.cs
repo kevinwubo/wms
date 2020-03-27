@@ -191,7 +191,7 @@ namespace GuoChe.Controllers
             {
                 OrderDeliverPlanEntity entity = new OrderDeliverPlanEntity();
                 entity.PlanID = planID;
-                entity.DeliveryNo = DateTime.Now.ToString("yyyyMMddhhmmsss");
+                entity.DeliveryNo = "YD"+DateTime.Now.ToString("yyyyMMddhhmmsss");
                 entity.OrderIDS = orderids;
                 entity.CarrierName = carrierName;
                 entity.CarrierID = carrierId;

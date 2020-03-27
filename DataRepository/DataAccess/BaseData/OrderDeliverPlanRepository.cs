@@ -12,10 +12,16 @@ namespace DataRepository.DataAccess.BaseData
 {
     public class OrderDeliverPlanRepository : DataAccessBase
     {
-        public List<OrderDeliverPlanInfo> GetAllOrderDeliverPlan()
+
+        public List<OrderDeliverPlanInfo> GetAllOrderDeliverPlan(string orderids)
         {
             List<OrderDeliverPlanInfo> result = new List<OrderDeliverPlanInfo>();
-            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderDeliverPlanStatement.GetAllOrderDeliverPlan, "Text"));
+            string sqlText = OrderDeliverPlanStatement.GetAllOrderDeliverPlan;
+            if (!string.IsNullOrEmpty(orderids))
+            {
+                sqlText += " AND OrderIDS like '%" + orderids + "%'";
+            }
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
             result = command.ExecuteEntityList<OrderDeliverPlanInfo>();
             return result;
         }
