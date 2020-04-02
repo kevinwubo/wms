@@ -693,21 +693,23 @@
                 return false;
             }
 
-            $.ajax({
-                type: "post",
-                url: "/Line/OrderDeliveryPlanProcess",
-                data: {
-                    orderids: orderids, carrierName: carrierName, carrierId: carrierId, temp: temp, deliveryType: deliveryType,
-                    driverName: driverName, driverTelephone: driverTelephone, carModel: carModel, carNo: carNo, deliverDate: deliverDate, remark: remark,
-                    oilcardNo: oilcardNo, oilCardBalance: oilCardBalance, gpsNo: gpsNo, needTicket: needTicket, planID: planID
-                },
-                success: function (msg) {
-                    console.log(msg);
-                    alert("运输计划安排成功！");
-                    $("#myModal").hide();
-                    $("#btn_submit").click();
-                }
-            })
+            if (confirm('订单确认开始配送吗？')) {
+                $.ajax({
+                    type: "post",
+                    url: "/Line/OrderDeliveryPlanProcess",
+                    data: {
+                        orderids: orderids, carrierName: carrierName, carrierId: carrierId, temp: temp, deliveryType: deliveryType,
+                        driverName: driverName, driverTelephone: driverTelephone, carModel: carModel, carNo: carNo, deliverDate: deliverDate, remark: remark,
+                        oilcardNo: oilcardNo, oilCardBalance: oilCardBalance, gpsNo: gpsNo, needTicket: needTicket, planID: planID
+                    },
+                    success: function (msg) {
+                        console.log(msg);
+                        alert("运输计划安排成功！");
+                        $("#myModal").hide();
+                        $("#btn_submit").click();
+                    }
+                })
+            }
         });
 
 
