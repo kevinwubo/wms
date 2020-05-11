@@ -101,7 +101,7 @@
                 { 
                     allCount+=detail.Quantity;
                     i += 1;
-                    totalWeight += detail.Weight.ToDecimal(0);                                
+                    totalWeight += (detail.Weight.ToDecimal(0)*detail.Quantity);                                
                     <tr style="height: auto">
                         <td class="tdcss" style="width:5%;">@i</td>
                         <td class="tdcss" style="width:15%;">@detail.GoodsNo</td>

@@ -74,7 +74,7 @@ namespace Service
                 foreach (OrderDetailEntity entity in orderDetailList)
                 {
                     //同商品+批次号+客户 
-                    List<InventoryEntity> inventoryList = InventoryService.GetInventoryByRule(entity.GoodsID, -1, entity.BatchNumber, orderInfo.CustomerID, true);
+                    List<InventoryEntity> inventoryList = InventoryService.GetInventoryByRule(entity.GoodsID, -1, entity.BatchNumber.Trim(), orderInfo.CustomerID, true);
 
                     inventoryInfoProcess(entity, inventoryList, orderInfo);
                 }

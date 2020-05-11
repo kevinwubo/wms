@@ -71,7 +71,7 @@ namespace Service
                 info.ReceiverStorageID = entity.ReceiverStorageID;
                 info.CarrierID = entity.CarrierID;
                 info.OrderDate = Convert.ToDateTime(entity.OrderDate);
-                info.SendDate =Convert.ToDateTime( entity.SendDate);
+                info.SendDate =Convert.ToDateTime(entity.SendDate);
 
                 info.configPrice = entity.configPrice;
                 info.configHandInAmt = entity.configHandInAmt;

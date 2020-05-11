@@ -57,7 +57,7 @@ namespace Service.Inventory
                             info.Quantity = entity.Quantity;
                             info.CustomerID = entity.CustomerID;
                             info.InventoryType = Common.InventoryType.入库.ToString();
-                            info.BatchNumber = entity.BatchNumber;
+                            info.BatchNumber = entity.BatchNumber.Trim();
                             info.ProductDate = DateTime.Parse(entity.ProductDate);
                             info.InventoryDate = DateTime.Parse(inventoryDate);
                             info.UnitPrice = entity.UnitPrice;

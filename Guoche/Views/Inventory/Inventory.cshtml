@@ -23,7 +23,7 @@
             <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
                 <div class="row-fluid">
                     <div class="">
-                        <form action="/Inventory/Inventory" method="get">
+                        @*<form action="/Inventory/Inventory" method="get">*@
                             <div class="dataTables_length" id="menus_filter">
                                 <label><input type="text" placeholder="商品信息" aria-controls="menus" id="name" name="name" value="@ViewBag.Name"></label>
                                 <label><input type="text" placeholder="批次号" aria-controls="menus" id="batchNumber" name="batchNumber" value="@ViewBag.batchNumber"></label>
@@ -48,10 +48,10 @@
                                         }
                                     </select>
                                 </label>
-                                <button class="btn btn-info" type="submit">搜索</button>
+                                <button class="btn btn-info" type="button" id="searchBtn">搜索</button>
                                 <button class="btn btn-info" type="button" id="export">导出库存</button>
                             </div>
-                        </form>
+                        @*</form>*@
                     </div>
                 </div>
                 @if (invent != null && invent.Count > 0)
@@ -135,6 +135,16 @@
 
         window.location.href = "/Inventory/ExportExcel?pagetype=" + pagetype + "&name=" + name + "&batchNumber=" + batchNumber + "&StorageID=" + StorageID + "&customerID=" + customerID;
     });
+    jQuery("#searchBtn").click(function () {
+        var pagetype = $("#pagetype").val();
+        var name = $("#name").val();
+        var batchNumber = $("#batchNumber").val();
+        var StorageID = $("#StorageID").val();
+        var customerID = $("#CustomerID").val();
+
+        window.location.href = "/Inventory/Inventory?pagetype=" + pagetype + "&name=" + name + "&batchNumber=" + batchNumber + "&StorageID=" + StorageID + "&customerID=" + customerID;
+    });
+    
     //layui.use('laydate', function () {
 
     //    var laydate = layui.laydate;
