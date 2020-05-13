@@ -1373,7 +1373,7 @@ namespace Service
                             //{
                             //    goods = listGoods[0];
                             //}
-                            List<InventoryEntity> listInventory = InventoryService.GetInventoryByRule(goods.GoodsID, info.SendStorageID, "");
+                            List<InventoryEntity> listInventory = InventoryService.GetInventoryByRule(goods.GoodsID, info.SendStorageID, detail.BatchNumber);
                             InventoryEntity inventoryEntity = null;
                             if (listInventory != null && listInventory.Count > 0)
                             {
