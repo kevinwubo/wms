@@ -113,5 +113,10 @@ namespace DataRepository.DataAccess.Order
 
         public static string UpdateUploadStatus = @"UPDATE wms_OrderInfo SET UploadStatus = @UploadStatus,ChangeDate = GetDate() WHERE OrderID=@OrderID";
 
+        /// <summary>
+        /// 根据库存ID获取当前库中是否有未出库的数据
+        /// </summary>
+        public static string getOutStockOrderByInentroyID = @"select a.OrderID,OrderNo,InventoryID,b.OrderDate,a.Quantity from wms_OrderDetailInfo a,wms_OrderInfo b where a.OrderID=b.OrderID and b.OrderOutStatus='F' and OrderType!='RKD'";
+
     }
 }

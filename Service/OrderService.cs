@@ -285,14 +285,14 @@ namespace Service
         }
 
 
-        public static bool ModifyOrder(OrderEntity entity)
+        public static int ModifyOrder(OrderEntity entity)
         {
-            long orderID = 0;
-            long result = 0;
+
+            int orderID = 0;
+            int result = 0;
             if (entity != null)
             {
                 OrderRepository mr = new OrderRepository();
-
                 OrderInfo orderInfo = TranslateOrderInfo(entity);
                 OrderJsonEntity jsonlist = null;
                 if (!string.IsNullOrEmpty(entity.orderDetailJson))
@@ -307,116 +307,175 @@ namespace Service
                         string str = ex.ToString();
                     }
                 }
-
-                //订单信息更新
-                if (entity.OrderID > 0)
-                {
-                    orderInfo.OrderID = entity.OrderID;
-                    orderInfo.ChangeDate = DateTime.Now;
-                    result = mr.ModifyOrder(orderInfo);
-                    orderID = entity.OrderID;
-                }
-                else
-                {
-                    orderInfo.ChangeDate = DateTime.Now;
-                    orderInfo.CreateDate = DateTime.Now;
-                    if (!string.IsNullOrEmpty(orderInfo.OrderNo))
-                    {
-                        OrderEntity oEntity = OrderService.GetOrderByOrderNo(orderInfo.OrderNo);
-                        if (oEntity != null)
-                        {
-                            oEntity.OrderNo = GetOrderNo();
-                        }
-                    }
-                    orderID = mr.CreateNew(orderInfo);
-                }
-
-                #region 订单明细更新
-
+                List<OrderDetailInfo> list = new List<OrderDetailInfo>();
+                //订单明细
                 if (jsonlist != null)
                 {
-                    List<OrderDetailInfo> oldOrderDetail = new List<OrderDetailInfo>();//修改 涉及到库存数量更改
-                    List<OrderDetailJsonEntity> list = jsonlist.listOrderDetail;
+                    list = convertOrderDetailList(jsonlist.listOrderDetail);
+                }
+
+                bool checkResult = CheckOrderStock(list);
+                if (checkResult)
+                {
+                    //订单信息更新
+                    if (entity.OrderID > 0)
+                    {
+                        orderInfo.OrderID = entity.OrderID;
+                        orderInfo.ChangeDate = DateTime.Now;
+                        result = mr.ModifyOrder(orderInfo);
+                        orderID = entity.OrderID;
+                    }
+                    else
+                    {
+                        orderInfo.ChangeDate = DateTime.Now;
+                        orderInfo.CreateDate = DateTime.Now;
+                        if (!string.IsNullOrEmpty(orderInfo.OrderNo))
+                        {
+                            OrderEntity oEntity = OrderService.GetOrderByOrderNo(orderInfo.OrderNo);
+                            if (oEntity != null)
+                            {
+                                oEntity.OrderNo = GetOrderNo();
+                            }
+                        }
+                        orderID = mr.CreateNew(orderInfo);
+                    }
+
+                    #region 订单明细更新
+
+
                     if (list != null && list.Count > 0)
                     {
                         OrderDetailRepository mrdetail = new OrderDetailRepository();
-                        foreach(OrderDetailJsonEntity item in list)
+                        foreach (OrderDetailInfo item in list)
                         {
-                            OrderDetailInfo info = new OrderDetailInfo();
-                            info.ID = item.ID;
-                            info.OrderID = entity.OrderID > 0 ? item.OrderID : orderID.ToString().ToInt(0);
-                            int goodsID = item.GoodsID.ToInt(0);
-                            GoodsEntity goodsEntity = new GoodsEntity(); ;
-                            if (goodsID < 1)
+                            item.OrderID = orderID;
+                            if (item.ID > 0)
                             {
-                                goodsEntity = getGoodsModelByGoods("", item.GoodsName, item.GoodsNo, item.GoodsModel);
+                                mrdetail.ModifyOrderDetail(item);
                             }
                             else
                             {
-                                goodsEntity = GoodsService.GetGoodsEntityById(goodsID);
+                                mrdetail.CreateNew(item);
                             }
-                            info.GoodsID = goodsEntity.GoodsID;
+                        }
+                    }
+                    #endregion
+                }
+                else
+                {
+                    result = 5;
+                }
+            }
+            return result;
+        }
 
-                            
+        /// <summary>
+        /// 库存明细
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="orderID"></param>
+        /// <returns></returns>
+        private static List<OrderDetailInfo> convertOrderDetailList(List<OrderDetailJsonEntity> list)
+        {
+            List<OrderDetailInfo> orderDetailList = new List<OrderDetailInfo>();
+            if (list != null && list.Count > 0)
+            {
+                OrderDetailRepository mrdetail = new OrderDetailRepository();
+                foreach (OrderDetailJsonEntity item in list)
+                {
+                    OrderDetailInfo info = new OrderDetailInfo();
+                    info.ID = item.ID;
+                    info.OrderID = 0;
+                    int goodsID = item.GoodsID.ToInt(0);
+                    GoodsEntity goodsEntity = new GoodsEntity(); ;
+                    if (goodsID < 1)
+                    {
+                        goodsEntity = getGoodsModelByGoods("", item.GoodsName, item.GoodsNo, item.GoodsModel);
+                    }
+                    else
+                    {
+                        goodsEntity = GoodsService.GetGoodsEntityById(goodsID);
+                    }
+                    info.GoodsID = goodsEntity != null ? goodsEntity.GoodsID : 0;
+                    info.InventoryID = item.InventoryID.ToInt(0);
+                    info.GoodsNo = goodsEntity != null ? goodsEntity.GoodsNo : item.GoodsNo;
+                    info.GoodsName = goodsEntity != null ? goodsEntity.GoodsName : item.GoodsName;
+                    info.GoodsModel = goodsEntity != null ? goodsEntity.GoodsModel : item.GoodsModel;
+                    info.Quantity = item.Quantity.ToInt(0);
+                    info.Units = goodsEntity != null ? goodsEntity.Units : item.Units;
+                    info.Weight = goodsEntity != null ? goodsEntity.Weight : item.Weight;
+                    info.TotalWeight = item.TotalWeight;
+                    info.BatchNumber = item.BatchNumber;
+                    info.ProductDate = string.IsNullOrEmpty(item.ProductDate) ? DateTime.Now : Convert.ToDateTime(item.ProductDate);
+                    if (!string.IsNullOrEmpty(item.ExceedDate))
+                    {
+                        if (info.GoodsID > 0)
+                        {
+                            if (goodsEntity != null)
+                            {
+                                info.ExceedDate = Datehelper.getDateTime(info.ProductDate, goodsEntity.exDate.ToInt(0), goodsEntity.exUnits);
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                info.ExceedDate = string.IsNullOrEmpty(item.ExceedDate) ? DateTime.Now : Convert.ToDateTime(item.ExceedDate);
+                            }
+                            catch (Exception ex)
+                            {
 
-                            info.InventoryID = item.InventoryID.ToInt(0);
-                            info.GoodsNo = goodsEntity != null ? goodsEntity.GoodsNo : item.GoodsNo;
-                            info.GoodsName = goodsEntity != null ? goodsEntity.GoodsName : item.GoodsName;
-                            info.GoodsModel = goodsEntity != null ? goodsEntity.GoodsModel : item.GoodsModel;
-                            info.Quantity = item.Quantity.ToInt(0);
-                            info.Units = goodsEntity != null ? goodsEntity.Units: item.Units;
-                            info.Weight = goodsEntity != null ? goodsEntity.Weight : item.Weight;
-                            info.TotalWeight = item.TotalWeight;
-                            info.BatchNumber = item.BatchNumber;
-                            info.ProductDate = string.IsNullOrEmpty(item.ProductDate) ? DateTime.Now : Convert.ToDateTime(item.ProductDate);
-                            if (!string.IsNullOrEmpty(item.ExceedDate))
-                            {
-                                if (info.GoodsID > 0)
-                                {
-                                    if (goodsEntity != null)
-                                    {
-                                        info.ExceedDate = Datehelper.getDateTime(info.ProductDate, goodsEntity.exDate.ToInt(0), goodsEntity.exUnits);
-                                    }
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        info.ExceedDate = string.IsNullOrEmpty(item.ExceedDate) ? DateTime.Now : Convert.ToDateTime(item.ExceedDate);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                                                               
-                                    }
-                                }
                             }
-                            
-     
-                            if (info.ID > 0)
-                            {
-                                oldOrderDetail.Add(info);
-                                info.ChangeDate = DateTime.Now;
-                                mrdetail.ModifyOrderDetail(info);
-                            }
-                            else
-                            {
-                                info.CreateDate = DateTime.Now;
-                                info.ChangeDate = DateTime.Now;
-                                mrdetail.CreateNew(info);
-                            }                            
                         }
                     }
 
-                    //OrderInventoryService.OrderInventoryProcess(orderID);
+
+                    if (info.ID > 0)
+                    {
+                        info.ChangeDate = DateTime.Now;
+
+                    }
+                    else
+                    {
+                        info.CreateDate = DateTime.Now;
+                        info.ChangeDate = DateTime.Now;
+                    }
+                    orderDetailList.Add(info);
                 }
-
-                #endregion
-
-                //List<OrderInfo> miList = mr.GetAllOrder();//刷新缓存
-                //Cache.Add("OrderALL", miList);
             }
-            return result > 0;
+            return orderDetailList;
         }
+
+        /// <summary>
+        /// 库存检测
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static bool CheckOrderStock(List<OrderDetailInfo> list)
+        {
+            if (list != null && list.Count > 0)
+            {
+                OrderRepository mr = new OrderRepository();
+                InventoryRepository iventmr = new InventoryRepository();
+                foreach (OrderDetailInfo entity in list)
+                {
+                    InventoryInfo inventoryInfo = iventmr.GetInventoryByKey(entity.InventoryID);
+                    List<OrderStockInfo> stockList = mr.GetOutStockOrderByInentroyID(entity.InventoryID);
+                    if (inventoryInfo != null && stockList != null && stockList.Count > 0)
+                    {
+                        //总库存 - 待出库库存- 当前订单出库数量
+                        int qutity = inventoryInfo.Quantity - stockList[0].Quantity - entity.Quantity;
+                        if (qutity < 0)
+                        {
+                            LogHelper.WriteTextLog("CheckOrderStock", "商品名称" + entity.GoodsName + "当前库存：" + inventoryInfo.Quantity + "待出库数据" + JsonHelper.ToJson(stockList[0]));
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
 
         /// <summary>
         /// 
@@ -1358,6 +1417,7 @@ namespace Service
                     info.PromotionMan = "";
                     info.LineID = GetLineID(entity.CustomerName + (receiverEntity != null ? receiverEntity.ReceiverName : ""));//线路
                     OrderRepository or = new OrderRepository();
+
                     long orderid = or.CreateNew(info);
 
                     idsEntity.SHDIds += orderid + ",";

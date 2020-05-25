@@ -35,6 +35,34 @@ namespace DataRepository.DataAccess.Order
             return result;
         }
 
+        /// <summary>
+        /// 根据库存ID获取当前库中是否有未出库的数据
+        /// </summary>
+        /// <param name="invenroyiD"></param>
+        /// <returns></returns>
+        public List<OrderStockInfo> GetOutStockOrderByInentroyID(int invenroyiD)
+        {
+            List<OrderStockInfo> result = new List<OrderStockInfo>();
+            string sqlText = OrderStatement.getOutStockOrderByInentroyID;
+
+            //sqlText += " AND OrderDate BETWEEN @begindate AND @enddate ";
+
+            if (invenroyiD>0)
+            {
+                sqlText += " AND InventoryID=@InventoryID ";
+            }
+
+            DataCommand command = new DataCommand(ConnectionString, GetDbCommand(sqlText, "Text"));
+
+            if (invenroyiD > 0)
+            {
+                command.AddInputParameter("@InventoryID", DbType.Int32, invenroyiD);
+            }
+
+            result = command.ExecuteEntityList<OrderStockInfo>();
+            return result;
+        }
+
         public List<OrderInfo> GetOrderByRule(string begindate, string enddate)
         {
             List<OrderInfo> result = new List<OrderInfo>();
@@ -75,7 +103,7 @@ namespace DataRepository.DataAccess.Order
             return result;
         }
 
-        public long CreateNew(OrderInfo Order)
+        public int CreateNew(OrderInfo Order)
         {
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(OrderStatement.CreateNewOrder, "Text"));
             command.AddInputParameter("@OrderNo", DbType.String, Order.OrderNo);
@@ -118,7 +146,7 @@ namespace DataRepository.DataAccess.Order
             command.AddInputParameter("@ChangeDate", DbType.DateTime, Order.ChangeDate);
 
             var o = command.ExecuteScalar<object>();
-            return Convert.ToInt64(o);
+            return Convert.ToInt32(o);
         }
 
         /// <summary>

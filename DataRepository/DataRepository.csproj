@@ -130,6 +130,7 @@
     <Compile Include="DataModel\MenuInfo.cs" />
     <Compile Include="DataModel\NewsInfo.cs" />
     <Compile Include="DataModel\OrderInfo.cs" />
+    <Compile Include="DataModel\OrderStockInfo.cs" />
     <Compile Include="DataModel\PriceSetInfo.cs" />
     <Compile Include="DataModel\ProvinceInfo.cs" />
     <Compile Include="DataModel\ReportInfo.cs" />

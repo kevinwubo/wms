@@ -406,7 +406,11 @@ namespace Service.Inventory
                                 entity.Quantity = dt.Rows[i]["余量"].ToString();
                                 GoodsEntity goodsEntity = OrderService.getGoodsModelByGoods("", entity.GoodsName, "", entity.Models);
                                 entity.GoodsID = goodsEntity != null ? goodsEntity.GoodsID : 0;
-                                list.Add(entity);
+
+                                if (!String.IsNullOrEmpty(entity.BatchNumber) && entity.BatchNumber.Length == 8)
+                                {
+                                    list.Add(entity);
+                                }
                             }
                         }
                     }

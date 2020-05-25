@@ -108,9 +108,15 @@ namespace GuoChe.Controllers
                 }
                 order.OperatorID = CurrentUser.UserID.ToString().ToInt(0);
             }
-            OrderService.ModifyOrder(order);            
-            //return Content("<script>alert('" + tips + "');window.location.href='/Order/OrderSearch?orderno=" + order.OrderNo + "'</script>");
-            return Content("<script>alert('" + tips + "');window.location.href='/Order/OrderSearch_Modify?type=modify'</script>");
+            int result = OrderService.ModifyOrder(order);
+            string content = "<script>alert('" + tips + "');window.location.href='/Order/OrderSearch_Modify?type=modify'</script>";
+            if (result == 5)
+            {
+                tips = "订单库存不足，请检查库存！";
+                content = "<script>alert('" + tips + "');javascript:history.go(-1);</script>";
+            }
+
+            return Content(content);
         }
         #endregion
 
