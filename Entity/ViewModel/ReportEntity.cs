@@ -104,6 +104,12 @@ namespace Entity.ViewModel
         /// </summary>
         public string Remark { get; set; }
 
+        public string Remark2 { get; set; }
+
+        /// <summary>
+        /// 运单编号
+        /// </summary>
+        public string DeliveryNo { get; set; }
 
         //车牌、车型，驾驶员
         public string CarNo { get; set; }

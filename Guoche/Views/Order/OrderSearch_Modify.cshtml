@@ -302,6 +302,10 @@
                                                     <p>出库状态</p>
                                                     <h5>@(!string.IsNullOrEmpty(entity.OrderOutStatus) && entity.OrderOutStatus.Equals("T") ? "已出库" : "待出库")</h5>
                                                 </div>
+                                                <div>
+                                                    <p>预约车型</p>
+                                                    <h5>@(entity.ReservedCarModel)</h5>
+                                                </div>
                                             </div>
                                             <div class="lcItem_t_r_btnList" style="width: 270px;">
                                                 <div class="showDiv" isok="true">
@@ -316,10 +320,10 @@
                                                 @if (ViewBag.PageType == "verify")
                                                 {
                                                     <div class="showDiv">
-                                                        <a href="/Order/OrderPass?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">通过</a>
+                                                        <a href="###" onclick="javascript:orderpassclick(@entity.OrderID,'@entity.OrderType')"  style="color:white">通过</a>
                                                     </div>
                                                     <div class="showDiv">
-                                                        <a href="/Order/OrderBack?type=@entity.OrderType&orderid=@entity.OrderID" style="color:white">拒绝</a>
+                                                        <a href="###" onclick="javascript:orderbackclick(@entity.OrderID,'@entity.OrderType')"  style="color:white">拒绝</a>
                                                     </div>
                                                 }
                                                 else if (ViewBag.PageType == "modify")
@@ -444,6 +448,43 @@
                 alert("仅允许修改或删除自己录制的订单");
             }
         }
+
+
+        function orderpassclick (id, type) {
+            $.ajax({
+                type: "post",
+                url: "/Order/OrderPass",
+                data: {
+                    orderid: id,
+                    type: type
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        alert("订单审核成功！");
+                    }
+                }
+            })
+        }
+
+        function orderbackclick (id, type) {
+            $.ajax({
+                type: "post",
+                url: "/Order/OrderBack",
+                data: {
+                    orderid: id,
+                    type: type
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data) {
+                        alert("订单被拒绝！");
+                    }
+                }
+            })
+        }
+
+
         $("#chk_all").click(function () {
             //全选,设置chheckbox name='all' tbody id=tb
             $("input[name=chk_name]").each(function () {

@@ -60,6 +60,7 @@ namespace GuoChe.Controllers
             ViewBag.DeliverList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "DeliverModel00" && t.Status == 1).ToList();
             //收货人信息
             //ViewBag.Receiver = ReceiverService.GetReceiverByRule("", "", "", 1);//只显示使用中的数据
+            ViewBag.CarModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "CarModel00" && t.Status == 1).ToList();
 
             ViewBag.Order = new OrderEntity();
             ViewBag.ButtonName = "发布订单";
@@ -99,20 +100,15 @@ namespace GuoChe.Controllers
         #region 订单保存
         public ContentResult Modify(OrderEntity order)
         {
-            string tips = "订单添加成功！";
+   
             if (order != null)
             {
-                if (order.OrderID > 0)
-                {
-                    tips = "订单修改成功！";
-                }
                 order.OperatorID = CurrentUser.UserID.ToString().ToInt(0);
             }
-            int result = OrderService.ModifyOrder(order);
+            string tips = OrderService.ModifyOrder(order);
             string content = "<script>alert('" + tips + "');window.location.href='/Order/OrderSearch_Modify?type=modify'</script>";
-            if (result == 5)
+            if (tips.Contains("请检查库存"))
             {
-                tips = "订单库存不足，请检查库存！";
                 content = "<script>alert('" + tips + "');javascript:history.go(-1);</script>";
             }
 
@@ -322,7 +318,7 @@ namespace GuoChe.Controllers
         #endregion
 
         #region 订单通过
-        public void OrderPass(int orderid,string type)
+        public ContentResult OrderPass(int orderid, string type)
         {
             long OperatorID = 0;
             if (CurrentUser != null)
@@ -330,12 +326,14 @@ namespace GuoChe.Controllers
                 OperatorID = CurrentUser.UserID;
             }
             // 更新订单状态
-            OrderService.UpdateOrderStatus(orderid, 4);            
+            OrderService.UpdateOrderStatus(orderid, 4);
+
+            return Content("<script>alert('订单审核通过！');javascript:history.go(-1);</script>");
         }
         #endregion
 
         #region 订单拒绝
-        public void OrderBack(int orderid, string type)
+        public ContentResult OrderBack(int orderid, string type)
         {
             long OperatorID = 0;
             if (CurrentUser != null)
@@ -343,6 +341,7 @@ namespace GuoChe.Controllers
                 OperatorID = CurrentUser.UserID;
             }
             OrderService.OrderBack(orderid, type, OperatorID);
+            return Content("<script>alert('订单被拒绝！');javascript:history.go(-1);</script>");
         }
         #endregion
 
@@ -656,8 +655,9 @@ namespace GuoChe.Controllers
             List<OrderEntity> list = getOrderList(ids);
             //创建Excel文件的对象
             HSSFWorkbook book = new HSSFWorkbook();
+            #region 汇总
             //添加一个sheet
-            ISheet sheet1 = book.CreateSheet("Sheet1");
+            ISheet sheet1 = book.CreateSheet("汇总");
             sheet1.SetColumnWidth(0, 15 * 256);
             sheet1.SetColumnWidth(1, 15 * 256);
             sheet1.SetColumnWidth(2, 15 * 256);
@@ -719,13 +719,56 @@ namespace GuoChe.Controllers
             row1.CreateCell(17).SetCellValue("运费应收");
             row1.CreateCell(18).SetCellValue("运费应付");
 
+            #endregion
+
+            #region 订单明细
+            //添加一个sheet
+            ISheet sheet2 = book.CreateSheet("订单明细");
+            sheet2.SetColumnWidth(0, 15 * 256);
+            sheet2.SetColumnWidth(1, 15 * 256);
+            sheet2.SetColumnWidth(2, 15 * 256);
+            sheet2.SetColumnWidth(3, 15 * 256);
+            sheet2.SetColumnWidth(4, 15 * 256);
+            sheet2.SetColumnWidth(5, 15 * 256);
+            sheet2.SetColumnWidth(6, 15 * 256);
+            sheet2.SetColumnWidth(7, 15 * 256);
+            sheet2.SetColumnWidth(8, 15 * 256);
+            sheet2.SetColumnWidth(9, 20 * 256);
+            sheet2.SetColumnWidth(10, 15 * 256);
+            sheet2.SetColumnWidth(11, 15 * 256);
+            sheet2.SetColumnWidth(12, 15 * 256);
+            sheet2.SetColumnWidth(13, 15 * 256);
+            sheet2.SetColumnWidth(14, 15 * 256);
+            sheet2.SetColumnWidth(15, 15 * 256);
+            sheet2.SetColumnWidth(16, 15 * 256);
+            sheet2.SetColumnWidth(17, 15 * 256);
+            sheet2.SetColumnWidth(18, 15 * 256);
+            ////公共样式：加边框
+            int Row22 = 0;
+            NPOI.SS.UserModel.IRow row2 = sheet2.CreateRow(Row22);
+
+            row2.CreateCell(0).SetCellValue("项次");
+            row2.CreateCell(1).SetCellValue("订单号");
+            row2.CreateCell(2).SetCellValue("商品编号");
+            row2.CreateCell(3).SetCellValue("名称");
+            row2.CreateCell(4).SetCellValue("规格");
+            row2.CreateCell(5).SetCellValue("数量");
+            row2.CreateCell(6).SetCellValue("单位");
+            row2.CreateCell(7).SetCellValue("重量");
+            row2.CreateCell(8).SetCellValue("批次号");
+            row2.CreateCell(9).SetCellValue("生产日期");
+            row2.CreateCell(10).SetCellValue("到期日期");
+            Row22 = Row22 + 1;
+            #endregion
+
             Row = Row + 1;
             for (int i = 0; i < list.Count; i++)
-            {                
+            {
+                #region 订单汇总
                 //订单状态	订单属性	订单编号	下单时间	出库仓	承运商	客户编号	客户名称	送达方(门店/仓库)	送达地址(门店/仓库)	要求送达时间
                 //确认送达时间	配送总数	总重量	备注	装卸应收	装卸应付	运费应收	运费应付
                 NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(Row);
-                
+
                 rowtemp.CreateCell(0).SetCellValue(list[i].OrderStatusDesc);
                 rowtemp.CreateCell(1).SetCellValue(list[i].OrderTypeDesc);
                 rowtemp.CreateCell(2).SetCellValue(list[i].OrderNo);
@@ -741,7 +784,7 @@ namespace GuoChe.Controllers
 
                 int totalQutity = 0;
                 int totalWeight = 0;
-                List<OrderDetailEntity> listDetail= list[i].orderDetailList;
+                List<OrderDetailEntity> listDetail = list[i].orderDetailList;
                 if (listDetail != null && listDetail.Count > 0)
                 {
                     foreach (OrderDetailEntity item in listDetail)
@@ -760,56 +803,32 @@ namespace GuoChe.Controllers
                 rowtemp.CreateCell(18).SetCellValue(list[i].configCosting.ToString());
 
 
-                //List<OrderDetailEntity> listDetail= list[i].orderDetailList;
-                //if (listDetail != null && listDetail.Count > 0)
-                //{
-                //    Row = Row + 1;
-                //    NPOI.SS.UserModel.IRow row2 = sheet1.CreateRow(Row);
-                //    row2.CreateCell(0).SetCellValue("");
-                //    row2.CreateCell(1).SetCellValue("");
-                //    row2.CreateCell(2).SetCellValue("");
-                //    row2.CreateCell(3).SetCellValue("");
-                //    row2.CreateCell(4).SetCellValue("");
-                //    row2.CreateCell(5).SetCellValue("");
-                //    row2.CreateCell(6).SetCellValue("");                    
-                //    row2.CreateCell(7).SetCellValue("项次");
-                //    row2.CreateCell(8).SetCellValue("商品编号");
-                //    row2.CreateCell(9).SetCellValue("名称");
-                //    row2.CreateCell(10).SetCellValue("规格");
-                //    row2.CreateCell(11).SetCellValue("数量");
-                //    row2.CreateCell(12).SetCellValue("单位");
-                //    row2.CreateCell(13).SetCellValue("重量");
-                //    row2.CreateCell(14).SetCellValue("批次号");
-                //    row2.CreateCell(15).SetCellValue("生产日期");
-                //    row2.CreateCell(16).SetCellValue("到期日期");
-
-                //    int jj = 1;
-                //    for (int j = 0; j < listDetail.Count; j++)
-                //    {
-                //        Row = Row + 1;
-                //        NPOI.SS.UserModel.IRow rowtemp2 = sheet1.CreateRow(Row);
-                //        rowtemp2.CreateCell(0).SetCellValue("");
-                //        rowtemp2.CreateCell(1).SetCellValue("");
-                //        rowtemp2.CreateCell(2).SetCellValue("");
-                //        rowtemp2.CreateCell(3).SetCellValue("");
-                //        rowtemp2.CreateCell(4).SetCellValue("");
-                //        rowtemp2.CreateCell(5).SetCellValue("");
-                //        rowtemp2.CreateCell(6).SetCellValue("");
-                //        rowtemp2.CreateCell(7).SetCellValue(jj++);
-                //        rowtemp2.CreateCell(8).SetCellValue(listDetail[j].GoodsNo);
-                //        rowtemp2.CreateCell(9).SetCellValue(listDetail[j].GoodsName);
-                //        rowtemp2.CreateCell(10).SetCellValue(listDetail[j].GoodsModel);
-                //        rowtemp2.CreateCell(11).SetCellValue(listDetail[j].Quantity);
-                //        rowtemp2.CreateCell(12).SetCellValue(listDetail[j].Units);
-                //        rowtemp2.CreateCell(13).SetCellValue(listDetail[j].TotalWeight);
-                //        rowtemp2.CreateCell(14).SetCellValue(listDetail[j].BatchNumber);
-                //        rowtemp2.CreateCell(15).SetCellValue(listDetail[j].ProductDate.ToShortDateString());
-                //        rowtemp2.CreateCell(16).SetCellValue(listDetail[j].ExceedDate.ToShortDateString());
-                //    }
-                //}
                 Row = Row + 1;
+                #endregion
+                
+                #region 订单明细
 
+                for (int j = 0; j < listDetail.Count; j++)
+                {
+                    NPOI.SS.UserModel.IRow rowtemp2 = sheet2.CreateRow(Row22);
+                    rowtemp2.CreateCell(0).SetCellValue(Row22);
+                    rowtemp2.CreateCell(1).SetCellValue(list[i].OrderNo);
+                    rowtemp2.CreateCell(2).SetCellValue(listDetail[j].GoodsNo);
+                    rowtemp2.CreateCell(3).SetCellValue(listDetail[j].GoodsName);
+                    rowtemp2.CreateCell(4).SetCellValue(listDetail[j].GoodsModel);
+                    rowtemp2.CreateCell(5).SetCellValue(listDetail[j].Quantity);
+                    rowtemp2.CreateCell(6).SetCellValue(listDetail[j].Units);
+                    rowtemp2.CreateCell(7).SetCellValue(listDetail[j].TotalWeight);
+                    rowtemp2.CreateCell(8).SetCellValue(listDetail[j].BatchNumber);
+                    rowtemp2.CreateCell(9).SetCellValue(listDetail[j].ProductDate.ToShortDateString());
+                    rowtemp2.CreateCell(10).SetCellValue(listDetail[j].ExceedDate.ToShortDateString());
+                    Row22 = Row22 + 1;
+                }
+                #endregion
             }
+
+
+
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             book.Write(ms);

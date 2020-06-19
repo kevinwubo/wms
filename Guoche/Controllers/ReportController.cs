@@ -35,13 +35,13 @@ namespace GuoChe.Controllers
             }
             List<OrderDeliverPlanEntity> mList = null;
 
-            int count = OrderDeliverPlanService.GetOrderDeliverPlanCount( carrierid, begindate, enddate);
+            int count = OrderDeliverPlanService.GetOrderDeliverPlanCount(carrierid, begindate, enddate);
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = PAGESIZE;
             pager.SumCount = count;
             pager.URL = "OrderDeliverPlanReport";
-            
+
             mList = OrderDeliverPlanService.GetOrderDeliverPlanInfoByRule(carrierid, begindate, enddate, pager);
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
@@ -84,7 +84,7 @@ namespace GuoChe.Controllers
                     }
                 }
             }
-            ViewBag.OrderList = mList;           
+            ViewBag.OrderList = mList;
             return View();
         }
         #endregion
@@ -129,17 +129,18 @@ namespace GuoChe.Controllers
 
             int K = 0;
             NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
-            row1.CreateCell(0).SetCellValue("序号");
-            row1.CreateCell(1).SetCellValue("承运商名称");
-            row1.CreateCell(2).SetCellValue("温区");
-            row1.CreateCell(3).SetCellValue("物流方式");
-            row1.CreateCell(4).SetCellValue("驾驶员姓名");
-            row1.CreateCell(5).SetCellValue("联系电话");
-            row1.CreateCell(6).SetCellValue("车型");
-            row1.CreateCell(7).SetCellValue("提货时间");
-            row1.CreateCell(8).SetCellValue("备注");
-            row1.CreateCell(9).SetCellValue("备注1（客服备注）");
-            row1.CreateCell(10).SetCellValue("备注2（运营备注）");
+            row1.CreateCell(0).SetCellValue("运输单号");
+            row1.CreateCell(1).SetCellValue("序号");
+            row1.CreateCell(2).SetCellValue("承运商名称");
+            row1.CreateCell(3).SetCellValue("温区");
+            row1.CreateCell(4).SetCellValue("物流方式");
+            row1.CreateCell(5).SetCellValue("驾驶员姓名");
+            row1.CreateCell(6).SetCellValue("联系电话");
+            row1.CreateCell(7).SetCellValue("车型");
+            row1.CreateCell(8).SetCellValue("提货时间");
+            row1.CreateCell(9).SetCellValue("备注");
+            row1.CreateCell(10).SetCellValue("备注1（客服备注）");
+            row1.CreateCell(11).SetCellValue("备注2（运营备注）");
             //将数据逐步写入sheet1各个行
             string remark = "";
             string sfhd = "";
@@ -150,20 +151,21 @@ namespace GuoChe.Controllers
                 for (int i = 0; i < list.Count; i++)
                 {
                     NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(row++);
-                    rowtemp.CreateCell(0).SetCellValue(list[i].PlanID);
-                    rowtemp.CreateCell(1).SetCellValue(list[i].CarrierName);
-                    rowtemp.CreateCell(2).SetCellValue(list[i].Temp);
-                    rowtemp.CreateCell(3).SetCellValue(list[i].DeliveryType);
-                    rowtemp.CreateCell(4).SetCellValue(list[i].DriverName);
-                    rowtemp.CreateCell(5).SetCellValue(list[i].DriverTelephone);
-                    rowtemp.CreateCell(6).SetCellValue(list[i].CarModel);
-                    rowtemp.CreateCell(7).SetCellValue(list[i].DeliverDate.ToShortDateString());
-                    rowtemp.CreateCell(8).SetCellValue(list[i].Remark);
-                    rowtemp.CreateCell(9).SetCellValue("");
-                    rowtemp.CreateCell(10).SetCellValue("");    
+                    rowtemp.CreateCell(0).SetCellValue(list[i].DeliveryNo);
+                    rowtemp.CreateCell(1).SetCellValue(list[i].PlanID);
+                    rowtemp.CreateCell(2).SetCellValue(list[i].CarrierName);
+                    rowtemp.CreateCell(3).SetCellValue(list[i].Temp);
+                    rowtemp.CreateCell(4).SetCellValue(list[i].DeliveryType);
+                    rowtemp.CreateCell(5).SetCellValue(list[i].DriverName);
+                    rowtemp.CreateCell(6).SetCellValue(list[i].DriverTelephone);
+                    rowtemp.CreateCell(7).SetCellValue(list[i].CarModel);
+                    rowtemp.CreateCell(8).SetCellValue(list[i].DeliverDate.ToShortDateString());
+                    rowtemp.CreateCell(9).SetCellValue(list[i].Remark);
+                    rowtemp.CreateCell(10).SetCellValue("");
+                    rowtemp.CreateCell(11).SetCellValue("");
                 }
             }
-            
+
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             book.Write(ms);
@@ -195,7 +197,7 @@ namespace GuoChe.Controllers
         /// <param name="p"></param>
         /// <returns></returns>
         public ActionResult CustomServiceReport(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
-            string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid=-1, int p = 1)
+            string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, int p = 1)
         {
             // 默认当月
             if (string.IsNullOrEmpty(begindate) || string.IsNullOrEmpty(enddate))
@@ -492,7 +494,7 @@ namespace GuoChe.Controllers
             ViewBag.orderTypeList = orderTypeList;
             ViewBag.ReceiverName = receivername;
 
-            ReEntity report = ReportService.CreateReportList(mList,true);
+            ReEntity report = ReportService.CreateReportList(mList, true);
             ViewBag.Report = report;
 
             ViewBag.GUID = System.Guid.NewGuid().ToString();
@@ -574,7 +576,7 @@ namespace GuoChe.Controllers
         #region 导出excel
 
         public FileResult ReportToExcel(int carrierid = 0, int storageid = 0, int customerid = 0, string receivername = "",
-        string ordertype = "", string orderno = "", string begindate = "", string enddate = "",string type="")
+        string ordertype = "", string orderno = "", string begindate = "", string enddate = "", string type = "")
         {
 
             int count = ReportService.GetOrderCount("", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1).count;
@@ -584,15 +586,15 @@ namespace GuoChe.Controllers
             pager.SumCount = count;
             pager.URL = "CustomServiceReport";
             List<OrderEntity> list = ReportService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, -1, -1, -1, ordertype, orderno, begindate, enddate, -1);
-            ReEntity report = ReportService.CreateReportList(list,true);
-            return ReportExportExcel(type, report.reportList);
+            ReEntity report = ReportService.CreateReportList(list, true);
+            return ReportExportExcel(type, report.reportList, customerid, carrierid);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="type">利润分析表:LRR /客服日常报表:KFR /客户对账单:KHR 供应商对账单:GYSR</param>
         /// <returns></returns>
-        public FileResult ReportExportExcel(string type, List<ReportEntity> list)
+        public FileResult ReportExportExcel(string type, List<ReportEntity> list, int customerid = 0, int carrierid = 0)
         {
             //获取list数据        
 
@@ -629,6 +631,11 @@ namespace GuoChe.Controllers
             int K = 0;
             NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
             row1.CreateCell(K).SetCellValue("序号");
+            if ("GYSR".Equals(type))
+            {
+                row1.CreateCell(K++).SetCellValue("运输单号");
+            }
+
             row1.CreateCell(K++).SetCellValue("订单编号");
             row1.CreateCell(K++).SetCellValue("订单属性");
             row1.CreateCell(K++).SetCellValue("订单归属");
@@ -661,7 +668,6 @@ namespace GuoChe.Controllers
             {
                 row1.CreateCell(K++).SetCellValue("利润");
             }
-            row1.CreateCell(K++).SetCellValue("备注");
 
             if ("GYSR".Equals(type))
             {
@@ -669,6 +675,8 @@ namespace GuoChe.Controllers
                 row1.CreateCell(K++).SetCellValue("车型");
                 row1.CreateCell(K++).SetCellValue("驾驶员");
             }
+            row1.CreateCell(K++).SetCellValue("备注1");
+            row1.CreateCell(K++).SetCellValue("备注2");
 
             //将数据逐步写入sheet1各个行
             for (int i = 0; i < list.Count; i++)
@@ -676,6 +684,10 @@ namespace GuoChe.Controllers
                 NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
                 int KK = 0;
                 rowtemp.CreateCell(KK).SetCellValue(list[i].ID);
+                if ("GYSR".Equals(type))
+                {
+                    rowtemp.CreateCell(KK++).SetCellValue(list[i].DeliveryNo);
+                }
                 rowtemp.CreateCell(KK++).SetCellValue(list[i].OrderNo);
                 rowtemp.CreateCell(KK++).SetCellValue(list[i].OrderType);
                 rowtemp.CreateCell(KK++).SetCellValue(list[i].OrderOwner);
@@ -715,9 +727,9 @@ namespace GuoChe.Controllers
                 {
                     try
                     {
-                            rowtemp.CreateCell(KK++).SetCellValue(list[i].CarNo != null ? list[i].CarNo.ToString() : "");
-                            rowtemp.CreateCell(KK++).SetCellValue(list[i].CarModel != null ? list[i].CarModel.ToString() : "");
-                            rowtemp.CreateCell(KK++).SetCellValue(list[i].DriverName != null ? list[i].DriverName.ToString() : "");
+                        rowtemp.CreateCell(KK++).SetCellValue(list[i].CarNo != null ? list[i].CarNo.ToString() : "");
+                        rowtemp.CreateCell(KK++).SetCellValue(list[i].CarModel != null ? list[i].CarModel.ToString() : "");
+                        rowtemp.CreateCell(KK++).SetCellValue(list[i].DriverName != null ? list[i].DriverName.ToString() : "");
                     }
                     catch (Exception)
                     {
@@ -726,13 +738,39 @@ namespace GuoChe.Controllers
                 }
 
                 rowtemp.CreateCell(KK++).SetCellValue(list[i].Remark);
+                rowtemp.CreateCell(KK++).SetCellValue(list[i].Remark2);
             }
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             book.Write(ms);
             ms.Seek(0, SeekOrigin.Begin);
-            return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMdd") + "报表.xls");
+            return File(ms, "application/vnd.ms-excel", getFileNames(type, list, customerid, carrierid));
         }
-        #endregion 
+
+        /// <param name="type">利润分析表:LRR /客服日常报表:KFR /客户对账单:KHR 供应商对账单:GYSR</param>
+        /// <returns></returns>
+        private string getFileNames(string type, List<ReportEntity> list, int customerid = 0, int carrierid = 0)
+        {
+            string filename = DateTime.Now.ToString("yyyyMMdd") + "力橙对账单{0}.xls";
+            string names = "";
+            if ("KHR".Equals(type))
+            {
+
+                if (customerid > 0)
+                {
+                    names = list[0].OrderOwner + "客户";
+                }
+            }
+            if ("GYSR".Equals(type))
+            {
+                if (carrierid > 0)
+                {
+                    names = list[0].CarrierName + "承运商";
+                }
+            }
+
+            return string.Format(filename, names);
+        }
+        #endregion
     }
 }

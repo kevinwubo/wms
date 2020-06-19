@@ -167,6 +167,20 @@ var orderInfo = {
             });
             
         });
+
+        //$("#coumpLayer_count").click(function () {
+        //    var totalCount = 0;
+        //    $("#fineTable").find("tr").each(function () {
+        //        var tdArr = $(this).children();
+        //        var title = tdArr.eq(0).find('input').val();
+        //        if (title == "Head") {
+        //            return;
+        //        }
+        //        var quantity = tdArr.eq(5).find('input').val();//数量
+        //        totalCount +=parseInt(quantity);
+        //    });
+        //    $("#TotalCount").val(totalCount)
+        //});
                 
         //计算价格-计算
         $(".coumpLayer_sure").click(function () {

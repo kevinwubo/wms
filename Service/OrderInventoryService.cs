@@ -73,8 +73,16 @@ namespace Service
             {
                 foreach (OrderDetailEntity entity in orderDetailList)
                 {
+                    List<InventoryEntity> inventoryList = new List<InventoryEntity>();
+                    if (entity.InventoryID > 0)
+                    {
+                        inventoryList.Add(InventoryService.GetInventoryEntityById(entity.InventoryID));
+                    }
                     //同商品+批次号+客户 
-                    List<InventoryEntity> inventoryList = InventoryService.GetInventoryByRule(entity.GoodsID, -1, entity.BatchNumber.Trim(), orderInfo.CustomerID, true);
+                    else
+                    {
+                        inventoryList = InventoryService.GetInventoryByRule(entity.GoodsID, -1, entity.BatchNumber.Trim(), orderInfo.CustomerID, true);
+                    }
 
                     inventoryInfoProcess(entity, inventoryList, orderInfo);
                 }

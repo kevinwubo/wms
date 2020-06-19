@@ -11,6 +11,9 @@
     List<BaseDataEntity> CarrierModel = ((List<BaseDataEntity>)ViewBag.CarrierModel) ?? new List<BaseDataEntity>();
     List<BaseDataEntity> deliveryList = (List<BaseDataEntity>)ViewBag.DeliverList;//物流方式
     List<BaseDataEntity> temp = (List<BaseDataEntity>)ViewBag.TemList;//温度
+    List<BaseDataEntity> carModelList = (List<BaseDataEntity>)ViewBag.CarModel;//温度
+
+    List<ReceiverEntity> receivers = (List<ReceiverEntity>)ViewBag.Receiver; 
     PagerInfo p = (PagerInfo)ViewBag.Pager;
 }
 <link href="~/source/assets/css/queryItem.css" rel="stylesheet" />
@@ -47,11 +50,12 @@
             <div id="menus_wrapper" class="dataTables_wrapper form-inline" role="grid">
                 <div class="row-fluid">
                     <div class="">
-                        <form action="/Line/OrderDeliveryPlan" method="get">
+                        <form action="/Line/OrderDeliveryPlan" method="get" enctype="multipart/form-data" onsubmit="return verify()">
                             <div class="dataTables_length" id="menus_filter">
                                 <label>
-                                    <input type="text" id="orderno" name="orderno" style="width:200px" value="@ViewBag.OrderNo" placeholder="订单号,收货方查询" />
-                                </label>
+                                    <input type="text" id="orderno" name="orderno" style="width:200px" value="@ViewBag.OrderNo" placeholder="订单号" />
+                                    <input type="hidden" id="revicerids" name="revicerids" value="@ViewBag.Revicerids" />
+                                </label>         
                                 <label>
                                     <select tabindex="1" class="" style="width:200px" id="storageid" name="storageid">
                                         <option value="">--请选择出库仓--</option>
@@ -86,12 +90,12 @@
                                     </select>
                                 </label>
                                 @*<label>
-                                        订单状态: <select class="span3" style="width:150px" id="status" name="status">
-                                            <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
-                                            <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
-                                            <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
-                                        </select>
-                                    </label>*@
+                    订单状态: <select class="span3" style="width:150px" id="status" name="status">
+                        <option value="-1" @(ViewBag.Status == -1 ? "selected" : "")>全部</option>
+                        <option value="1" @(ViewBag.Status == 1 ? "selected" : "")>可用</option>
+                        <option value="0" @(ViewBag.Status == 0 ? "selected" : "")>不可用</option>
+                    </select>
+                </label>*@
                                 <label>
                                     <select tabindex="1" class="" style="width: 65px" id="pageSize" name="pageSize">
                                         <option value="10" @(ViewBag.PageSize == 10 ? "selected" : "")>10条</option>
@@ -101,24 +105,33 @@
                                         <option value="50" @(ViewBag.PageSize == 50 ? "selected" : "")>50条</option>
                                     </select>
                                 </label>
+                                <br />
                                 <label>
-                                    <input type="text" aria-controls="menus" class="layui-input" style="width:150px" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" lay-key="1" autocomplete="off" name="begindate">
+                                    <input type="text" aria-controls="menus" class="layui-input" style="width:150px;margin-top:-108px;" placeholder="订单开始时间" id="begindate" value="@ViewBag.BeginDate" lay-key="1" autocomplete="off" name="begindate">
                                 </label>
                                 <label>
-                                    <input type="text" aria-controls="menus" class="layui-input" style="width:150px" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
+                                    <input type="text" aria-controls="menus" class="layui-input" style="width:150px;margin-top:-108px;" placeholder="订单结束时间" id="enddate" value="@ViewBag.EndDate" lay-key="2" autocomplete="off" name="enddate">
                                 </label>
-                                <button class="btn btn-info" type="submit" id="btn_submit">搜索</button>
                                 <label>
-                                    <input type="checkbox" id="chk_all" value="-1" />全选
+                                    <select id='m2' class="demo1" multiple="multiple">
+                                        @foreach (var item in receivers)
+                                        {
+                                            <option value="@item.ReceiverID">@item.ReceiverName</option>
+                                        }
+                                    </select>
                                 </label>
-                                <button class="btn btn-info" type="button" id="btn_OrderPlan">安排计划</button>
+                                <button class="btn btn-info" type="submit" style="margin-top:-108px;" id="btn_submit">搜索</button>
+                                <label>
+                                    <input type="checkbox" id="chk_all" value="-1" style="margin-top:-108px;" /><span style="margin-top:-108px;">全选</span>
+                                </label>
+                                <button class="btn btn-info" type="button" style="margin-top:-108px;" id="btn_OrderPlan">安排计划</button>
                             </div>
                         </form>
                     </div>
                 </div>
                 @if (orderList != null && orderList.Count > 0)
                 {
-                    <div class="lcQueryItem">
+                    <div class="lcQueryItem" style="margin-top:-90px;">
                         @foreach (OrderEntity entity in orderList)
                         {
 
@@ -205,7 +218,7 @@
                                                     <div class="查看回单" onclick="javascript:showImg('@entity.AttachmentIDs')">
                                                         查看回单
                                                     </div>
-                                                }                                                
+                                                }
 
                                             </div>
                                         </div>
@@ -477,7 +490,7 @@
                     @*<input type="text" placeholder="请输入车型" id="CarModel" name="CarModel" style="width:220px" />*@
                     @*4.2米，5.2米，6.8米，7.6米，9.6米，12.5米，13.7米，15米，17.5米，其他*@
                     <select tabindex="1" class="" id="CarModel" style="width:220px" name="CarModel">
-                        <option value="4.2米">4.2米</option>
+                        @*<option value="4.2米">4.2米</option>
                         <option value="5.2米">5.2米</option>
                         <option value="6.8米">6.8米</option>
                         <option value="7.6米">7.6米</option>
@@ -489,7 +502,11 @@
                         <option value="5.8米">5.8米</option>
                         <option value="6.2米">6.2米</option>
                         <option value="8.6米">8.6米</option>
-                        <option value="其他">其他</option>
+                        <option value="其他">其他</option>*@
+                        @foreach (var item in carModelList)
+                        {
+                            <option value="@item.ValueInfo">@item.ValueInfo</option>
+                        }
                     </select>
                 </td>
                 <td>提货车牌</td>
@@ -540,6 +557,10 @@
 
 </div>
 @section Footer{
+    <link href="~/source/select/css/ySelect.css" rel="stylesheet" />
+    <script src="~/source/select/js/bootstrap.min.js"></script>
+    <script src="~/source/select/js/jquery-1.11.3.min.js"></script>
+    <script src="~/source/select/js/ySelect.js"></script>
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput.js"></script>
     <script type="text/javascript" src="~/source/bootstrap-fileinput/js/fileinput_locale_zh.js"></script>
     <script type="text/javascript" src="~/source/assets/js/viewer-jquery.min.js"></script>
@@ -732,5 +753,21 @@
                 elem: '#DeliverDate' //指定元素
             });
         });
+        $(function () {
+            $('.demo1').ySelect();           
+            $("#revicerids").val("");
+
+
+
+            //$("#current").click(function () {
+            //    alert($("#m2").ySelectedValues(","));
+            //    alert($("#m2").ySelectedTexts(","));
+            //});
+
+        });
+
+        function verify() {
+            $("#revicerids").val($("#m2").ySelectedValues(","));
+        }
     </script>
 }

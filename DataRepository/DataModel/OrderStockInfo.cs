@@ -32,11 +32,19 @@ namespace DataRepository.DataModel
         /// </summary>
         [DataMapping("Quantity", DbType.Int32)]
         public int Quantity { get; set; }
+        
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        [DataMapping("GoodsName", DbType.String)]
+        public string GoodsName { get; set; }
 
         /// <summary>
         /// 订单时间
         /// </summary>
         [DataMapping("OrderDate", DbType.DateTime)]
         public DateTime OrderDate { get; set; }
+
+
     }
 }

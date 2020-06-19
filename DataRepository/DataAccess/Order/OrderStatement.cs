@@ -69,16 +69,16 @@ namespace DataRepository.DataAccess.Order
 
         public static string CreateNewOrder = @"INSERT INTO dbo.wms_OrderInfo(OrderNo,MergeNo,OrderType,ReceiverID,CustomerID,SendStorageID,ReceiverStorageID,CarrierID
                                                 ,OrderDate,SendDate,configPrice,configHandInAmt,configSortPrice,configCosting,configHandOutAmt,configSortCosting,TempType,OrderStatus,OrderOutStatus,DeliveryType,DeliveryStatus
-                                                ,UploadStatus,Status,Remark,OperatorID,OrderSource,SalesMan,PromotionMan,LineID,SubOrderType,IsImport,CreateDate,ChangeDate)
+                                                ,UploadStatus,Status,Remark,OperatorID,OrderSource,SalesMan,PromotionMan,LineID,SubOrderType,IsImport,CreateDate,ChangeDate,ReservedCarModel)
 			                                                VALUES(@OrderNo,@MergeNo,@OrderType,@ReceiverID,@CustomerID,@SendStorageID,@ReceiverStorageID,@CarrierID,
                                                 @OrderDate,@SendDate,@configPrice,@configHandInAmt,@configSortPrice,@configCosting,@configHandOutAmt,@configSortCosting,@TempType,@OrderStatus,@OrderOutStatus,@DeliveryType,@DeliveryStatus
-                                                ,@UploadStatus,@Status,@Remark,@OperatorID,@OrderSource,@SalesMan,@PromotionMan,@LineID,@SubOrderType,@IsImport,@CreateDate,@ChangeDate) select @@IDENTITY";
+                                                ,@UploadStatus,@Status,@Remark,@OperatorID,@OrderSource,@SalesMan,@PromotionMan,@LineID,@SubOrderType,@IsImport,@CreateDate,@ChangeDate,@ReservedCarModel) select @@IDENTITY";
 
         public static string ModifyOrder = @"UPDATE wms_OrderInfo SET OrderNo = @OrderNo,MergeNo = @MergeNo,OrderType = @OrderType,ReceiverID = @ReceiverID,CustomerID = @CustomerID
                                                 ,SendStorageID = @SendStorageID,ReceiverStorageID = @ReceiverStorageID,CarrierID = @CarrierID,OrderDate = @OrderDate,SendDate = @SendDate
                                                 ,configPrice = @configPrice,configHandInAmt = @configHandInAmt,configSortPrice = @configSortPrice,configCosting = @configCosting,configHandOutAmt = @configHandOutAmt
                                                 ,configSortCosting = @configSortCosting,TempType = @TempType,OrderStatus = @OrderStatus,DeliveryType=@DeliveryType,UploadStatus = @UploadStatus,Status = @Status,Remark = @Remark
-                                                ,OperatorID = @OperatorID,ChangeDate = @ChangeDate WHERE OrderID=@OrderID";
+                                                ,OperatorID = @OperatorID,ReservedCarModel=@ReservedCarModel,ChangeDate = @ChangeDate WHERE OrderID=@OrderID";
 
         /// <summary>
         /// 更新订单出库状态
@@ -116,7 +116,7 @@ namespace DataRepository.DataAccess.Order
         /// <summary>
         /// 根据库存ID获取当前库中是否有未出库的数据
         /// </summary>
-        public static string getOutStockOrderByInentroyID = @"select a.OrderID,OrderNo,InventoryID,b.OrderDate,a.Quantity from wms_OrderDetailInfo a,wms_OrderInfo b where a.OrderID=b.OrderID and b.OrderOutStatus='F' and OrderType!='RKD'";
+        public static string getOutStockOrderByInentroyID = @"select a.OrderID,OrderNo,InventoryID,b.OrderDate,a.Quantity,a.GoodsName from wms_OrderDetailInfo a,wms_OrderInfo b where a.OrderID=b.OrderID and b.OrderOutStatus='F' and OrderType!='RKD'";
 
     }
 }

@@ -9,6 +9,7 @@
     //List<ReceiverEntity> receivers = (List<ReceiverEntity>)ViewBag.Receiver;//收货人 [门店、仓库]
     OrderEntity entity = (OrderEntity)ViewBag.Order;//价格配置
     List<BaseDataEntity> temp = (List<BaseDataEntity>)ViewBag.TemList;//温度
+    List<BaseDataEntity> carModelList = (List<BaseDataEntity>)ViewBag.CarModel;//车型
     List<BaseDataEntity> deliveryList = (List<BaseDataEntity>)ViewBag.DeliverList;//物流方式
     List<BaseDataEntity> receiverList = (List<BaseDataEntity>)ViewBag.ReceiverList;//收货方
    
@@ -148,6 +149,7 @@
                     <input type="hidden" id="Hid_Type" name="Hid_Type" value="@ViewBag.Type" />
                     <input type="hidden" id="OrderType" name="OrderType" value="@(string.IsNullOrEmpty(entity.OrderType)?ViewBag.Type:entity.OrderType)" />
                     <input type="hidden" id="orderDetailJson" name="orderDetailJson" />
+                    <input type="hidden" id="CarrierID" name="CarrierID" value="@entity.CarrierID" />
                     <table class="table table-bordered" >
                         <tr>
                             <td style=""><label class="control-label">选择客户</label></td>
@@ -251,9 +253,20 @@
                                     }
                                 </select>
                             </td>
+                            <td style=" "><label class="control-label">预约车型</label></td>
+                            <td>
+                                <select tabindex="1" class="" id="ReservedCarModel" name="ReservedCarModel">
+                                    <option value="">请选择车型</option>
+                                    @foreach (var item in carModelList)
+                                    {
+                                        <option value="@item.ValueInfo" @(item.ValueInfo == entity.TempType ? "selected" : "")>@item.ValueInfo</option>
+                                    }
+                                </select>
+                            </td>
+                            
                             <td style=" "><label class="control-label">备注</label></td>
-                            <td style="width: 20%;" colspan="3">
-                                <input class="" type="text" style="width:600px" placeholder="备注" id="Remark" name="Remark" value="@entity.Remark" maxlength="600">
+                            <td>
+                                <input class="" type="text" style="width:220px" placeholder="备注" id="Remark" name="Remark" value="@entity.Remark" maxlength="600">
                             </td>
                         </tr>
                         <tr>
@@ -305,8 +318,8 @@
                                     <th>库存数量</th>@*7*@
                                     <th>商品重量</th>@*8*@
                                     <th>商品总重量</th>@*9*@
-                                    <th>运输成本</th>@*10*@
-                                    <th>运输售价</th>@*11*@
+                                    <th>可用库存</th>@*10*@
+                                    <th>待出库数量</th>@*11*@
                                     <th>移除</th>
                                 </tr>
                             </thead>
@@ -325,13 +338,13 @@
                                             <td><input type="hidden" value="@item.BatchNumber" class="form-control ">@item.BatchNumber</td>
                                             <td><input type="hidden" value="@item.ProductDate.ToShortDateString()" class="form-control ">@item.ProductDate.ToShortDateString()</td>
                                             <td><input type="hidden" value="@item.ExceedDate.ToShortDateString()" class="form-control ">@item.ExceedDate.ToShortDateString()</td>
-                                            <td><input type="text" style="width:120px" value="@item.Quantity" class="form-control "></td>
+                                            <td><input type="text" name="txt_Count" style="width:120px" value="@item.Quantity" class="form-control "></td>
                                             <td><input type="hidden" value="@item.Units" class="form-control ">@item.Units</td>
                                             <td><input type="hidden" value="@(item.inventory!=null?item.inventory.Quantity:0)" class="form-control ">@(item.inventory != null ? item.inventory.Quantity : 0)</td>
                                             <td><input type="hidden" value="@item.Weight" class="form-control ">@item.Weight</td>
                                             <td><input type="hidden" value="@item.TotalWeight" class="form-control ">@item.TotalWeight</td>
-                                            <td><input type="hidden" value="0" class="form-control">0</td>
-                                            <td><input type="hidden" value="0" class="form-control">0</td>
+                                            <td><input type="hidden" value="0" class="form-control">@item.CanUseQuantity</td>
+                                            <td><input type="hidden" value="0" class="form-control">@item.WaitQuantity</td>
                                             <td><span style="cursor:pointer" onclick="delTr(this,@item.ID)">移除</span></td>
                                         </tr>
                                     }
@@ -358,8 +371,8 @@
                                     <th>单位</th>@*7*@
                                     <th>商品重量</th>@*8*@
                                     <th>商品总重量</th>@*9*@
-                                    <th>运输成本</th>@*10*@
-                                    <th>运输售价</th>@*11*@
+                                    <th>可用库存</th>@*10*@
+                                    <th>待出库数量</th>@*11*@
                                     <th>移除</th>
                                 </tr>
                             </thead>
@@ -380,7 +393,7 @@
 
                                             <td><input type="text" style="width:120px" value="@item.BatchNumber" class="form-control "></td>
                                             <td><input type="text" value="@item.ProductDate.ToShortDateString()" style="width:120px" onclick="WdatePicker({dateFmt:yyyy-MM-dd})" class="form-control "></td>
-                                            <td><input type="text" style="width:120px" value="@item.Quantity" class="form-control "></td>
+                                            <td><input type="text" style="width:120px" name="txt_Count"  value="@item.Quantity" class="form-control "></td>
 
                                             <td><input type="hidden" value="@item.Units" class="form-control ">@item.Units</td>
                                             <td><input type="hidden" value="@item.Weight" class="form-control ">@item.Weight</td>
@@ -399,9 +412,11 @@
             <div class="widget-footer">
                 <button class="btn btn-primary" type="button" id="coumpLayer_price">计算价格</button>
                 <button class="btn btn-primary" type="button"  id="select_goods">选择商品</button>
+                @*<button class="btn btn-primary" type="button" id="coumpLayer_count">计算数量</button>*@
                 <button class="btn btn-primary" type="button" style=" float: right;margin-left: 10px;" id="goback">返回</button>
                 <button class="btn btn-primary" type="button" style=" float: right;" id="save">@ViewBag.ButtonName</button>
-                <input class="" type="text" style="width:220px;float: right;" readonly="readonly" placeholder="订单编号"  id="OrderNo" name="OrderNo" value='@(string.IsNullOrEmpty(entity.OrderNo) ? DateTime.Now.ToString("yyyyMMddhhfff") : entity.OrderNo)' maxlength=" 200">
+                <b>数量合计：</b><input type="text" id="TotalCount" name="TotalCount" value="0" readonly="readonly" style="width:100px" />
+                <input class="" type="text" style="width:120px;float: right;" readonly="readonly"  placeholder="订单编号" id="OrderNo" name="OrderNo" value='@(string.IsNullOrEmpty(entity.OrderNo) ? DateTime.Now.ToString("yyyyMMddhhfff") : entity.OrderNo)' maxlength=" 200">
             </div>
 
         </div>
@@ -470,5 +485,12 @@
             elem: '#SendDate' //指定元素
         });
     });
+    function Totla() {
+        var totalCount = 0;
+        $("input[name='txt_Count']").each(function () {
+            totalCount += parseInt($(this).val());
+        })
+        $("#TotalCount").val(totalCount)
+    }
 </script>
 }

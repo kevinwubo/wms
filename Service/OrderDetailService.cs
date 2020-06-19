@@ -75,7 +75,7 @@ namespace Service
                 entity.ChangeDate = info.ChangeDate;
                 entity.CreateDate = info.CreateDate;
                 entity.ChangeDate = info.ChangeDate;
-
+                
                 entity.goods = new GoodsEntity();
                 if (entity.GoodsID > 0)
                 {
@@ -87,6 +87,8 @@ namespace Service
                 {
                     entity.inventory = InventoryService.GetInventoryById(entity.InventoryID);
                 }
+                entity.WaitQuantity = entity.inventory != null ? entity.inventory.Quantity : 0;
+                entity.CanUseQuantity = entity.Quantity - entity.WaitQuantity;
                 
             }
 

@@ -67,8 +67,8 @@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">商品编号</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">商品名称</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">库存数量</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">运输成本</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">运输售价</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">可用库存</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">待出库数量</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">规格型号</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">单位</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">重量</th>
@@ -107,8 +107,8 @@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">商品编号</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">商品名称</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">库存数量</th>                                
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">运输成本</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">运输售价</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">可用库存</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">待出库数量</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">规格型号</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">单位</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">批次号</th>
@@ -117,7 +117,7 @@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">重量</th>                                
                             </tr>
                         </thead>
-                        @*1商品编号	2商品名称	3库存数量	4运输成本	5运输售价	6规格型号	7单位	8批次号	9生产日期	10到期日期    11重量*@                        
+                        @*1商品编号	2商品名称	3库存数量	可用库存	待出库数量	6规格型号	7单位	8批次号	9生产日期	10到期日期    11重量*@                        
                         <tbody role="alert" id="tbody" aria-live="polite" aria-relevant="all">
                             @for (int i = 0; i < iList.Count; i++)
                             {
@@ -126,8 +126,8 @@
                                     <td class=" "><input type="hidden" value="@(iList[i].goods != null ? iList[i].goods.GoodsNo:"")" />@(iList[i].goods != null ? iList[i].goods.GoodsNo:"")</td>
                                     <td class=" "><input type="hidden" value="@(iList[i].goods != null ? iList[i].goods.GoodsName:"")" />@(iList[i].goods != null ? iList[i].goods.GoodsName:"")</td>
                                     <td class=" " style="@(iList[i].Quantity < 10 ? "background-color:red" : "")"><input type="hidden" value="@iList[i].Quantity" />@iList[i].Quantity</td>
-                                    <td class=" "><input type="hidden" value="0" />0</td>
-                                    <td class=" "><input type="hidden" value="0" />0</td>
+                                    <td class=" "><input type="hidden" value="@(iList[i].CanUseQuantity)" />@(iList[i].CanUseQuantity)</td>
+                                    <td class=" "><input type="hidden" value="@(iList[i].WaitQuantity)" />@(iList[i].WaitQuantity)</td>
                                     <td class=" "><input type="hidden" value="@(iList[i].goods != null ? iList[i].goods.GoodsModel:"")" />@(iList[i].goods != null ? iList[i].goods.GoodsModel:"")</td>
                                     <td class=" "><input type="hidden" value="@(iList[i].goods != null ? iList[i].goods.Units:"")" />@(iList[i].goods != null ? iList[i].goods.Units:"")</td>                                   
                                     <td class=" "><input type="hidden" value='@(iList[i].BatchNumber )' />@(iList[i].BatchNumber) </td>
@@ -200,16 +200,16 @@
                     var goodsno = tdArr.eq(2).find('input').val();//商品编号    
                     var goodsmodel = tdArr.eq(7).find('input').val();//商品规格   
 
-                    //1所属客户	2商品编号	3商品名称	4库存数量	5运输成本	6运输售价	7规格型号	8单位	9重量	10保质期
+                    //1所属客户	2商品编号	3商品名称	4库存数量	5可用库存	6待出库数量	7规格型号	8单位	9重量	10保质期
                     html += '<tr>\n' +
                             '    <td><input type="hidden" value="' + goodsid + '" class="form-control"><input type="hidden" value="0" class="form-control"><input type="hidden" value="0" class="form-control"></td>\n' +
                             '    <td><input type="hidden" value="' + customername + '" class="form-control">' + customername + '</td>\n' +
                             '    <td><input type="hidden" value="' + goodsname + '" class="form-control ">' + goodsname + '</td>\n' +
                             '    <td><input type="hidden" value="' + exunits + '" class="form-control ">' + exunits + '</td>\n' +
                            
-                            '    <td><input type="text" style="width:120px"  value="1" class="form-control "></td>\n' +
+                            '    <td><input type="text" style="width:120px"  value="@DateTime.Now.ToString("yyyyMMdd")" class="form-control "></td>\n' +
                             '    <td><input type="text" value="@DateTime.Now.ToString("yyyy-MM-dd")" style="width:120px" onclick="WdatePicker({dateFmt:\'yyyy-MM-dd\'})" class="form-control "></td>\n' +
-                            '    <td><input type="text" style="width:120px"  value="1" class="form-control "></td>\n' +
+                            '    <td><input type="text" style="width:120px"  value="1" name="txt_Count" onblur="Totla()" class="form-control "></td>\n' +
 
                             '    <td><input type="hidden" value="' + units + '" class="form-control ">' + units + '</td>\n' +
                             '    <td><input type="hidden" value="' + weight + '" class="form-control ">' + weight + '</td>\n' +
@@ -226,7 +226,7 @@
             //商品名称	批次号	生产日期	到期日期	(商品数量)	单位	库存数量	商品重量	商品总重量	
             $("#tbody").find("tr").each(function () {
                 var tdArr = $(this).children();
-                //1商品编号	2商品名称	3库存数量	4运输成本	5运输售价	6规格型号	7单位	8批次号	9生产日期	10到期日期    11重量
+                //1商品编号	2商品名称	3库存数量	4可用库存	5待出库数量	6规格型号	7单位	8批次号	9生产日期	10到期日期    11重量
                 if (tdArr.eq(0).find('[name="checkbox"]').prop("checked")) {
                     var inventoryid = tdArr.eq(0).find('input').val();//库存ID
                     var goodsname = tdArr.eq(2).find('input').val();//商品名称
@@ -243,6 +243,9 @@
                     var goodsno = tdArr.eq(1).find('input').val();//商品编号    
                     var goodsmodel = tdArr.eq(6).find('input').val();//商品规格   
 
+                    var canusequantity = tdArr.eq(4).find('input').val();//可用库存   
+                    var waitquantity = tdArr.eq(5).find('input').val();//待出库数量 
+
                     html += '<tr>\n' +
                             '    <td><input type="hidden" value="0" class="form-control"><input type="hidden" value="' + inventoryid + '" class="form-control"><input type="hidden" value="0" class="form-control"></td>\n' +
                             '    <td><input type="hidden" value="' + goodsname + '" class="form-control">' + goodsname + '</td>\n' +
@@ -250,14 +253,14 @@
                             '    <td><input type="hidden" value="' + productdate + '" class="form-control ">' + productdate + '</td>\n' +
                             '    <td><input type="hidden" value="' + exunits + '" class="form-control ">' + exunits + '</td>\n' +
 
-                            '    <td><input type="text" style="width:120px"  value="1" class="form-control "></td>\n' +
+                            '    <td><input type="text" style="width:120px"  name="txt_Count" onblur="Totla()" class="form-control "></td>\n' +
 
                             '    <td><input type="hidden" value="' + units + '" class="form-control ">' + units + '</td>\n' +
                             '    <td><input type="hidden" value="' + quantity + '" class="form-control ">' + quantity + '</td>\n' +
                             '    <td><input type="hidden" value="' + weight + '" class="form-control ">' + weight + '</td>\n' +
                             '    <td><input type="hidden" value="' + totalweight + '" class="form-control ">' + totalweight + '</td>\n' +
-                            '    <td><input type="hidden" value="' + goodsno + '" class="form-control"></td>\n' +
-                            '    <td><input type="hidden" value="' + goodsmodel + '" class="form-control"></td>\n' +
+                            '    <td><input type="hidden" value="' + goodsno + '" class="form-control">' + canusequantity + '</td>\n' +
+                            '    <td><input type="hidden" value="' + goodsmodel + '" class="form-control">' + waitquantity + '</td>\n' +
                             '    <td><span style="cursor:pointer" onclick="delTr(this)">移除</span></td>\n' +
                             '</tr>';
                 }

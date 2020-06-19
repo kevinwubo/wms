@@ -193,6 +193,9 @@ namespace Service.BaseBiz
 
                 List<ReceiverInfo> miList = mr.GetAllReceiver();//刷新缓存
                 Cache.Add("ReceiverALL", miList);
+
+                Cache.Add("GetReceiverByCustomerID" + entity.CustomerID, miList);
+
             }
             return result > 0;
         }

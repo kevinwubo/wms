@@ -29,6 +29,16 @@ namespace Entity.ViewModel
         public int Quantity { get; set; }
 
         /// <summary>
+        /// 可用库存数量  库存数量-待出库数量
+        /// </summary>
+        public int CanUseQuantity { get; set; }
+
+        /// <summary>
+        /// 待出库数量
+        /// </summary>
+        public int WaitQuantity { get; set; }
+
+        /// <summary>
         /// 商品所属客户ID
         /// </summary>
         public int CustomerID { get; set; }
@@ -111,6 +121,8 @@ namespace Entity.ViewModel
         /// 关联仓库
         /// </summary>
         public StorageEntity storages { get; set; }
+
+        public string colorStyle { get; set; }
     }
 
 

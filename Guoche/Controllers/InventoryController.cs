@@ -348,6 +348,80 @@ namespace GuoChe.Controllers
             ViewBag.Pager = pager;
             return View();
         }
+
+        /// <summary>
+        /// 库存明细导出
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="inventoryType"></param>
+        /// <param name="StorageID"></param>
+        /// <param name="customerID"></param>
+        /// <param name="inventoryDate"></param>
+        /// <returns></returns>
+        public FileResult InventoryDetailToExcel(string name, string inventoryType, int StorageID = 0, int customerID = 0, string inventoryDate = "")
+        {
+            int count = InventoryDetailService.GetInventoryCount(name, inventoryType, StorageID, customerID, inventoryDate, "");
+            PagerInfo pager = new PagerInfo();
+            pager.PageIndex = 1;
+            pager.PageSize = count;
+            pager.SumCount = count;
+            //获取list数据
+            List<InventoryDetailEntity> list = InventoryDetailService.GetInventoryDetailInfoByRule(name, inventoryType, StorageID, customerID, inventoryDate, "", pager);
+
+            //创建Excel文件的对象
+            HSSFWorkbook book = new HSSFWorkbook();
+            //添加一个sheet
+            ISheet sheet1 = book.CreateSheet("Sheet1");
+
+            //															
+            //给sheet1添加第一行的头部标题
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            row1.CreateCell(0).SetCellValue("类型");
+            row1.CreateCell(1).SetCellValue("订单属性");
+            row1.CreateCell(2).SetCellValue("订单编号");
+            row1.CreateCell(3).SetCellValue("所属客户");
+            row1.CreateCell(4).SetCellValue("仓库名称");
+            row1.CreateCell(5).SetCellValue("商品编号");
+            row1.CreateCell(6).SetCellValue("商品名称");
+            row1.CreateCell(7).SetCellValue("批次号");
+            row1.CreateCell(8).SetCellValue("生产日期");
+            row1.CreateCell(9).SetCellValue("保质期");
+            row1.CreateCell(10).SetCellValue("规格型号");
+            row1.CreateCell(11).SetCellValue("单位");
+            row1.CreateCell(12).SetCellValue("数量");
+            row1.CreateCell(13).SetCellValue("重量");
+            row1.CreateCell(14).SetCellValue("出入库日期");
+            row1.CreateCell(15).SetCellValue("备注");
+            //将数据逐步写入sheet1各个行
+            for (int i = 0; i < list.Count; i++)
+            {
+                NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                rowtemp.CreateCell(0).SetCellValue(list[i].InventoryType);
+                rowtemp.CreateCell(1).SetCellValue(list[i].OrderTypeDesc);
+                rowtemp.CreateCell(2).SetCellValue(list[i].OrderNo);
+                rowtemp.CreateCell(3).SetCellValue(list[i].customer != null ? list[i].customer.CustomerName : "");
+                rowtemp.CreateCell(4).SetCellValue(list[i].storages != null ? list[i].storages.StorageName : "");
+                rowtemp.CreateCell(5).SetCellValue(list[i].goods != null ? list[i].goods.GoodsNo : "");
+                rowtemp.CreateCell(6).SetCellValue(list[i].goods != null ? list[i].goods.GoodsName : "");
+                rowtemp.CreateCell(7).SetCellValue(list[i].BatchNumber);
+                rowtemp.CreateCell(8).SetCellValue(list[i].ProductDate.ToShortDateString());
+                rowtemp.CreateCell(9).SetCellValue(list[i].goods != null ? list[i].goods.exDate + list[i].goods.exUnits : "");
+                rowtemp.CreateCell(10).SetCellValue(list[i].goods != null ? list[i].goods.GoodsModel : "");
+                rowtemp.CreateCell(11).SetCellValue(list[i].goods != null ? list[i].goods.Units : "");
+                rowtemp.CreateCell(12).SetCellValue(list[i].Quantity);
+                rowtemp.CreateCell(13).SetCellValue(list[i].goods != null ? list[i].goods.Weight : "");
+                rowtemp.CreateCell(14).SetCellValue(list[i].InventoryDate.ToShortDateString());
+                rowtemp.CreateCell(15).SetCellValue(list[i].Remark);
+            }
+            // 写入到客户端 
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+
+            string filename = DateTime.Now.ToString("yyyyMMdd") + "{0}商品信息出入库明细 .xls";
+            return File(ms, "application/vnd.ms-excel", string.Format(filename, name));
+        }
+
         #endregion
 
         #region 库位查询
@@ -453,8 +527,10 @@ namespace GuoChe.Controllers
             row1.CreateCell(7).SetCellValue("生产日期");
             row1.CreateCell(8).SetCellValue("保质期");
             row1.CreateCell(9).SetCellValue("数量");
-            row1.CreateCell(10).SetCellValue("重量");
-            row1.CreateCell(11).SetCellValue("出入库日期");
+            row1.CreateCell(10).SetCellValue("可用库存数量");
+            row1.CreateCell(11).SetCellValue("待出库数量");
+            row1.CreateCell(12).SetCellValue("重量");
+            row1.CreateCell(13).SetCellValue("出入库日期");
             //将数据逐步写入sheet1各个行
             for (int i = 0; i < list.Count; i++)
             {
@@ -469,14 +545,39 @@ namespace GuoChe.Controllers
                 rowtemp.CreateCell(7).SetCellValue(list[i].ProductDate.ToShortDateString());
                 rowtemp.CreateCell(8).SetCellValue(list[i].goods != null ? list[i].goods.exDate + list[i].goods.exUnits : "");
                 rowtemp.CreateCell(9).SetCellValue(list[i].Quantity);
-                rowtemp.CreateCell(10).SetCellValue(list[i].goods != null ? list[i].goods.Weight : "");
-                rowtemp.CreateCell(11).SetCellValue(list[i].InventoryDate.ToShortDateString());
+                rowtemp.CreateCell(10).SetCellValue(list[i].Quantity);
+                rowtemp.CreateCell(11).SetCellValue(list[i].Quantity);
+                rowtemp.CreateCell(12).SetCellValue(list[i].goods != null ? list[i].goods.Weight : "");
+                rowtemp.CreateCell(13).SetCellValue(list[i].InventoryDate.ToShortDateString());
             }
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             book.Write(ms);
             ms.Seek(0, SeekOrigin.Begin);
-            return File(ms, "application/vnd.ms-excel", DateTime.Now.ToString("yyyyMMdd") + "库存信息.xls");
+            return File(ms, "application/vnd.ms-excel", getFileNames(list, customerID, StorageID));
+        }
+
+        /// <summary>
+        /// 库存报表：xx客户+导出日期；  例:海南椰小鸡餐饮20200610库存报表
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="customerid"></param>
+        /// <param name="StorageID"></param>
+        /// <returns></returns>
+        private string getFileNames(List<InventoryEntity> list, int customerid = 0, int StorageID = 0)
+        {
+            string filename = "";
+
+            if (customerid > 0 && list[0].customer != null)
+            {
+                filename += filename + list[0].customer.CustomerName;
+            }
+            if (StorageID > 0 && list[0].storages != null)
+            {
+                filename += filename + list[0].storages.StorageName;
+            }
+
+            return string.Format("{0}" + DateTime.Now.ToString("yyyyMMdd") + "库存报表.xls", filename);
         }
         #endregion     
 

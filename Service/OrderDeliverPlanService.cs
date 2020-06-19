@@ -67,6 +67,7 @@ namespace Service
                 entity.CarrierName = info.CarrierName;
                 entity.CarrierID = info.CarrierID;
                 entity.Temp = info.Temp;
+                entity.DeliveryNo = info.DeliveryNo;
                 entity.DeliveryType = info.DeliveryType;
                 entity.DriverName = info.DriverName;
                 entity.DriverTelephone = info.DriverTelephone;

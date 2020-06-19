@@ -81,9 +81,9 @@ namespace Service.BaseBiz
         public static bool ModifyStorage(StorageEntity StorageEntity)
         {
             long result = 0;
+            StorageRepository mr = new StorageRepository();
             if (StorageEntity != null)
-            {
-                StorageRepository mr = new StorageRepository();
+            {                
                 StorageInfo StorageInfo = TranslateStorageInfo(StorageEntity);
 
                 ContactJsonEntity jsonlist = null;
@@ -147,6 +147,8 @@ namespace Service.BaseBiz
                 }
                 #endregion  
             }
+            List<StorageInfo> miList = mr.GetAllstorage();
+            Cache.Add("StorageALL", miList);
             return result > 0;
         }
 

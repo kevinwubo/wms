@@ -53,6 +53,7 @@
                                 </label>
                                 <label><input type="text" aria-controls="menus" placeholder="出入库日期" id="inventoryDate" class="layui-input" lay-key="1"  name="inventoryDate" value="@ViewBag.inventoryDate"></label>
                                 <button class="btn btn-info" type="submit">搜索</button>
+                                <button class="btn btn-info" type="button" id="export">导出出入库明细</button>
                             </div>
                         </form>
                     </div>
@@ -123,6 +124,17 @@
         laydate.render({
             elem: '#inventoryDate' //指定元素
         });
+    });
+
+    jQuery("#export").click(function () {
+        //string name, string inventoryType, int StorageID = 0, int customerID = 0, string inventoryDate
+        var name = $("#name").val();
+        var inventoryType = $("#inventoryType").val();
+        var StorageID = $("#StorageID").val();
+        var customerID = $("#CustomerID").val();
+        var inventoryDate = $("#inventoryDate").val();
+
+        window.location.href = "/Inventory/InventoryDetailToExcel?name=" + name + "&inventoryType=" + inventoryType + "&StorageID=" + StorageID + "&customerID=" + customerID + "&inventoryDate=" + inventoryDate;
     });
 </script>
 }

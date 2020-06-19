@@ -17,7 +17,7 @@ namespace Service
         public static OrderFeeInfo GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1,
             int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "")
         {
-            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "", "", "");
+            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "", "", "", "");
         }
 
         public static List<OrderEntity> GetOrderInfoPager(PagerInfo pager)
@@ -34,11 +34,11 @@ namespace Service
         }
 
         public static List<OrderEntity> GetOrderInfoByRule(PagerInfo pager, string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1,
-            int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType="")
+            int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "")
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "", "DESC", "", "", pager);
+            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, "", "DESC", "", "", "", pager);
 
             if (!miList.IsEmpty())
             {
@@ -101,6 +101,8 @@ namespace Service
                             rEntity.CarNo = planEntity.CarNo;
                             rEntity.CarModel = planEntity.CarModel;
                             rEntity.DriverName = planEntity.DriverName;
+                            rEntity.Remark2 = planEntity.Remark;
+                            rEntity.DeliveryNo = planEntity.DeliveryNo;
                         }
                     }
 

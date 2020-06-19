@@ -220,10 +220,49 @@ namespace Service.Inventory
                 }                
                 entity.customer = CustomerService.GetCustomerEntityById(info.CustomerID);
                 entity.storages = StorageService.GetStorageEntityById(info.StorageID);
+                entity.WaitQuantity = OrderService.GetOutStockOrderByInentroyID(entity.InventoryID).Quantity;
+                entity.CanUseQuantity = entity.Quantity - entity.WaitQuantity;
+                entity.colorStyle = colorStyle(entity);
+            
             }
 
             return entity;
         }
+
+        /// <summary>
+        /// 过期日期预警  3分之二 黄色 过期了红色
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        private static string colorStyle(InventoryEntity entity)
+        {
+            DateTime startTime = Convert.ToDateTime(entity.ProductDate);
+            DateTime endTime = Convert.ToDateTime(entity.ExpDate);
+            TimeSpan ts = endTime - startTime;
+
+            //过期了红色
+            if (DateTime.Now > entity.ExpDate)
+            {
+                return "style=background-color:red";
+            }
+
+            DateTime startNowTime = DateTime.Now;
+            TimeSpan tsNow = endTime - startNowTime;
+
+            int days= ts.Days - tsNow.Days;
+            if (entity.goods != null)
+            {
+                int totalDays = Datehelper.getDays(entity.goods.exDate.ToInt(0), entity.goods.exUnits);
+                if (days / totalDays > 3)
+                {
+                    return "style=background-color:yellow";
+                }
+            }
+            
+            return "";
+        }
+
+
 
         public static bool ModifyInventory(InventoryEntity entity)
         {

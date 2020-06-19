@@ -27,5 +27,25 @@ namespace Common
             }
             return dt;
         }
+
+        public static int getDays(int num, string units)
+        {
+            if (!string.IsNullOrEmpty(units))
+            {
+                if (units.Equals("天"))
+                {
+                    return num;
+                }
+                else if (units.Equals("月"))
+                {
+                    return num * 30;
+                }
+                else if (units.Equals("年"))
+                {
+                    return num * 365;
+                }
+            }
+            return 0;
+        }
     }
 }

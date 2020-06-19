@@ -75,22 +75,26 @@ var orderInfo = {
                             var css = data[i].GoodsID < 1 ? "color:red" : "";
                             if (orderSource == "Costa") {
                                 var ccss = data[i].CustomerID < 1 ? "color:red" : "";
+                                var invenoryCss = data[i].CanOutStock == false ? "color:red" : "";
                                 html += "<tr>"
                                 html += "<td>" + data[i].GoodsNo + "</td><td style='" + css + "'>" + data[i].GoodsName + ":" + data[i].GoodsID + "</td><td>" + data[i].GoodsModel + "</td><td>" + data[i].Units + "</td><td>" + data[i].Quantity + "</td><td>" + data[i].ShopNo + "</td><td style='" + ccss + "'>" + data[i].ShopName + "==" + data[i].CustomerID + "</td>";
                                 html += "<td>" + data[i].OrderNo + "</td><td>" + data[i].OrderDate + "</td><td>" + data[i].YyDate + "</td><td>" + data[i].Remark + "</td>";
                                 html += "</tr>"
                             }
                             else if (orderSource == "Regular") {
+                                var ccss = data[i].CustomerID < 1 ? "color:red" : "";
+                                var invenoryCss = data[i].CanOutStock == false ? "color:red" : "";
                                 html += "<tr>"
                                 html += "<td>" + data[i].orderDate + "</td><td>" + data[i].sendDate + "</td><td>" + data[i].sendStorageName + "</td><td>" + data[i].Temp + "</td><td>" + data[i].CarrierName + "</td><td>" + data[i].CustomerName + "</td><td>" + data[i].ReceiverName + "</td>";
-                                html += "<td style='" + css + "'>" + data[i].GoodsName + ":" + data[i].GoodsID + "</td><td>" + data[i].Quantity + "</td><td>" + data[i].Units + "</td><td>" + data[i].Remark + "</td>";
+                                html += "<td style='" + css + "'>" + data[i].GoodsName + ":" + data[i].GoodsID + "</td><td style='" + invenoryCss + "'>" + data[i].Quantity + "</td><td>" + data[i].Units + "</td><td>" + data[i].Remark + "</td>";
                                 html += "</tr>"
                             }
                             else {
                                 var ccss = data[i].CustomerID < 1 ? "color:red" : "";
+                                var invenoryCss = data[i].CanOutStock == false ? "color:red" : "";
                                 html += "<tr>"
                                 html += "<td>" + data[i].ImportType + "</td><td>" + data[i].OrderDate + data[i].YyDate + "</td><td>" + data[i].CustomerName + "</td><td  style='" + ccss + "'>" + data[i].ShopName + "==" + data[i].CustomerID + "</td><td>" + data[i].OrderNo + "</td><td style='" + css + "'>" + data[i].GoodsName + ":" + data[i].GoodsID + "</td><td>" + data[i].Units + "</td>";
-                                html += "<td>" + data[i].Quantity + "</td><td>" + data[i].Address + "</td><td>" + data[i].BarCode + "</td><td>" + data[i].PromotionMan + "</td><td>" + data[i].Remark + "</td>";
+                                html += "<td  style='" + invenoryCss + "'>" + data[i].Quantity + "</td><td>" + data[i].Address + "</td><td>" + data[i].BarCode + "</td><td>" + data[i].PromotionMan + "</td><td>" + data[i].Remark + "</td>";
                                 html += "</tr>"
                             }
                             $("#orderImportList").append(html);

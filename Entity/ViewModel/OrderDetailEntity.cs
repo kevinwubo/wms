@@ -88,6 +88,16 @@ namespace Entity.ViewModel
         /// </summary>
         public DateTime ChangeDate { get; set; }
 
+        /// <summary>
+        /// 可用库存数量  库存数量-待出库数量
+        /// </summary>
+        public int CanUseQuantity { get; set; }
+
+        /// <summary>
+        /// 待出库数量
+        /// </summary>
+        public int WaitQuantity { get; set; }
+
         #region 其他对象
         public GoodsEntity goods { get; set; }
         public InventoryEntity inventory { get; set; }

@@ -220,6 +220,13 @@ namespace DataRepository.DataModel
         /// </summary>
         [DataMapping("IsImport", DbType.String)]
         public string IsImport { get; set; }
+
+        /// <summary>
+        /// 预约车型
+        /// </summary>
+        [DataMapping("ReservedCarModel", DbType.String)]
+        public string ReservedCarModel { get; set; }
+
         /// <summary>
         /// 创建时间
         /// </summary>

@@ -114,7 +114,7 @@ namespace GuoChe.Controllers
         /// <param name="p"></param>
         /// <returns></returns>
         public ActionResult OrderDeliveryPlan(int carrierid = 0, int storageid = 0, int customerid = 0, int status = -1, string orderno = "",
-            string begindate = "", string enddate = "", string deliveryStatus = "", int p = 1, int pageSize = 20)
+            string begindate = "", string enddate = "", string deliveryStatus = "", string revicerids="", int p = 1, int pageSize = 20)
         {
             List<OrderEntity> mList = null;
             deliveryStatus = !string.IsNullOrEmpty(deliveryStatus) ? deliveryStatus : "F";//默认未安排计划的订单
@@ -132,21 +132,16 @@ namespace GuoChe.Controllers
             }
 
             //查询未出库 未安排运输计划订单  不包含入库单
-            int count = OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", orderOutStatus, deliveryStatus, " AND OrderType!='RKD'");
+            int count =OrderService.GetOrderCount("", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", orderOutStatus, deliveryStatus, " AND OrderType!='RKD'", revicerids);
             PagerInfo pager = new PagerInfo();
             pager.PageIndex = p;
             pager.PageSize = pageSize;
             pager.SumCount = count;
             pager.URL = "OrderDeliveryPlan";
 
-            //if (status > -1 || carrierid > 0 || storageid > 0 || customerid > 0 || !string.IsNullOrEmpty(orderno) || !string.IsNullOrEmpty(begindate) || !string.IsNullOrEmpty(enddate))
-            //{
-            mList = OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", orderOutStatus, deliveryStatus, " AND OrderType!='RKD'");
-            //}
-            //else
-            //{
-            //    mList = OrderService.GetOrderInfoPager(pager);
-            //}
+
+            mList =  OrderService.GetOrderInfoByRule(pager, "", carrierid, storageid, customerid, status, -1, -1, "", orderno, begindate, enddate, -1, "", "", orderOutStatus, deliveryStatus, " AND OrderType!='RKD'", revicerids);
+
             //默认承运商
             ViewBag.Carrier = CarrierService.GetCarrierByRule("", 1);//只显示使用中的数据
             //默认仓库
@@ -159,6 +154,10 @@ namespace GuoChe.Controllers
             ViewBag.TemList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "TM00" && t.Status == 1).ToList();
             //物流方式
             ViewBag.DeliverList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "DeliverModel00" && t.Status == 1).ToList();
+
+            ViewBag.CarModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "CarModel00" && t.Status == 1).ToList();
+
+            ViewBag.Receiver = ReceiverService.GetReceiverByRule("", "", "", 1);
 
             //承运商类型
             ViewBag.CarrierModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "Carrier00" && t.Status == 1).ToList();
@@ -174,6 +173,7 @@ namespace GuoChe.Controllers
             ViewBag.EndDate = enddate;
             ViewBag.deliveryStatus = deliveryStatus;
             ViewBag.Pager = pager;
+            ViewBag.Revicerids = revicerids;
             return View();
         }
 

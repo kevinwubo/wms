@@ -875,6 +875,11 @@
     <Content Include="source\Order\inputOrder.js" />
     <Content Include="source\Order\SearchOrder.js" />
     <Content Include="source\Report.js" />
+    <Content Include="source\select\css\ySelect.css" />
+    <Content Include="source\select\index.html" />
+    <Content Include="source\select\js\bootstrap.min.js" />
+    <Content Include="source\select\js\jquery-1.11.3.min.js" />
+    <Content Include="source\select\js\ySelect.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

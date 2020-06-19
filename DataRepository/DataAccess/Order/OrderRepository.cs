@@ -140,8 +140,8 @@ namespace DataRepository.DataAccess.Order
             command.AddInputParameter("@PromotionMan", DbType.String, Order.PromotionMan);
             command.AddInputParameter("@OrderOutStatus", DbType.String, "F");//默认未出库
             command.AddInputParameter("@DeliveryStatus", DbType.String, "F");//默认未物流分配
-            command.AddInputParameter("@LineID", DbType.Int32, Order.LineID); 
-
+            command.AddInputParameter("@LineID", DbType.Int32, Order.LineID);
+            command.AddInputParameter("@ReservedCarModel", DbType.String, Order.ReservedCarModel); 
             command.AddInputParameter("@CreateDate", DbType.DateTime, Order.CreateDate);
             command.AddInputParameter("@ChangeDate", DbType.DateTime, Order.ChangeDate);
 
@@ -268,7 +268,8 @@ namespace DataRepository.DataAccess.Order
             command.AddInputParameter("@Status", DbType.Int32, Order.Status);
             command.AddInputParameter("@DeliveryType", DbType.String, Order.DeliveryType);
             command.AddInputParameter("@Remark", DbType.String, Order.Remark);
-            command.AddInputParameter("@OperatorID", DbType.Int32, Order.OperatorID);            
+            command.AddInputParameter("@OperatorID", DbType.Int32, Order.OperatorID);
+            command.AddInputParameter("@ReservedCarModel", DbType.String, Order.ReservedCarModel); 
             command.AddInputParameter("@ChangeDate", DbType.DateTime, Order.ChangeDate);
             command.AddInputParameter("@OrderID", DbType.Int32, Order.OrderID);
             return command.ExecuteNonQuery();
@@ -327,7 +328,7 @@ namespace DataRepository.DataAccess.Order
         /// <returns></returns>
         public List<OrderInfo> GetOrderInfoByRule(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
             int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource, string subOrderType,
-            string OrderOutStatus, string desc, string deliveryStatus,string sqlwhere, PagerInfo pager)
+            string OrderOutStatus, string desc, string deliveryStatus, string sqlwhere, string receiverids, PagerInfo pager)
         {
             List<OrderInfo> result = new List<OrderInfo>();
 
@@ -343,6 +344,10 @@ namespace DataRepository.DataAccess.Order
             if (customerid > 0)
             {
                 builder.Append(" AND CustomerID=@CustomerID");
+            }
+            if (!string.IsNullOrEmpty(receiverids))
+            {
+                builder.Append(" AND ReceiverID in(" + receiverids.Trim(',') + ")");
             }
             if (status > -1)
             {
@@ -362,7 +367,7 @@ namespace DataRepository.DataAccess.Order
             }
             if (!string.IsNullOrEmpty(orderno))//订单号 收货方查询
             {
-                builder.Append(" AND (orderno='" + orderno + "' or ReceiverID in(select ReceiverID from wms_ReceiverInfo where ReceiverName like '%" + orderno + "%') or ReceiverStorageID in (select StorageID from wms_StorageInfo where StorageName like '%" + orderno + "%' )) ");
+                builder.Append(" AND (orderno='" + orderno + "' ) ");
             }
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {
@@ -426,6 +431,10 @@ namespace DataRepository.DataAccess.Order
             {
                 command.AddInputParameter("@ordertype", DbType.String, ordertype);
             }
+            //if (!string.IsNullOrEmpty(receiverids))
+            //{
+            //    command.AddInputParameter("@ReceiverIDs", DbType.String, receiverids.Trim(','));
+            //}
             //if (!string.IsNullOrEmpty(orderno))
             //{
             //    command.AddInputParameter("@orderno", DbType.String, orderno);
@@ -467,7 +476,7 @@ namespace DataRepository.DataAccess.Order
 
         public OrderFeeInfo GetOrderCount(string name, int carrierid, int storageid, int customerid, int status, int uploadstatus,
             int orderstatus, string ordertype, string orderno, string begindate, string enddate, int operatorid, string ordersource,
-            string subOrderType, string OrderOutStatus, string deliveryStatus, string sqlwhere)
+            string subOrderType, string OrderOutStatus, string deliveryStatus, string sqlwhere, string receiverids)
         {
             OrderFeeInfo feeInfo = new OrderFeeInfo();
             StringBuilder builder = new StringBuilder();
@@ -483,6 +492,10 @@ namespace DataRepository.DataAccess.Order
             if (customerid > 0)
             {
                 builder.Append(" AND CustomerID=@CustomerID");
+            }
+            if (!string.IsNullOrEmpty(receiverids))
+            {
+                builder.Append(" AND ReceiverID in("+receiverids.Trim(',')+")");
             }
             if (status > -1)
             {
@@ -503,7 +516,7 @@ namespace DataRepository.DataAccess.Order
             if (!string.IsNullOrEmpty(orderno))
             {
                 //builder.Append(" AND orderno=@orderno ");
-                builder.Append(" AND (orderno='" + orderno + "' or ReceiverID in(select ReceiverID from wms_ReceiverInfo where ReceiverName like '%" + orderno + "%') or ReceiverStorageID in (select StorageID from wms_StorageInfo where StorageName like '%" + orderno + "%' )) ");
+                builder.Append(" AND (orderno='" + orderno + "' ) ");
             }
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {
@@ -557,6 +570,10 @@ namespace DataRepository.DataAccess.Order
             {
                 command.AddInputParameter("@UploadStatus", DbType.Int32, uploadstatus);
             }
+            //if (!string.IsNullOrEmpty(receiverids))
+            //{
+            //    command.AddInputParameter("@ReceiverIDs", DbType.String, receiverids.Trim(','));
+            //}
             if (orderstatus > -1)
             {
                 command.AddInputParameter("@OrderStatus", DbType.Int32, orderstatus);

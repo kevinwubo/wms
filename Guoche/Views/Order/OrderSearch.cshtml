@@ -322,6 +322,10 @@
                             <p>出库状态</p>
                             <h5>@(!string.IsNullOrEmpty(entity.OrderOutStatus) && entity.OrderOutStatus.Equals("T") ? "已出库" : "待出库")</h5>
                         </div>
+                        <div>
+                            <p>预约车型</p>
+                            <h5>@(entity.ReservedCarModel)</h5>
+                        </div>
                     </div>
                     <div class="lcItem_t_r_btnList" style="width: 130px;">
                         <div class="showDiv" isok="true">

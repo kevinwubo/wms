@@ -79,7 +79,7 @@ namespace Service
                 info.configCosting = entity.configCosting;
                 info.configHandOutAmt = entity.configHandOutAmt;
                 info.configSortCosting = entity.configSortCosting;
-
+                
                 info.DeliveryType = entity.DeliveryType;
                 info.TempType = entity.TempType;
                 info.OrderStatus = entity.OrderStatus;
@@ -88,7 +88,7 @@ namespace Service
                 info.OrderOutStatus = entity.OrderOutStatus;
                 info.Remark = entity.Remark;
                 info.OperatorID = entity.OperatorID;
-
+                info.ReservedCarModel = entity.ReservedCarModel;
                 info.OrderOutStatus = "F";//未出库
                 info.IsImport = entity.IsImport;
                 info.OrderSource = entity.OrderSource;
@@ -128,7 +128,7 @@ namespace Service
                 entity.configCosting = info.configCosting;
                 entity.configHandOutAmt = info.configHandOutAmt;
                 entity.configSortCosting = info.configSortCosting;
-
+                
                 entity.DeliveryType = info.DeliveryType;
                 entity.TempType = info.TempType;
                 entity.OrderStatus = info.OrderStatus;
@@ -147,6 +147,7 @@ namespace Service
                 entity.ChangeDate = info.ChangeDate;
                 entity.DeliveryStatus = info.DeliveryStatus;
                 entity.PlanID = info.PlanID;
+                entity.ReservedCarModel = info.ReservedCarModel;
                 entity.orderDetailList = OrderDetailService.GetOrderDetailByOrderID(entity.OrderID);
 
                 entity.receiver = ReceiverService.GetReceiverById(entity.ReceiverID);
@@ -285,9 +286,10 @@ namespace Service
         }
 
 
-        public static int ModifyOrder(OrderEntity entity)
+        public static string ModifyOrder(OrderEntity entity)
         {
 
+            string resultMess = "订单添加成功！";
             int orderID = 0;
             int result = 0;
             if (entity != null)
@@ -314,12 +316,13 @@ namespace Service
                     list = convertOrderDetailList(jsonlist.listOrderDetail);
                 }
 
-                bool checkResult = CheckOrderStock(list);
+                bool checkResult = CheckOrderStock(list,ref resultMess);
                 if (checkResult)
                 {
                     //订单信息更新
                     if (entity.OrderID > 0)
                     {
+                        resultMess = "订单修改成功！";
                         orderInfo.OrderID = entity.OrderID;
                         orderInfo.ChangeDate = DateTime.Now;
                         result = mr.ModifyOrder(orderInfo);
@@ -361,12 +364,8 @@ namespace Service
                     }
                     #endregion
                 }
-                else
-                {
-                    result = 5;
-                }
             }
-            return result;
+            return resultMess;
         }
 
         /// <summary>
@@ -451,7 +450,7 @@ namespace Service
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static bool CheckOrderStock(List<OrderDetailInfo> list)
+        public static bool CheckOrderStock(List<OrderDetailInfo> list,ref string resultMess)
         {
             if (list != null && list.Count > 0)
             {
@@ -460,14 +459,22 @@ namespace Service
                 foreach (OrderDetailInfo entity in list)
                 {
                     InventoryInfo inventoryInfo = iventmr.GetInventoryByKey(entity.InventoryID);
-                    List<OrderStockInfo> stockList = mr.GetOutStockOrderByInentroyID(entity.InventoryID);
-                    if (inventoryInfo != null && stockList != null && stockList.Count > 0)
+
+                    if (inventoryInfo != null)
                     {
+                        OrderStockInfo orderStockInfo = GetOutStockOrderByInentroyID(entity.InventoryID);
                         //总库存 - 待出库库存- 当前订单出库数量
-                        int qutity = inventoryInfo.Quantity - stockList[0].Quantity - entity.Quantity;
+                        int qutity = inventoryInfo.Quantity - orderStockInfo.Quantity - entity.Quantity;
                         if (qutity < 0)
                         {
-                            LogHelper.WriteTextLog("CheckOrderStock", "商品名称" + entity.GoodsName + "当前库存：" + inventoryInfo.Quantity + "待出库数据" + JsonHelper.ToJson(stockList[0]));
+                            resultMess = string.Format("【{0}】库存不足，请检查库存！", entity.GoodsName);
+
+                            if (!string.IsNullOrEmpty(orderStockInfo.GoodsName))
+                            {
+                                resultMess = string.Format("【{0}】库存不足，请检查库存！", orderStockInfo.GoodsName);
+                            }
+
+                            LogHelper.WriteTextLog("CheckOrderStock", "商品名称" + entity.GoodsName + "当前库存：" + inventoryInfo.Quantity + "待出库数量：" + JsonHelper.ToJson(orderStockInfo));
                             return false;
                         }
                     }
@@ -476,6 +483,17 @@ namespace Service
             return true;
         }
 
+
+        public static OrderStockInfo GetOutStockOrderByInentroyID(int inventoryID)
+        {
+            OrderRepository mr = new OrderRepository();
+            List<OrderStockInfo> stockList = mr.GetOutStockOrderByInentroyID(inventoryID);
+            if (stockList != null && stockList.Count > 0)
+            {
+                return stockList[0];
+            }
+            return new OrderStockInfo();
+        }
 
         /// <summary>
         /// 
@@ -565,12 +583,12 @@ namespace Service
         {
             OrderRepository mr = new OrderRepository();
             //库存回位
-            OrderEntity orderinfo = GetOrderByOrderID(oid);
-            if (orderinfo != null && orderinfo.OrderType.Equals(OrderType.CPDD))
-            {
-                LogHelper.WriteTextLog("订单删除", "订单号：" + oid);
-                InventoryService.updateInventoryByOrder(orderinfo);
-            }
+            //OrderEntity orderinfo = GetOrderByOrderID(oid);
+            //if (orderinfo != null && orderinfo.OrderType.Equals(OrderType.CPDD))
+            //{
+            //    LogHelper.WriteTextLog("订单删除", "订单号：" + oid);
+            //    InventoryService.updateInventoryByOrder(orderinfo);
+            //}
             //执行删除订单
             int i = mr.Delete(oid);
 
@@ -580,9 +598,9 @@ namespace Service
 
         #region 分页相关
         public static int GetOrderCount(string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1, int uploadstatus = -1,
-            int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "", string orderOutStatus = "", string deliveryStatus = "", string sqlwhere="")
+            int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "", string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "", string orderOutStatus = "", string deliveryStatus = "", string sqlwhere = "", string receiverids = "")
         {
-            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, orderOutStatus, deliveryStatus, sqlwhere).count;
+            return new OrderRepository().GetOrderCount(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, orderOutStatus, deliveryStatus, sqlwhere,receiverids).count;
         }
 
         public static List<OrderEntity> GetOrderInfoPager(PagerInfo pager)
@@ -600,11 +618,11 @@ namespace Service
 
         public static List<OrderEntity> GetOrderInfoByRule(PagerInfo pager, string name = "", int carrierid = -1, int storageid = -1, int customerid = -1, int status = -1,
             int uploadstatus = -1, int orderstatus = -1, string ordertype = "", string orderno = "", string begindate = "",
-            string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "", string orderOutStatus = "", string deliveryStatus = "", string sqlwhere = "")
+            string enddate = "", int operatorid = -1, string ordersource = "", string subOrderType = "", string orderOutStatus = "", string deliveryStatus = "", string sqlwhere = "", string receiverids = "")
         {
             List<OrderEntity> all = new List<OrderEntity>();
             OrderRepository mr = new OrderRepository();
-            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, orderOutStatus, "DESC", deliveryStatus, sqlwhere, pager);
+            List<OrderInfo> miList = mr.GetOrderInfoByRule(name, carrierid, storageid, customerid, status, uploadstatus, orderstatus, ordertype, orderno, begindate, enddate, operatorid, ordersource, subOrderType, orderOutStatus, "DESC", deliveryStatus, sqlwhere, receiverids, pager);
 
             if (!miList.IsEmpty())
             {
@@ -1315,7 +1333,7 @@ namespace Service
                                 entity.BatchNumber = dt.Rows[i]["批次号"].ToString();
                                 entity.Quantity = dt.Rows[i]["数量"].ToString();
                                 entity.Units = dt.Rows[i]["单位"].ToString();
-                                
+
                                 //运输应收	装卸应收	分拣应收	运输应付	装卸应付	分拣应付
                                 entity.configPrice = dt.Rows[i]["运输应收"].ToString().ToDecimal(0);
                                 entity.configHandInAmt = dt.Rows[i]["装卸应收"].ToString().ToDecimal(0);
@@ -1323,10 +1341,30 @@ namespace Service
                                 entity.configCosting = dt.Rows[i]["运输应付"].ToString().ToDecimal(0);
                                 entity.configHandOutAmt = dt.Rows[i]["装卸应付"].ToString().ToDecimal(0);
                                 entity.configSortCosting = dt.Rows[i]["分拣应付"].ToString().ToDecimal(0);
-                                
+
                                 entity.Remark = dt.Rows[i]["备注"].ToString();
+                                entity.ReservedCarModel = dt.Rows[i]["预约车型"].ToString();
                                 GoodsEntity goodsEntity = getGoodsModelByGoods("", entity.GoodsName, "", "");
                                 entity.GoodsID = goodsEntity == null ? "-1" : goodsEntity.GoodsID.ToString();
+
+                                //发货仓库
+                                entity.SendStorageID = 0;
+                                if (!string.IsNullOrEmpty(entity.sendStorageName))
+                                {
+                                    List<StorageEntity> listStorage = StorageService.GetStorageByRule(entity.sendStorageName, -1);
+                                    StorageEntity storageEntity = listStorage != null && listStorage.Count > 0 ? listStorage[0] : null;
+                                    entity.SendStorageID = storageEntity != null ? storageEntity.StorageID : 0;//发货仓库  
+                                }
+
+                                List<InventoryEntity> listInventory = InventoryService.GetInventoryByRule(entity.GoodsID.ToInt(0), entity.SendStorageID, entity.BatchNumber);
+                                entity.inventory = null;
+                                if (listInventory != null && listInventory.Count > 0)
+                                {
+                                    entity.inventory = listInventory[0];
+                                    entity.CanOutStock = checkInventoryCount(entity.inventory.Quantity, entity.Quantity.ToInt(0));
+                                }                              
+
+
                                 list.Add(entity);
                             }
                         }
@@ -1334,6 +1372,25 @@ namespace Service
                 }
             }
             return list;
+        }
+
+
+        public static bool checkInventoryCount(int InventoryID, int outQuantity)
+        {
+            InventoryRepository iventmr = new InventoryRepository();
+            InventoryInfo inventoryInfo = iventmr.GetInventoryByKey(InventoryID);
+
+            if (inventoryInfo != null)
+            {
+                OrderStockInfo orderStockInfo = GetOutStockOrderByInentroyID(InventoryID);
+                //总库存 - 待出库库存- 当前订单出库数量
+                int qutity = inventoryInfo.Quantity - orderStockInfo.Quantity - outQuantity;
+                if (qutity < 0)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         #region 常规订单生成
@@ -1363,29 +1420,50 @@ namespace Service
                     OrderInfo info = new OrderInfo();
                     //							
                     //发货仓库
-                    List<StorageEntity> listStorage = StorageService.GetStorageByRule(entity.sendStorageName, -1);
-                    StorageEntity storageEntity = listStorage != null && listStorage.Count > 0 ? listStorage[0] : null;
-                    info.SendStorageID = storageEntity != null ? storageEntity.StorageID : 0;//发货仓库  
+                    info.SendStorageID = 0;
+                    if (!string.IsNullOrEmpty(entity.sendStorageName))
+                    {
+                        List<StorageEntity> listStorage = StorageService.GetStorageByRule(entity.sendStorageName, -1);
+                        StorageEntity storageEntity = listStorage != null && listStorage.Count > 0 ? listStorage[0] : null;
+                        info.SendStorageID = storageEntity != null ? storageEntity.StorageID : 0;//发货仓库  
+                    }
 
                     //承运商
-                    List<CarrierEntity> listCarrier = CarrierService.GetCarrierByRule(entity.CarrierName, -1);
-                    CarrierEntity carrierEntity = listCarrier != null && listCarrier.Count > 0 ? listCarrier[0] : null;
-                    info.CarrierID = carrierEntity != null ? carrierEntity.CarrierID : 0;//承运商
+                    info.CarrierID = 0;
+                    if (!string.IsNullOrEmpty(entity.CarrierName))
+                    {
+                        List<CarrierEntity> listCarrier = CarrierService.GetCarrierByRule(entity.CarrierName, -1);
+                        CarrierEntity carrierEntity = listCarrier != null && listCarrier.Count > 0 ? listCarrier[0] : null;
+                        info.CarrierID = carrierEntity != null ? carrierEntity.CarrierID : 0;//承运商
+                    }
 
                     //客户名称
-                    List<CustomerEntity> listCustomer = CustomerService.GetCustomerByRule(entity.CustomerName, -1);
-                    CustomerEntity customerEntity = listCustomer != null && listCustomer.Count > 0 ? listCustomer[0] : null;
-                    info.CustomerID = customerEntity != null ? customerEntity.CustomerID : 0;
+                    info.CustomerID = 0;
+                    if (!string.IsNullOrEmpty(entity.CustomerName))
+                    {
+                        List<CustomerEntity> listCustomer = CustomerService.GetCustomerByRule(entity.CustomerName, -1);
+                        CustomerEntity customerEntity = listCustomer != null && listCustomer.Count > 0 ? listCustomer[0] : null;
+                        info.CustomerID = customerEntity != null ? customerEntity.CustomerID : 0;
+                    }
 
                     //送达方(门店/仓库)
-                    List<ReceiverEntity> listReceiver = ReceiverService.GetReceiverByRule(entity.ReceiverName, "", "", -1);//门店信息
-                    ReceiverEntity receiverEntity = listReceiver != null && listReceiver.Count > 0 ? listReceiver[0] : null;
-                    info.ReceiverID = receiverEntity != null ? receiverEntity.ReceiverID : 0;
+                    info.ReceiverID = 0;
+                    ReceiverEntity receiverEntity = null;
+                    if (!string.IsNullOrEmpty(entity.ReceiverName))
+                    {
+                        List<ReceiverEntity> listReceiver = ReceiverService.GetReceiverByRule(entity.ReceiverName, "", "", -1);//门店信息
+                        receiverEntity = listReceiver != null && listReceiver.Count > 0 ? listReceiver[0] : null;
+                        info.ReceiverID = receiverEntity != null ? receiverEntity.ReceiverID : 0;
+                    }
 
-                    List<StorageEntity> listReceiverStorage = StorageService.GetStorageByRule(entity.ReceiverName, -1);//仓库信息
-                    StorageEntity receiverStorageEntity = listReceiverStorage != null && listReceiverStorage.Count > 0 ? listReceiverStorage[0] : null;
-                    info.ReceiverStorageID = receiverStorageEntity != null ? receiverStorageEntity.StorageID : 0;
-
+                    info.ReceiverStorageID = 0;
+                    if (!string.IsNullOrEmpty(entity.ReceiverName))
+                    {
+                        List<StorageEntity> listReceiverStorage = StorageService.GetStorageByRule(entity.ReceiverName, -1);//仓库信息
+                        StorageEntity receiverStorageEntity = listReceiverStorage != null && listReceiverStorage.Count > 0 ? listReceiverStorage[0] : null;
+                        info.ReceiverStorageID = receiverStorageEntity != null ? receiverStorageEntity.StorageID : 0;
+                    }
+                    info.ReservedCarModel = entity.ReservedCarModel;
                     info.OrderNo = GetOrderNo();
                     info.MergeNo = "";
                     info.OrderType = OrderType;
@@ -1418,7 +1496,7 @@ namespace Service
                     info.LineID = GetLineID(entity.CustomerName + (receiverEntity != null ? receiverEntity.ReceiverName : ""));//线路
                     OrderRepository or = new OrderRepository();
 
-                    long orderid = or.CreateNew(info);
+                    long orderid = 0;//or.CreateNew(info);
 
                     idsEntity.SHDIds += orderid + ",";
                     if (orderid > 0)
@@ -1468,7 +1546,7 @@ namespace Service
                             infodetail.CreateDate = DateTime.Now;
                             infodetail.ChangeDate = DateTime.Now;
                             OrderDetailRepository ordetail = new OrderDetailRepository();
-                            long id = ordetail.CreateNew(infodetail);
+                            long id = 0;//ordetail.CreateNew(infodetail);
                         }
                         #endregion
                     }

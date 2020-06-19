@@ -207,6 +207,11 @@ namespace Entity.ViewModel
         /// </summary>
         public int PlanID { get; set; }
 
+        /// <summary>
+        /// 预约车型
+        /// </summary>
+        public string ReservedCarModel { get; set; }
+
         #region 其他属性
         /// <summary>
         /// 订单明细对象
@@ -555,6 +560,26 @@ namespace Entity.ViewModel
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+
+        /// <summary>
+        /// 发货仓库ID
+        /// </summary>
+        public int SendStorageID { get; set; }
+
+        /// <summary>
+        /// 库存是否充足
+        /// </summary>
+        public bool CanOutStock { get; set; }
+
+        /// <summary>
+        /// 订单库存信息
+        /// </summary>
+        public InventoryEntity inventory { get; set; }
+
+        /// <summary>
+        /// 预约车型
+        /// </summary>
+        public string ReservedCarModel { get; set; }
 
         /// <summary>
         /// 物流方式

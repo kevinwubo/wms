@@ -71,7 +71,9 @@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">保质期</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">过期日期</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">数量</th>
-                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">重量</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">数量</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">可用库存数量</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">待出库数量</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">出入库日期</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">库存状态</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">操作</th>
@@ -92,8 +94,10 @@
                                     <td class=" ">@invent[i].BatchNumber</td>
                                     <td class=" ">@invent[i].ProductDate.ToShortDateString()</td>
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.exDate + invent[i].goods.exUnits : "")</td>
-                                    <td>@invent[i].ExpDate.ToShortDateString()</td>
+                                    <td @(invent[i].colorStyle)>@invent[i].ExpDate.ToShortDateString()</td>
                                     <td class=" " style="@(invent[i].Quantity<10?"background-color:red":"")">@invent[i].Quantity</td>
+                                    <td class=" ">@invent[i].CanUseQuantity</td>
+                                    <td class=" ">@invent[i].WaitQuantity</td>
                                     <td class=" ">@(invent[i].goods != null ? invent[i].goods.Weight : "")</td>
                                     <td class=" ">@invent[i].InventoryDate.ToShortDateString()</td>
                                     <td>
