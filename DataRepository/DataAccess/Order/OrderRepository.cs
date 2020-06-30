@@ -367,7 +367,8 @@ namespace DataRepository.DataAccess.Order
             }
             if (!string.IsNullOrEmpty(orderno))//订单号 收货方查询
             {
-                builder.Append(" AND (orderno='" + orderno + "' ) ");
+                //builder.Append(" AND (orderno='" + orderno + "' ) ");
+                builder.Append(" AND (orderno='" + orderno + "' or ReceiverID in(select ReceiverID from wms_ReceiverInfo where ReceiverName like '%" + orderno + "%') or ReceiverStorageID in (select StorageID from wms_StorageInfo where StorageName like '%" + orderno + "%' )) ");
             }
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {
@@ -516,7 +517,8 @@ namespace DataRepository.DataAccess.Order
             if (!string.IsNullOrEmpty(orderno))
             {
                 //builder.Append(" AND orderno=@orderno ");
-                builder.Append(" AND (orderno='" + orderno + "' ) ");
+                builder.Append(" AND (orderno='" + orderno + "' or ReceiverID in(select ReceiverID from wms_ReceiverInfo where ReceiverName like '%" + orderno + "%') or ReceiverStorageID in (select StorageID from wms_StorageInfo where StorageName like '%" + orderno + "%' )) ");
+                //builder.Append(" AND (orderno='" + orderno + "' ) ");
             }
             if (!string.IsNullOrEmpty(begindate) && !string.IsNullOrEmpty(enddate))
             {

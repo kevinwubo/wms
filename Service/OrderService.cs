@@ -1496,7 +1496,7 @@ namespace Service
                     info.LineID = GetLineID(entity.CustomerName + (receiverEntity != null ? receiverEntity.ReceiverName : ""));//线路
                     OrderRepository or = new OrderRepository();
 
-                    long orderid = 0;//or.CreateNew(info);
+                    long orderid =or.CreateNew(info);
 
                     idsEntity.SHDIds += orderid + ",";
                     if (orderid > 0)
@@ -1546,7 +1546,7 @@ namespace Service
                             infodetail.CreateDate = DateTime.Now;
                             infodetail.ChangeDate = DateTime.Now;
                             OrderDetailRepository ordetail = new OrderDetailRepository();
-                            long id = 0;//ordetail.CreateNew(infodetail);
+                            long id = ordetail.CreateNew(infodetail);
                         }
                         #endregion
                     }

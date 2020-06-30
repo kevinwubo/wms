@@ -209,7 +209,7 @@
                            
                             '    <td><input type="text" style="width:120px"  value="@DateTime.Now.ToString("yyyyMMdd")" class="form-control "></td>\n' +
                             '    <td><input type="text" value="@DateTime.Now.ToString("yyyy-MM-dd")" style="width:120px" onclick="WdatePicker({dateFmt:\'yyyy-MM-dd\'})" class="form-control "></td>\n' +
-                            '    <td><input type="text" style="width:120px"  value="1" name="txt_Count" onblur="Totla()" class="form-control "></td>\n' +
+                            '    <td><input type="text" style="width:120px"  value="1" name="txt_Count" onblur="CalculateTotalQuantity()" class="form-control "></td>\n' +
 
                             '    <td><input type="hidden" value="' + units + '" class="form-control ">' + units + '</td>\n' +
                             '    <td><input type="hidden" value="' + weight + '" class="form-control ">' + weight + '</td>\n' +
@@ -248,12 +248,12 @@
 
                     html += '<tr>\n' +
                             '    <td><input type="hidden" value="0" class="form-control"><input type="hidden" value="' + inventoryid + '" class="form-control"><input type="hidden" value="0" class="form-control"></td>\n' +
-                            '    <td><input type="hidden" value="' + goodsname + '" class="form-control">' + goodsname + '</td>\n' +
-                            '    <td><input type="hidden" value="' + batchnumber + '" class="form-control ">' + batchnumber + '</td>\n' +
+                            '    <td><input type="hidden" id="goodsname" name="goodsname" value="' + goodsname + '" class="form-control">' + goodsname + '</td>\n' +
+                            '    <td><input type="hidden" id="batchnumber" name="batchnumber" value="' + batchnumber + '" class="form-control ">' + batchnumber + '</td>\n' +
                             '    <td><input type="hidden" value="' + productdate + '" class="form-control ">' + productdate + '</td>\n' +
                             '    <td><input type="hidden" value="' + exunits + '" class="form-control ">' + exunits + '</td>\n' +
 
-                            '    <td><input type="text" style="width:120px"  name="txt_Count" onblur="Totla()" class="form-control "></td>\n' +
+                            '    <td><input type="text" style="width:120px" value="1" name="txt_Count" onblur="CalculateTotalQuantity()" class="form-control "></td>\n' +
 
                             '    <td><input type="hidden" value="' + units + '" class="form-control ">' + units + '</td>\n' +
                             '    <td><input type="hidden" value="' + quantity + '" class="form-control ">' + quantity + '</td>\n' +

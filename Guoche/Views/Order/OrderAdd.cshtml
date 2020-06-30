@@ -338,7 +338,7 @@
                                             <td><input type="hidden" value="@item.BatchNumber" class="form-control ">@item.BatchNumber</td>
                                             <td><input type="hidden" value="@item.ProductDate.ToShortDateString()" class="form-control ">@item.ProductDate.ToShortDateString()</td>
                                             <td><input type="hidden" value="@item.ExceedDate.ToShortDateString()" class="form-control ">@item.ExceedDate.ToShortDateString()</td>
-                                            <td><input type="text" name="txt_Count" style="width:120px" value="@item.Quantity" class="form-control "></td>
+                                            <td><input type="text" name="txt_Count" onblur="CalculateTotalQuantity()" style="width:120px" value="@item.Quantity" class="form-control "></td>
                                             <td><input type="hidden" value="@item.Units" class="form-control ">@item.Units</td>
                                             <td><input type="hidden" value="@(item.inventory!=null?item.inventory.Quantity:0)" class="form-control ">@(item.inventory != null ? item.inventory.Quantity : 0)</td>
                                             <td><input type="hidden" value="@item.Weight" class="form-control ">@item.Weight</td>
@@ -393,7 +393,7 @@
 
                                             <td><input type="text" style="width:120px" value="@item.BatchNumber" class="form-control "></td>
                                             <td><input type="text" value="@item.ProductDate.ToShortDateString()" style="width:120px" onclick="WdatePicker({dateFmt:yyyy-MM-dd})" class="form-control "></td>
-                                            <td><input type="text" style="width:120px" name="txt_Count"  value="@item.Quantity" class="form-control "></td>
+                                            <td><input type="text" style="width:120px" name="txt_Count" onblur="CalculateTotalQuantity()" value="@item.Quantity" class="form-control "></td>
 
                                             <td><input type="hidden" value="@item.Units" class="form-control ">@item.Units</td>
                                             <td><input type="hidden" value="@item.Weight" class="form-control ">@item.Weight</td>
@@ -485,7 +485,7 @@
             elem: '#SendDate' //指定元素
         });
     });
-    function Totla() {
+    function CalculateTotalQuantity() {
         var totalCount = 0;
         $("input[name='txt_Count']").each(function () {
             totalCount += parseInt($(this).val());

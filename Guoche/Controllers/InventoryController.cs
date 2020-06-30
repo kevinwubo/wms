@@ -545,8 +545,8 @@ namespace GuoChe.Controllers
                 rowtemp.CreateCell(7).SetCellValue(list[i].ProductDate.ToShortDateString());
                 rowtemp.CreateCell(8).SetCellValue(list[i].goods != null ? list[i].goods.exDate + list[i].goods.exUnits : "");
                 rowtemp.CreateCell(9).SetCellValue(list[i].Quantity);
-                rowtemp.CreateCell(10).SetCellValue(list[i].Quantity);
-                rowtemp.CreateCell(11).SetCellValue(list[i].Quantity);
+                rowtemp.CreateCell(10).SetCellValue(list[i].CanUseQuantity);
+                rowtemp.CreateCell(11).SetCellValue(list[i].WaitQuantity);
                 rowtemp.CreateCell(12).SetCellValue(list[i].goods != null ? list[i].goods.Weight : "");
                 rowtemp.CreateCell(13).SetCellValue(list[i].InventoryDate.ToShortDateString());
             }
