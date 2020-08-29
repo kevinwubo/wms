@@ -31,7 +31,7 @@ namespace Service.BaseBiz
         {
             List<ReceiverEntity> all = new List<ReceiverEntity>();
             ReceiverRepository mr = new ReceiverRepository();
-            List<ReceiverInfo> miList = Cache.Get<List<ReceiverInfo>>("GetReceiverByCustomerID" + customerID);
+            List<ReceiverInfo> miList = null;//Cache.Get<List<ReceiverInfo>>("GetReceiverByCustomerID" + customerID);
             if (miList.IsEmpty())
             {
                 miList = mr.GetReceiverByCustomerID(customerID);

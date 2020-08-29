@@ -490,7 +490,10 @@ namespace Service
             List<OrderStockInfo> stockList = mr.GetOutStockOrderByInentroyID(inventoryID);
             if (stockList != null && stockList.Count > 0)
             {
-                return stockList[0];
+
+                OrderStockInfo info = stockList[0];
+                info.Quantity = stockList.Sum(p => p.Quantity);
+                return info;
             }
             return new OrderStockInfo();
         }

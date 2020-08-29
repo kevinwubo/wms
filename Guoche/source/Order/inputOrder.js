@@ -223,13 +223,15 @@ var orderInfo = {
                     type: "post",
                     success: function (data) {
                         console.log(data);
-                        if (data) {
-                            $("#div_items").html("")
-                            $("#div_items").show();
-                            for (var i = 0; i < data.length; i++) {
-                                $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
-                            }
-                        }
+                        //if (data) {
+                        //    $("#div_items").html("")
+                        //    $("#div_items").show();
+                        //    for (var i = 0; i < data.length; i++) {
+                        //        $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
+                        //    }
+                        //}
+
+                        $("#hid_ReceiverName_JSON").val(JSON.stringify(data));
 
                     }
                 });
@@ -275,45 +277,66 @@ var orderInfo = {
             $("#ReceiverName").keyup(function () {
                 var CID = $("#CustomerID").val();
                 var Name = $("#ReceiverName").val();
-                $.ajax({
-                    type: "post",
-                    url: "GetReceiverByCustomerID",
-                    data: {
-                        customerID: CID, customerName: Name,
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        if (data) {
-                            $("#div_items").html("")
-                            $("#div_items").show();
-                            for (var i = 0; i < data.length; i++) {
-                                $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
-                            }
+                //$.ajax({
+                //    type: "post",
+                //    url: "GetReceiverByCustomerID",
+                //    data: {
+                //        customerID: CID, customerName: Name,
+                //    },
+                //    success: function (data) {
+                //        console.log(data);
+                //        if (data) {
+                //            $("#div_items").html("")
+                //            $("#div_items").show();
+                //            for (var i = 0; i < data.length; i++) {
+                //                $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
+                //            }
+                //        }
+                //    }
+                //})
+                var data = JSON.parse($("#hid_ReceiverName_JSON").val());
+                if (data) {
+                    $("#div_items").html("")
+                    $("#div_items").show();
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].ReceiverName.indexOf(Name) >= 0) {
+                            $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
                         }
                     }
-                })
+                }
+
 
             })
             $("#ReceiverName").focus(function () {
                 var CID = $("#CustomerID").val();
                 var Name = $("#ReceiverName").val();
-                $.ajax({
-                    type: "post",
-                    url: "GetReceiverByCustomerID",
-                    data: {
-                        customerID: CID, customerName: Name,
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        if (data) {
-                            $("#div_items").html("")
-                            $("#div_items").show();
-                            for (var i = 0; i < data.length; i++) {
-                                $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
-                            }
+                //$.ajax({
+                //    type: "post",
+                //    url: "GetReceiverByCustomerID",
+                //    data: {
+                //        customerID: CID, customerName: Name,
+                //    },
+                //    success: function (data) {
+                //        console.log(data);
+                //        if (data) {
+                //            $("#div_items").html("")
+                //            $("#div_items").show();
+                //            for (var i = 0; i < data.length; i++) {
+                //                $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
+                //            }
+                //        }
+                //    }
+                //})
+                var data = JSON.parse($("#hid_ReceiverName_JSON").val());
+                if (data) {
+                    $("#div_items").html("")
+                    $("#div_items").show();
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].ReceiverName.indexOf(Name) >= 0) {
+                            $("#div_items").append("<li class='div_item' id='" + data[i].ReceiverID + "'>" + data[i].ReceiverName + "</li>");
                         }
                     }
-                })
+                }
 
             })            
 
