@@ -122,6 +122,8 @@
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width: 120px;">类型</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">名称/姓名</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">原因</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">添加时间</th>
+                                <th role="columnheader" tabindex="0" rowspan="1" colspan="1">更新时间</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">合作状态</th>
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1">甄别状态</th>                                
                                 <th role="columnheader" tabindex="0" rowspan="1" colspan="1" style="width: 40px;">操作</th>
@@ -135,6 +137,8 @@
                                     <td style="width:15%" class=" sorting_1">@entity.BlackTypeDesc</td>
                                     <td style="width:20%" class=" ">@entity.UnionName</td>
                                     <td style="width:45%" class=" ">@entity.Remark</td>
+                                    <td style="width:5%" class=" ">@entity.CreateDate.ToShortDateString()</td>
+                                    <td style="width:5%" class=" ">@entity.ChangeDate.ToShortDateString()</td>
                                     <td>
                                         @if (entity.Status == 0)
                                         {

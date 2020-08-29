@@ -150,6 +150,7 @@
                     <input type="hidden" id="OrderType" name="OrderType" value="@(string.IsNullOrEmpty(entity.OrderType)?ViewBag.Type:entity.OrderType)" />
                     <input type="hidden" id="orderDetailJson" name="orderDetailJson" />
                     <input type="hidden" id="CarrierID" name="CarrierID" value="@entity.CarrierID" />
+                    <input type="hidden" id="hid_ReceiverName_JSON" name="hid_ReceiverName_JSON" value="@ViewBag.HID_ReceiverName_JSON" />
                     <table class="table table-bordered" >
                         <tr>
                             <td style=""><label class="control-label">选择客户</label></td>
