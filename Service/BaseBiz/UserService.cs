@@ -45,6 +45,7 @@ namespace Service.BaseBiz
                 userInfo.UserName = userEntity.UserName;
                 userInfo.NickName = userEntity.NickName;
                 userInfo.Status = userEntity.Status;
+                userInfo.CustomerID = userEntity.CustomerID;
                 userInfo.GroupIDs = groupbuilder.ToString().TrimEnd(',');
                 userInfo.RoleIDs = rolebuilder.ToString().TrimEnd(',');
 
@@ -63,6 +64,7 @@ namespace Service.BaseBiz
                 userEntity.UserName = userInfo.UserName;
                 userEntity.NickName = userInfo.NickName;
                 userEntity.Status = userInfo.Status;
+                userEntity.CustomerID = userInfo.CustomerID;
                 List<MenuEntity> allMenus = new List<MenuEntity>();
                 MenuCompare compare = new MenuCompare();
                 if (!string.IsNullOrEmpty(userInfo.RoleIDs))

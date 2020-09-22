@@ -28,6 +28,11 @@ namespace Entity.ViewModel
 
         public int Status { get; set; }
 
+        /// <summary>
+        /// 所属客户
+        /// </summary>
+        public int CustomerID { get; set; }
+
         public List<RoleEntity> Roles { get; set; }
 
         public List<GroupEntity> Groups { get; set; }

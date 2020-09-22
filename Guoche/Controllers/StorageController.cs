@@ -71,9 +71,9 @@ namespace GuoChe.Controllers
             Response.Redirect("/Storage/");
         }
 
-        public void Remove(string StorageID)
+        public void Remove(string cid)
         {
-            StorageService.RemoveStorage(StorageID);
+            StorageService.RemoveStorage(cid);
             Response.Redirect("/Storage/");
         }
 

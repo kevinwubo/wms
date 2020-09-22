@@ -197,6 +197,9 @@ namespace GuoChe.Controllers
         /// <returns></returns>
         public ActionResult Inventory(string pagetype,string name, string batchNumber, int StorageID = -1, int customerID = -1, int p = 1)
         {
+            bool outInventory = false;
+            customerID = getCustomerId(customerID,ref outInventory);
+
             PagerInfo pager = new PagerInfo();
             int count = InventoryService.GetInventoryCount(name, batchNumber, StorageID, customerID);
             pager.PageIndex = p;
@@ -214,8 +217,18 @@ namespace GuoChe.Controllers
             }
 
             ViewBag.inventory = mList;
-            //客户信息
-            ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
+
+            if (outInventory)
+            {
+                //客户信息
+                ViewBag.Customer = CustomerService.GetCustomerByKeys(customerID.ToString());
+            }
+            else
+            {
+
+                //客户信息
+                ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
+            }
             //默认仓库
             ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
 
@@ -234,6 +247,26 @@ namespace GuoChe.Controllers
             return View();
         }
 
+        private int getCustomerId(int customerID, ref bool outInventory)
+        {
+
+            try
+            {
+                if (CurrentUser != null)
+                {
+                    if (CurrentUser.Roles.Find(p => p.RoleID == 10) != null)
+                    {
+                        outInventory = true;
+                        return CurrentUser.CustomerID;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return customerID;
+        }
 
         #endregion
 

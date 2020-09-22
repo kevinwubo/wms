@@ -21,6 +21,7 @@ var orderInfo = {
         valid.init(elemnets);
         orderInfo.regEvent();
         orderInfo.regInit();
+        $("#CustomerID").click();
     },
 
     regEvent: function () {      
@@ -215,7 +216,7 @@ var orderInfo = {
             $("#CustomerID").click(function () {
                 var CID = $("#CustomerID").val();
 
-                $("#ReceiverName").val("");
+                //$("#ReceiverName").val("");
                 //$("#ReceiverID").html("").append("<option value=''>--请选择门店--</option>");
                 jQuery.ajax({
                     url: "GetReceiverByCustomerID",
@@ -271,9 +272,9 @@ var orderInfo = {
             }
 
             //门店信息
-            $('#ReceiverName').blur(function () {
-                $('#div_items').hide(500);
-            })
+            //$('#ReceiverName').blur(function () {
+            //    $('#div_items').hide(500);
+            //})
             $("#ReceiverName").keyup(function () {
                 var CID = $("#CustomerID").val();
                 var Name = $("#ReceiverName").val();

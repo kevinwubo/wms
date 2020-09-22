@@ -68,7 +68,7 @@ namespace DataRepository.DataAccess.Storage
                                                                         VALUES(@StorageName,@StorageNo,@ProvinceID,@CityID,@Address,@Status,@CreateDate,@ChangeDate,@OperatorID)SELECT @@IDENTITY";
 
         public static string ModifyStorage = @"UPDATE [wms_StorageInfo] SET [StorageName] = @StorageName,[StorageNo] = @StorageNo,[ProvinceID] = @ProvinceID,[CityID] = @CityID,
-                                            [Address] = @Address,[ChangeDate] = @ChangeDate  ,OperatorID=@OperatorID
+                                            [Address] = @Address,[ChangeDate] = @ChangeDate  ,OperatorID=@OperatorID ,Status=@Status
                                             WHERE StorageID=@StorageID";
     }
 }
