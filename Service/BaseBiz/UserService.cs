@@ -55,7 +55,7 @@ namespace Service.BaseBiz
             return userInfo;
         }
 
-        private static UserEntity TranslateUserEntity(UserInfo userInfo)
+        private static UserEntity TranslateUserEntity(UserInfo userInfo,bool alldata=true)
         {
             UserEntity userEntity = new UserEntity();
             if (userInfo != null)
@@ -65,33 +65,37 @@ namespace Service.BaseBiz
                 userEntity.NickName = userInfo.NickName;
                 userEntity.Status = userInfo.Status;
                 userEntity.CustomerID = userInfo.CustomerID;
-                List<MenuEntity> allMenus = new List<MenuEntity>();
-                MenuCompare compare = new MenuCompare();
-                if (!string.IsNullOrEmpty(userInfo.RoleIDs))
-                {
-                    userEntity.Roles = RoleService.GetRoleByKeys(userInfo.RoleIDs);
-                    if (userEntity.Roles.Count > 0)
-                    {
-                        foreach (RoleEntity r in userEntity.Roles)
-                        {
-                            allMenus = allMenus.Merge(r.Menus, compare);
-                        }
-                    }
-                }
-                if (!string.IsNullOrEmpty(userInfo.GroupIDs))
-                {
-                    userEntity.Groups = GroupService.GetGroupByKeys(userInfo.GroupIDs);
-                    if (userEntity.Groups.Count > 0)
-                    {
-                        foreach (GroupEntity r in userEntity.Groups)
-                        {
-                            allMenus = allMenus.Merge(r.Menus, compare);
-                        }
-                    }
-                }
-                userEntity.Menus = allMenus;
-            }
 
+                if (alldata)
+                {
+
+                    List<MenuEntity> allMenus = new List<MenuEntity>();
+                    MenuCompare compare = new MenuCompare();
+                    if (!string.IsNullOrEmpty(userInfo.RoleIDs))
+                    {
+                        userEntity.Roles = RoleService.GetRoleByKeys(userInfo.RoleIDs);
+                        if (userEntity.Roles.Count > 0)
+                        {
+                            foreach (RoleEntity r in userEntity.Roles)
+                            {
+                                allMenus = allMenus.Merge(r.Menus, compare);
+                            }
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(userInfo.GroupIDs))
+                    {
+                        userEntity.Groups = GroupService.GetGroupByKeys(userInfo.GroupIDs);
+                        if (userEntity.Groups.Count > 0)
+                        {
+                            foreach (GroupEntity r in userEntity.Groups)
+                            {
+                                allMenus = allMenus.Merge(r.Menus, compare);
+                            }
+                        }
+                    }
+                    userEntity.Menus = allMenus;
+                }
+            }
 
             return userEntity;
         }
@@ -188,12 +192,12 @@ namespace Service.BaseBiz
             return mr.ModifyPassword(uid,pwd);
         }
 
-        public static UserEntity GetLoginUser(string name, string pwd)
+        public static UserEntity GetLoginUser(string name, string pwd, bool all = true)
         {
             UserEntity result = new UserEntity();
             UserRepository mr = new UserRepository();
-            UserInfo info = mr.GetLoginUser(name,pwd);
-            result = TranslateUserEntity(info);
+            UserInfo info = mr.GetLoginUser(name, pwd);
+            result = TranslateUserEntity(info,all);
             return result;
         }
 

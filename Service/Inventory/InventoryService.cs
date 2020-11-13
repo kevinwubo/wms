@@ -329,11 +329,11 @@ namespace Service.Inventory
         /// <param name="batchNumber">批次号</param>
         /// <param name="CustomerID">客户ID</param>
         /// <returns></returns>
-        public static List<InventoryEntity> GetInventoryByRule(int goodsid, int storageID, string batchNumber, int CustomerID = -1,bool DY0=false)
+        public static List<InventoryEntity> GetInventoryByRule(int goodsid, int storageID, string batchNumber, int CustomerID = -1,bool DY0=false,string keywords="")
         {
             List<InventoryEntity> all = new List<InventoryEntity>();
             InventoryRepository mr = new InventoryRepository();
-            List<InventoryInfo> miList = mr.GetInventoryByRule(goodsid, storageID, batchNumber, CustomerID, DY0);
+            List<InventoryInfo> miList = mr.GetInventoryByRule(goodsid, storageID, batchNumber, CustomerID, DY0,keywords);
 
             if (!miList.IsEmpty())
             {

@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "接口测试工具";
+    Layout = null;
+}
+
+<h2>登录接口</h2>
+<input class="btn-block" type="text" id="name" name="name" placeholder="用户名">
+<input class="btn-block" type="password" id="pwd" name="pwd" placeholder="密码">
+<button type="submit" class="btn pull-right" onclick="login(); return false;">登录</button>
+<br />
+<br />
+<h2>库存列表接口</h2>
+<input class="btn-block" type="text" id="goodsid" name="goodsid" placeholder="商品ID">
+<button type="submit" class="btn pull-right" onclick="searchInventory(); return false;">查询</button>
+<br />
+<br />
+<h2>库存明细接口</h2>
+<input class="btn-block" type="text" id="inventoryid" name="inventoryid" placeholder="库存ID">
+<button type="submit" class="btn pull-right" onclick="searchInventoryDetail(); return false;">查询</button>
+<br />
+<br />
+<h2>商品明细接口</h2>
+<input class="btn-block" type="text" id="goodssearchid" name="goodssearchid" placeholder="商品ID">
+<button type="submit" class="btn pull-right" onclick="searchGoods(); return false;">查询</button>
+<br />
+<br />
+<h2>库存商品查询接口</h2>
+<input class="btn-block" type="text" id="goodsname" name="goodsname" placeholder="商品名称(支持模糊查询)">
+<button type="submit" class="btn pull-right" onclick="searchGoodsName(); return false;">查询</button>
+<br />
+<br />
+<textarea cols="150" rows="15" id="txtresult"></textarea>
+<script type="text/javascript" src="~/source/assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+    function login() {
+        var name = $("#name").val(), pwd = $("#pwd").val()
+        $.post("/ApiService/Login", {
+            UserName: name,
+            Password: pwd,
+            ukey: $("#ukey").val()
+        }, function (data) {
+            $("#txtresult").val(JSON.stringify(data));
+        });
+    }
+
+    function searchInventory() {
+        var goodsid = $("#goodsid").val();
+        $.post("/ApiService/InventoryList", {
+            GoodsID: goodsid
+        }, function (data) {
+            $("#txtresult").val(JSON.stringify(data));
+        });
+    }
+
+    function searchInventoryDetail() {
+        var inventoryid = $("#inventoryid").val();
+        $.post("/ApiService/InventoryDetailInfo", {
+            InventoryID: inventoryid
+        }, function (data) {
+            $("#txtresult").val(JSON.stringify(data));
+        });
+    }
+
+    function searchGoods() {
+        var goodsid = $("#goodssearchid").val();
+        $.post("/ApiService/GoodsInfo", {
+            GoodsID: goodsid
+        }, function (data) {
+            $("#txtresult").val(JSON.stringify(data));
+        });
+    }
+
+    function searchGoodsName() {
+        var goodsname = $("#goodsname").val();
+        $.post("/ApiService/InventoryGoodsSearch", {
+            Keywords: goodsname
+        }, function (data) {
+            $("#txtresult").val(JSON.stringify(data));
+        });
+    } 
+</script>

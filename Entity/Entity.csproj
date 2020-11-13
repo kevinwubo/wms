@@ -39,6 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiBean\GoodsBean.cs" />
+    <Compile Include="ApiBean\InventoryDetailBean.cs" />
+    <Compile Include="ApiBean\InventoryBean.cs" />
+    <Compile Include="ApiBean\UserBean.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\AdviseEntity.cs" />
     <Compile Include="ViewModel\ApiUserEntity.cs" />

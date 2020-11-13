@@ -189,6 +189,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiConvert\ApiProcess.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BaseDataController.cs" />
     <Compile Include="Controllers\BasePdfController.cs" />
+    <Compile Include="Controllers\ApiServiceController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\LineController.cs" />
     <Compile Include="Controllers\PdfViewController.cs" />
@@ -1030,6 +1032,7 @@
     <Content Include="Views\Line\OrderDeliveryPlan.cshtml" />
     <Content Include="Views\Report\OrderDeliverPlanReport.cshtml" />
     <Content Include="Views\Report\OrderDetailView.cshtml" />
+    <Content Include="Views\ApiService\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

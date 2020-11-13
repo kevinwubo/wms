@@ -42,10 +42,14 @@ namespace DataRepository.DataAccess.BaseData
         /// <param name="batchNumber"></param>
         /// <param name="DY0">是否查询大于0</param>
         /// <returns></returns>
-        public List<InventoryInfo> GetInventoryByRule(int goodsid, int storageID, string batchNumber, int CustomerID,bool DY0)
+        public List<InventoryInfo> GetInventoryByRule(int goodsid, int storageID, string batchNumber, int CustomerID,bool DY0,string keywords)
         {
             List<InventoryInfo> result = new List<InventoryInfo>();
             string sqlText = InventoryStatement.GetAllInventoryByRule;
+            if (!string.IsNullOrEmpty(keywords))
+            {
+                sqlText += " and GoodsID in(select GoodsID from wms_GoodsInfo where GoodsName like '%" + keywords + "%')";
+            }
             if (goodsid > 0)
             {
                 sqlText += " AND GoodsID=@GoodSID";
