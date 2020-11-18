@@ -33,6 +33,7 @@ namespace GuoChe.Controllers
         /// <returns></returns>
         public JsonResult Login(String UserName, String Password)
         {
+
             UserEntity user = UserService.GetLoginUser(UserName, EncryptHelper.MD5Encrypt(Password), false);
             //if (user != null && user.UserID > 0)
             //{

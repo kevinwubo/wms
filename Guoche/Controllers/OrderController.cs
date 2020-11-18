@@ -60,9 +60,10 @@ namespace GuoChe.Controllers
             ViewBag.DeliverList = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "DeliverModel00" && t.Status == 1).ToList();
             //收货人信息
             //ViewBag.Receiver = ReceiverService.GetReceiverByRule("", "", "", 1);//只显示使用中的数据
-            ViewBag.CarModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "CarModel00" && t.Status == 1).ToList();            
-
-            ViewBag.Order = new OrderEntity();
+            ViewBag.CarModel = BaseDataService.GetBaseDataAll().Where(t => t.PCode == "CarModel00" && t.Status == 1).ToList();
+            OrderEntity entity = new OrderEntity();
+            entity.OrderNo = OrderService.GetOrderNo();
+            ViewBag.Order = entity;
             ViewBag.ButtonName = "发布订单";
             if (orderid > 0)
             {

@@ -418,7 +418,7 @@
                 <button class="btn btn-primary" type="button" style=" float: right;margin-left: 10px;" id="goback">返回</button>
                 <button class="btn btn-primary" type="button" style=" float: right;" id="save">@ViewBag.ButtonName</button>
                 <b>数量合计：</b><input type="text" id="TotalCount" name="TotalCount" value="0" readonly="readonly" style="width:100px" />
-                <input class="" type="text" style="width:120px;float: right;" readonly="readonly"  placeholder="订单编号" id="OrderNo" name="OrderNo" value='@(string.IsNullOrEmpty(entity.OrderNo) ? DateTime.Now.ToString("yyyyMMddhhfff") : entity.OrderNo)' maxlength=" 200">
+                <input class="" type="text" style="width:120px;float: right;" readonly="readonly"  placeholder="订单编号" id="OrderNo" name="OrderNo" value='@(entity.OrderNo)' maxlength=" 200">
             </div>
 
         </div>

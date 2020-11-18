@@ -23,11 +23,12 @@ namespace Service
         /// <returns></returns>
         public static string GetOrderNo()
         {
-            string orderNo = DateTime.Now.ToString("yyyyMMddhhfff");
-            OrderEntity entity = OrderService.GetOrderByOrderNo(orderNo);
+            Random random = new Random();
+            string orderNo = DateTime.Now.ToString("yyMMddmmss") + random.Next(101, 999);
+            OrderEntity entity = OrderService.GetOrderByOrderNo(orderNo);            
             if (entity != null)
             {
-                orderNo = DateTime.Now.ToString("yyyyMMddhhfff");
+                orderNo = DateTime.Now.ToString("yyMMddmmss") + random.Next(101, 999);
             }
             return orderNo;
         }
