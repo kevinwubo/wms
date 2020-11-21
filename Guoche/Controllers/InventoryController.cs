@@ -103,16 +103,46 @@ namespace GuoChe.Controllers
             //客户信息
             ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
             //默认仓库
+
             ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
 
             ViewBag.name = name ?? "";
             ViewBag.inventoryType = inventoryType ?? "";
-            ViewBag.StorageID = StorageID ;
+            ViewBag.StorageID = StorageID;
             ViewBag.customerID = customerID;
             ViewBag.inventoryDate = inventoryDate ?? "";
             ViewBag.Pager = pager;
             return View();
         }
+
+
+        private List<StorageEntity> buildNew(List<StorageEntity> stroageList, string storages)
+        {
+            if (string.IsNullOrEmpty(storages))
+            {
+                return stroageList;
+            }
+
+            List<StorageEntity> list = new List<StorageEntity>();
+            foreach (StorageEntity entity in stroageList)
+            {
+                List<string> strLost = new List<string>(storages.Split(','));
+                if (strLost.Contains(entity.StorageID.ToString()))
+                {
+                    list.Add(entity);
+                }
+            }
+
+            if (list == null || list.Count == 0)
+            {
+                return stroageList;
+            }
+
+
+
+            return list;
+        }
+
         #endregion
 
         #region 商品出库
@@ -230,7 +260,10 @@ namespace GuoChe.Controllers
                 ViewBag.Customer = CustomerService.GetCustomerByRule("", 1);//只显示使用中的数据
             }
             //默认仓库
-            ViewBag.Storage = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
+            //默认仓库
+            List<StorageEntity> stroageList = StorageService.GetStorageByRule("", 1);//只显示使用中的数据
+
+            ViewBag.Storage = buildNew(stroageList, CurrentUser.StorageIDs);
 
             ViewBag.name = name ?? "";
             ViewBag.batchNumber = batchNumber ?? "";

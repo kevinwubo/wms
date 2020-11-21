@@ -45,6 +45,9 @@ namespace DataRepository.DataModel
         [DataMapping("CustomerID", DbType.Int32)]
         public int CustomerID { get; set; }
 
+        [DataMapping("StorageIDs", DbType.String)]
+        public string StorageIDs { get; set; }
+
         [DataMapping("Password", DbType.String)]
         public string Password { get; set; }
 

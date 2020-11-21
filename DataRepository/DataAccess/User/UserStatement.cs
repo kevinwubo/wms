@@ -18,12 +18,14 @@ namespace DataRepository.DataAccess.User
 
         public static string GetUserByKeys = @"SELECT * FROM UserInfo(NOLOCK) WHERE UserID IN (#ids#)";
 
-        public static string CreateNewUser = @"INSERT INTO [UserInfo]([UserName],[NickName],[RoleIDs],[Password],[GroupIDs],[Status],[CreateDate]) VALUES (@UserName,@NickName,@RoleIDs,@Password,@GroupIDs,@Status,@CreateDate)";
+        public static string CreateNewUser = @"INSERT INTO [UserInfo]([UserName],[NickName],[RoleIDs],[Password],[GroupIDs],[Status],[CustomerID],[StorageIDs],[CreateDate]) VALUES (@UserName,@NickName,@RoleIDs,@Password,@GroupIDs,@Status,@CustomerID,@StorageIDs,@CreateDate)";
 
         public static string ModifyUser = @"UPDATE [UserInfo]
                                                SET [UserName] =@UserName,[NickName]=@NickName,[RoleIDs]=@RoleIDs
                                                   ,[GroupIDs]=@GroupIDs
                                                   ,[Status] = @Status
+                                                  ,CustomerID = @CustomerID
+                                                  ,[StorageIDs] = @StorageIDs
                                              WHERE UserID=@UserID";
         public static string GetLoginUser = @"SELECT * FROM [UserInfo](NOLOCK) WHERE [UserName]=@UserName AND [Password]=@Password";
 

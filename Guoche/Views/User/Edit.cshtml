@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "编辑用户";
     UserEntity user = ((UserEntity)ViewBag.User) ?? new UserEntity();
+    List<CustomerEntity> customers = (List<CustomerEntity>)ViewBag.Customer;//客户
 
 }
 <form class="form-horizontal" action="/User/Modify" method="post" id="userForm">
@@ -33,6 +34,19 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label">所属客户</label>
+                        <div class="controls">
+                            <select tabindex="1" class="" id="CustomerID" name="CustomerID">
+                                <option value="-1">请选择客户</option>
+                                @foreach (var item in customers)
+                                {
+                                    <option value="@item.CustomerID" @(item.CustomerID == user.CustomerID ? "selected" : "")>@item.CustomerName</option>
+                                }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label">是否可用</label>
                         <div class="controls">
                             <input type="checkbox" value="1" id="Status" name="Status" @(user.Status == 1 ? "checked" : "")>
@@ -54,7 +68,15 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="control-group">
+                        <div class="widget widget-padding span6" style="margin-left:180px">
+                            <div class="widget-header"><i class="icon-list-alt"></i><h5>属于仓库</h5></div>
+                            <div class="widget-body">
+                                @Html.Raw(ViewBag.StorageHtml)
+                            </div>
+                        </div>
+                    </div>
+    
                 </div>
             </div>
             <div class="widget-footer">

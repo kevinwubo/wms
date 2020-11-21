@@ -33,6 +33,11 @@ namespace Entity.ViewModel
         /// </summary>
         public int CustomerID { get; set; }
 
+        /// <summary>
+        /// 当前账户可以查看的仓库
+        /// </summary>
+        public string StorageIDs { get; set; }
+
         public List<RoleEntity> Roles { get; set; }
 
         public List<GroupEntity> Groups { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Common;
+using Entity.ApiBean;
 using Entity.ViewModel;
 using GuoChe.ApiConvert;
 using Infrastructure.Cache;
@@ -88,6 +89,43 @@ namespace GuoChe.Controllers
         {
             List<InventoryEntity> list = InventoryService.GetInventoryByRule(-1, -1, "", -1, false, Keywords);
             return Json(ApiProcess.convertInventoryList(list));
+        }
+
+        /// <summary>
+        /// 扫码 接口
+        /// </summary>
+        /// <param name="GoodsID"></param>
+        /// <returns></returns>
+        public JsonResult ScanInfo(int GoodsID)
+        {
+            return Json(new GoodsBean());
+        }
+
+        /// <summary>
+        /// 入库接口
+        /// </summary>
+        /// <param name="GoodsI"></param>
+        /// <param name="InventoryID"></param>
+        /// <param name="BatchNumber"></param>
+        /// <param name="InQuantity"></param>
+        /// <returns></returns>
+        public JsonResult InventoryIn(int GoodsI, int StorageID, string BatchNumber, int InQuantity)
+        {
+
+            return Json(new GoodsBean());
+        }
+
+        /// <summary>
+        /// 出库接口
+        /// </summary>
+        /// <param name="GoodsI"></param>
+        /// <param name="InventoryID"></param>
+        /// <param name="BatchNumber"></param>
+        /// <param name="OutQuantity"></param>
+        /// <returns></returns>
+        public JsonResult InventoryOut(int GoodsI, int InventoryID, string BatchNumber, int OutQuantity)
+        {
+            return Json(new GoodsBean());
         }
     }
 }

@@ -65,6 +65,8 @@ namespace DataRepository.DataAccess.User
             command.AddInputParameter("@RoleIDs", DbType.String, user.RoleIDs);
             command.AddInputParameter("@GroupIDs", DbType.String, user.GroupIDs);
             command.AddInputParameter("@Status", DbType.Int32, user.Status);
+            command.AddInputParameter("@CustomerID", DbType.Int32, user.CustomerID);
+            command.AddInputParameter("@StorageIDs", DbType.String, user.StorageIDs);
             command.AddInputParameter("@CreateDate", DbType.DateTime, user.CreateDate);
 
             return command.ExecuteNonQuery();
@@ -78,6 +80,8 @@ namespace DataRepository.DataAccess.User
             command.AddInputParameter("@NickName", DbType.String, user.NickName);         
             command.AddInputParameter("@RoleIDs", DbType.String, user.RoleIDs);
             command.AddInputParameter("@GroupIDs", DbType.String, user.GroupIDs);
+            command.AddInputParameter("@CustomerID", DbType.Int32, user.CustomerID);
+            command.AddInputParameter("@StorageIDs", DbType.String, user.StorageIDs);
             command.AddInputParameter("@Status", DbType.Int32, user.Status);
 
             return command.ExecuteNonQuery();

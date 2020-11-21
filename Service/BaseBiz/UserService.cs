@@ -41,6 +41,7 @@ namespace Service.BaseBiz
                         rolebuilder.Append(",");
                     }
                 }
+                userInfo.StorageIDs = userEntity.StorageIDs;
                 userInfo.UserID = userEntity.UserID;
                 userInfo.UserName = userEntity.UserName;
                 userInfo.NickName = userEntity.NickName;
@@ -65,7 +66,7 @@ namespace Service.BaseBiz
                 userEntity.NickName = userInfo.NickName;
                 userEntity.Status = userInfo.Status;
                 userEntity.CustomerID = userInfo.CustomerID;
-
+                userEntity.StorageIDs = userInfo.StorageIDs;
                 if (alldata)
                 {
 
