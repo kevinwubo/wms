@@ -1648,9 +1648,10 @@ namespace Service
                             info.StorageID = 13;
                             info.UnitPrice = 0;
                             InventoryRepository mr = new InventoryRepository();
-                            long inventID = mr.CreateNew(info);
+                            int inventID = mr.CreateNew(info);
 
                             InventoryDetailInfo dinfo = new InventoryDetailInfo();
+                            dinfo.InventoryID = inventID;
                             dinfo.BatchNumber = dt.Rows[i]["批次号"].ToString();
                             dinfo.CreateDate = DateTime.Now;
                             dinfo.ChangeDate = DateTime.Now;

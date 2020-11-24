@@ -65,9 +65,9 @@ namespace DataRepository.DataAccess.BaseData
         public static string GetInventoryDetailByKeys = @"SELECT * FROM wms_InventoryDetailInfo(NOLOCK) WHERE InventoryDetailID IN (#ids#)";
 
         public static string CreateNewInventoryDetail = @"INSERT INTO [wms_InventoryDetailInfo]
-                                                ([GoodsID],[StorageID],[Quantity],[CustomerID],[InventoryType],[BatchNumber],[ProductDate]
+                                                ([InventoryID],[GoodsID],[StorageID],[Quantity],[CustomerID],[InventoryType],[BatchNumber],[ProductDate]
                                                 ,[InventoryDate],[UnitPrice],[Remark],[OperatorID],[OrderType],OrderNo,OrderID,[CreateDate],[ChangeDate])
-                                                     VALUES(@GoodsID,@StorageID,@Quantity,@CustomerID,@InventoryType,@BatchNumber,@ProductDate
+                                                     VALUES(@InventoryID,@GoodsID,@StorageID,@Quantity,@CustomerID,@InventoryType,@BatchNumber,@ProductDate
                                                 ,@InventoryDate,@UnitPrice,@Remark,@OperatorID,@OrderType,@OrderNo,@OrderID,@CreateDate,@ChangeDate) select @@IDENTITY";
 
     }

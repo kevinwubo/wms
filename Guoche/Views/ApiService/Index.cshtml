@@ -38,19 +38,21 @@
 
 <h2>入库接口</h2>
 <input class="btn-block" type="text" id="InGoodID" name="InGoodID" placeholder="入库商品ID">
-<input class="btn-block" type="text" id="StorageID" name="StorageID" placeholder="仓库ID">
-<input class="btn-block" type="text" id="BatchNumber" name="BatchNumber" placeholder="批次号">
+<input class="btn-block" type="text" id="InStorageID" name="InStorageID" placeholder="仓库ID">
+<input class="btn-block" type="text" id="InBatchNumber" name="InBatchNumber" placeholder="批次号">
 <input class="btn-block" type="text" id="InQuantity" name="InQuantity" placeholder="入库数量">
+<input class="btn-block" type="text" id="InUserID" name="InUserID" placeholder="用户ID">
 <button type="submit" class="btn pull-right" onclick="InventoryIn(); return false;">入库操作</button>
 <br />
 <br />
 
 <h2>出库接口</h2>
 <input class="btn-block" type="text" id="OutGoodID" name="OutGoodID" placeholder="出库商品ID">
-<input class="btn-block" type="text" id="InventoryID" name="InventoryID" placeholder="库存ID">
-<input class="btn-block" type="text" id="BatchNumber" name="BatchNumber" placeholder="批次号">
+<input class="btn-block" type="text" id="OutInventoryID" name="OutInventoryID" placeholder="库存ID">
+<input class="btn-block" type="text" id="OutBatchNumber" name="BatchNumber" placeholder="批次号">
 <input class="btn-block" type="text" id="OutQuantity" name="OutQuantity" placeholder="出库数量">
-<button type="submit" class="btn pull-right" onclick="InventoryIn(); return false;">出库操作</button>
+<input class="btn-block" type="text" id="OutUserID" name="OutUserID" placeholder="用户ID">
+<button type="submit" class="btn pull-right" onclick="InventoryOut(); return false;">出库操作</button>
 <br />
 <br />
 <textarea cols="150" rows="15" id="txtresult"></textarea>
@@ -101,5 +103,42 @@
         }, function (data) {
             $("#txtresult").val(JSON.stringify(data));
         });
-    } 
+    }
+
+
+    // 入库操作
+    function InventoryIn() {
+        var InGoodID = $("#InGoodID").val();
+        var StorageID = $("#InStorageID").val();
+        var BatchNumber = $("#InBatchNumber").val();
+        var InQuantity = $("#InQuantity").val();
+        var UserID = $("#InUserID").val();
+        $.post("/ApiService/InventoryIn", {
+            GoodsID: InGoodID,
+            StorageID: StorageID,
+            BatchNumber: BatchNumber,
+            InQuantity: InQuantity,
+            UserID: UserID
+        }, function (data) {
+            $("#txtresult").val(JSON.stringify(data));
+        });
+    }
+
+    // 出库操作
+    function InventoryOut() {
+        var OutGoodID = $("#OutGoodID").val();
+        var InventoryID = $("#OutInventoryID").val();
+        var BatchNumber = $("#OutBatchNumber").val();
+        var OutQuantity = $("#OutQuantity").val();
+        var UserID = $("#OutUserID").val();
+        $.post("/ApiService/InventoryOut", {
+            GoodsID: OutGoodID,
+            InventoryID: InventoryID,
+            BatchNumber: BatchNumber,
+            OutQuantity: OutQuantity,
+            UserID: UserID
+        }, function (data) {
+            $("#txtresult").val(JSON.stringify(data));
+        });
+    }
 </script>

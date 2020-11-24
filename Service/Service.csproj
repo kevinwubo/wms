@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="AdviseService.cs" />
     <Compile Include="ApiBiz\SendSMSService.cs" />
+    <Compile Include="ApiService.cs" />
     <Compile Include="BaseBiz\BaseDataService.cs" />
     <Compile Include="BaseBiz\BlackListService.cs" />
     <Compile Include="BaseBiz\LineService.cs" />

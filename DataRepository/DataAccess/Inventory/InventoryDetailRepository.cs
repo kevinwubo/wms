@@ -46,6 +46,7 @@ namespace DataRepository.DataAccess.BaseData
         public long CreateNew(InventoryDetailInfo InventoryDetail)
         {
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(InventoryDetailStatement.CreateNewInventoryDetail, "Text"));
+            command.AddInputParameter("@InventoryID", DbType.Int32, InventoryDetail.InventoryID);
             command.AddInputParameter("@GoodsID", DbType.Int32, InventoryDetail.GoodsID);
             command.AddInputParameter("@StorageID", DbType.Int32, InventoryDetail.StorageID);
             command.AddInputParameter("@Quantity", DbType.Int32, InventoryDetail.Quantity);

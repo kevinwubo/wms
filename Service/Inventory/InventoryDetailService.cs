@@ -44,7 +44,7 @@ namespace Service.Inventory
                 entity.CreateDate = info.CreateDate;
                 entity.ChangeDate = info.ChangeDate;
                 entity.InventoryDetailID = info.InventoryDetailID;
-
+                entity.InventoryID = info.InventoryID;
                 entity.goods = GoodsService.GetGoodsEntityById(info.GoodsID);
                 entity.customer = CustomerService.GetCustomerEntityById(info.CustomerID);
                 entity.storages = StorageService.GetStorageEntityById(info.StorageID);

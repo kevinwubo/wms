@@ -107,7 +107,7 @@ namespace DataRepository.DataAccess.BaseData
             return result;
         }
 
-        public long CreateNew(InventoryInfo Inventory)
+        public int CreateNew(InventoryInfo Inventory)
         {
             DataCommand command = new DataCommand(ConnectionString, GetDbCommand(InventoryStatement.CreateNewInventory, "Text"));
             command.AddInputParameter("@GoodsID", DbType.Int32, Inventory.GoodsID);
@@ -124,7 +124,7 @@ namespace DataRepository.DataAccess.BaseData
             command.AddInputParameter("@CreateDate", DbType.DateTime, Inventory.CreateDate);
             command.AddInputParameter("@ChangeDate", DbType.DateTime, Inventory.ChangeDate);
             var o = command.ExecuteScalar<object>();
-            return Convert.ToInt64(o);
+            return Convert.ToInt32(o);
         }
 
         public int ModifyInventoryQuantity(InventoryInfo Inventory)

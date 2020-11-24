@@ -56,7 +56,7 @@ namespace Service.Inventory
                             info.StorageID = StorageID;
                             info.Quantity = entity.Quantity;
                             info.CustomerID = entity.CustomerID;
-                            info.InventoryType = Common.InventoryType.入库.ToString();
+                            info.InventoryType = type == OperatorType.IN ? Common.InventoryType.入库.ToString() : Common.InventoryType.出库.ToString();
                             info.BatchNumber = entity.BatchNumber.Trim();
                             info.ProductDate = DateTime.Parse(entity.ProductDate);
                             info.InventoryDate = DateTime.Parse(inventoryDate);
@@ -69,23 +69,8 @@ namespace Service.Inventory
                         }
                     }
 
-                    //生成入库单
-                    InventoryExecOrder orderExec= OrderService.CreateOrderByInventory(listInv, tempType);
 
-                    if (listInv != null && listInv.Count > 0)
-                    {
-                        foreach (InventoryInfo info in listInv)
-                        {
-                            InventoryRepository mr = new InventoryRepository();
-                            //插入库存
-                            mr.CreateNew(info);
-
-                            //库存明细保存
-                            CreateInventoryDetail(info,orderExec, StorageID, DateTime.Parse(inventoryDate), OperatorID);
-                            
-                        }
-                    }
-
+                    InventoryProcess(listInv, tempType, StorageID, inventoryDate, OperatorID);
    
                 }
             }
@@ -95,6 +80,35 @@ namespace Service.Inventory
                 return false;
             }
             return true;
+        }
+
+
+        /// <summary>
+        /// 库存处理
+        /// </summary>
+        /// <param name="listInv">入库数据</param>
+        /// <param name="tempType">温区</param>
+        /// <param name="StorageID">仓库编号</param>
+        /// <param name="inventoryDate">入库时间</param>
+        /// <param name="OperatorID">操作人</param>
+        public static void InventoryProcess(List<InventoryInfo> listInv, string tempType, int StorageID, string inventoryDate, long OperatorID)
+        {
+            //生成入库单
+            InventoryExecOrder orderExec = OrderService.CreateOrderByInventory(listInv, tempType);
+
+            if (listInv != null && listInv.Count > 0)
+            {
+                foreach (InventoryInfo info in listInv)
+                {
+                    InventoryRepository mr = new InventoryRepository();
+                    //插入库存
+                    info.InventoryID = mr.CreateNew(info);
+
+                    //库存明细保存
+                    CreateInventoryDetail(info, orderExec, StorageID, DateTime.Parse(inventoryDate), OperatorID);
+
+                }
+            }
         }
 
         /// <summary>
@@ -110,6 +124,7 @@ namespace Service.Inventory
             InventoryDetailInfo infoDetail = new InventoryDetailInfo();
             if (entity != null)
             {
+                infoDetail.InventoryID = entity.InventoryID;
                 infoDetail.OrderType = OrderType.RKD.ToString();
                 infoDetail.OrderNo = orderExec.OrderNo;
                 infoDetail.OrderID = orderExec.OrderID;
@@ -117,7 +132,7 @@ namespace Service.Inventory
                 infoDetail.StorageID = StorageID;
                 infoDetail.Quantity = entity.Quantity;
                 infoDetail.CustomerID = entity.CustomerID;
-                infoDetail.InventoryType = Common.InventoryType.入库.ToString();
+                infoDetail.InventoryType = entity.InventoryType;
                 infoDetail.BatchNumber = entity.BatchNumber;
                 infoDetail.ProductDate = entity.ProductDate;
                 infoDetail.InventoryDate = inventoryDate;
@@ -503,7 +518,7 @@ namespace Service.Inventory
                     foreach (InventoryInfo info in listInv)
                     {
                         //插入库存
-                        mr.CreateNew(info);
+                        info.InventoryID= mr.CreateNew(info);
                         //库存明细保存
                         CreateInventoryDetail(info, orderExec, info.StorageID, info.InventoryDate, operatorID);
 
@@ -567,6 +582,7 @@ namespace Service.Inventory
             InventoryDetailInfo infoDetail = new InventoryDetailInfo();
             if (order != null)
             {
+                infoDetail.InventoryID = orderDetail.InventoryID;
                 infoDetail.OrderID = order.OrderID;
                 infoDetail.OrderNo = order.OrderNo;
                 infoDetail.OrderType = order.OrderType;

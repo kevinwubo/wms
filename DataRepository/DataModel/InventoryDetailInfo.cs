@@ -11,10 +11,16 @@ namespace DataRepository.DataModel
     public class InventoryDetailInfo
     {
         /// <summary>
-        /// 库存ID
+        /// 库存明细ID
         /// </summary>
         [DataMapping("InventoryDetailID", DbType.Int32)]
         public int InventoryDetailID { get; set; }
+
+        /// <summary>
+        /// 库存ID
+        /// </summary>
+        [DataMapping("InventoryDetailID", DbType.Int32)]
+        public int InventoryID { get; set; }
 
         /// <summary>
         /// 商品ID

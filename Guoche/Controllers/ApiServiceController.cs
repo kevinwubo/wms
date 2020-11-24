@@ -3,6 +3,7 @@ using Entity.ApiBean;
 using Entity.ViewModel;
 using GuoChe.ApiConvert;
 using Infrastructure.Cache;
+using Service;
 using Service.BaseBiz;
 using Service.Inventory;
 using System;
@@ -34,7 +35,7 @@ namespace GuoChe.Controllers
         /// <returns></returns>
         public JsonResult Login(String UserName, String Password)
         {
-
+            ApiService.convertDatetime("20201124");
             UserEntity user = UserService.GetLoginUser(UserName, EncryptHelper.MD5Encrypt(Password), false);
             //if (user != null && user.UserID > 0)
             //{
@@ -109,10 +110,11 @@ namespace GuoChe.Controllers
         /// <param name="BatchNumber"></param>
         /// <param name="InQuantity"></param>
         /// <returns></returns>
-        public JsonResult InventoryIn(int GoodsI, int StorageID, string BatchNumber, int InQuantity)
+        public JsonResult InventoryIn(int GoodsID, int StorageID, string BatchNumber, int InQuantity,long UserID)
         {
-
-            return Json(new GoodsBean());
+            ApiService.ApiInInventoty(GoodsID, 0, StorageID, BatchNumber, InQuantity, UserID);
+            List<InventoryEntity> list = InventoryService.GetInventoryByRule(GoodsID, 0, "");
+            return Json(ApiProcess.convertInventoryList(list));
         }
 
         /// <summary>
@@ -123,9 +125,11 @@ namespace GuoChe.Controllers
         /// <param name="BatchNumber"></param>
         /// <param name="OutQuantity"></param>
         /// <returns></returns>
-        public JsonResult InventoryOut(int GoodsI, int InventoryID, string BatchNumber, int OutQuantity)
+        public JsonResult InventoryOut(int GoodsID, int InventoryID, string BatchNumber, int OutQuantity, long UserID)
         {
-            return Json(new GoodsBean());
+            ApiService.InventoryOut(GoodsID, InventoryID, BatchNumber, OutQuantity, UserID);
+            List<InventoryEntity> list = InventoryService.GetInventoryByRule(GoodsID, 0, "");
+            return Json(ApiProcess.convertInventoryList(list));
         }
     }
 }

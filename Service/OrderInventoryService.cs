@@ -130,12 +130,23 @@ namespace Service
         /// <summary>
         /// 库存表数据更新
         /// /// </summary>
-        private static void deductionInventory(int newQuantity, InventoryEntity inventory)
+        public static void deductionInventory(int newQuantity, InventoryEntity inventory)
         {
             //库存更新
             InventoryRepository mr = new InventoryRepository();
             InventoryInfo inventinfo = new InventoryInfo();
             inventinfo.Quantity = newQuantity;//仓库库存减去订单明细中出库库存
+            inventinfo.InventoryID = inventory.InventoryID;
+            inventinfo.ChangeDate = DateTime.Now;
+            mr.ModifyInventoryQuantity(inventinfo);
+        }
+
+        public static void ModifyQuantity(InventoryEntity inventory)
+        {
+            //库存更新
+            InventoryRepository mr = new InventoryRepository();
+            InventoryInfo inventinfo = new InventoryInfo();
+            inventinfo.Quantity = inventory.Quantity;//仓库库存减去订单明细中出库库存
             inventinfo.InventoryID = inventory.InventoryID;
             inventinfo.ChangeDate = DateTime.Now;
             mr.ModifyInventoryQuantity(inventinfo);
@@ -223,6 +234,7 @@ namespace Service
         {
             InventoryDetailRepository mrDetail = new InventoryDetailRepository();
             InventoryDetailInfo infoDetail = new InventoryDetailInfo();
+            infoDetail.InventoryID = detail.InventoryID;
             infoDetail.OrderID = orderEntity.OrderID;
             infoDetail.OrderNo = orderEntity.OrderNo;
             infoDetail.OrderType = orderEntity.OrderType;//订单类型

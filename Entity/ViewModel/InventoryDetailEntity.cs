@@ -17,6 +17,11 @@ namespace Entity.ViewModel
         public int InventoryDetailID { get; set; }
 
         /// <summary>
+        /// 库存ID
+        /// </summary>
+        public int InventoryID { get; set; }
+
+        /// <summary>
         /// 商品ID
         /// </summary>
         public int GoodsID { get; set; }
